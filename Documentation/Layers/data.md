@@ -1,4 +1,4 @@
- # Data Layer
+# 💾 Data Layer
 
 **The Data Layer implements data access, manages persistence, and handles communication with external services. It's the gateway between the application and the outside world.**
 

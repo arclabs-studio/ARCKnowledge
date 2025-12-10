@@ -1,4 +1,4 @@
-# Clean Architecture
+# 🏛️ Clean Architecture
 
 **Clean Architecture establishes clear boundaries between business logic and external concerns, making code testable, maintainable, and independent of frameworks.**
 

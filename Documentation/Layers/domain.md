@@ -1,4 +1,4 @@
-# Domain Layer
+# 🧠 Domain Layer
 
 **The Domain Layer is the heart of the application, containing business logic, business rules, and the (Swift Data) models that define what the application does.**
 

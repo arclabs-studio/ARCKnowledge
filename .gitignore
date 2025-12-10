@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Xcode
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# IDE
+*.xcworkspace
+!*.xcworkspace/contents.xcworkspacedata
+*.idea/
+*.vscode/
+
+# Misc
+*.log
+*.tmp
+*~

@@ -1,4 +1,4 @@
-# Plan Mode
+# 📋 Plan Mode
 
 **Plan Mode is a structured approach to complex tasks where Claude pauses to clarify requirements, evaluate options, and create a detailed implementation plan before coding.**
 

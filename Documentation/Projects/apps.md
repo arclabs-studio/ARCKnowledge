@@ -1,4 +1,4 @@
-# iOS Apps
+# 📱 iOS Apps
 
 **iOS Apps at ARC Labs are private, product-focused applications that deliver delightful user experiences using our reusable package infrastructure.**
 

@@ -1,4 +1,4 @@
-# Protocol-Oriented Design in Swift
+# 🔌 Protocol-Oriented Design in Swift
 
 **Protocol-Oriented Programming (POP) uses protocols as the primary abstraction mechanism, enabling flexible, testable, and reusable code.**
 

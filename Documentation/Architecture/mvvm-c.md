@@ -1,4 +1,4 @@
-# MVVM+C (Model-View-ViewModel-Coordinator)
+# 🔄 MVVM+C (Model-View-ViewModel-Coordinator)
 
 **MVVM+C separates presentation logic (MVVM) from navigation logic (Coordinator/Router), creating testable, maintainable, and scalable iOS apps.**
 

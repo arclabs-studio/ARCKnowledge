@@ -1,4 +1,4 @@
-# Code Style & Standards
+# 🎨 Code Style & Standards
 
 **Consistent code style ensures readability, maintainability, and professional quality across all ARC Labs projects.**
 

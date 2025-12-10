@@ -1,4 +1,4 @@
-# SOLID Principles in Swift
+# 📐 SOLID Principles in Swift
 
 **SOLID principles guide object-oriented design to create maintainable, scalable, and testable code.**
 

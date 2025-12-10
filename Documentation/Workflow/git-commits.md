@@ -1,4 +1,4 @@
-# Git Commit Standards
+# 💬 Git Commit Standards
 
 ## Overview
 

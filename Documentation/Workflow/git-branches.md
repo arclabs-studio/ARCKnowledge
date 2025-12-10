@@ -1,4 +1,4 @@
-# Git Branch Naming Conventions
+# 🌿 Git Branch Naming Conventions
 
 ## Overview
 

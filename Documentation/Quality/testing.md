@@ -1,4 +1,4 @@
-# Testing with Swift Testing
+# 🧪 Testing with Swift Testing
 
 **Comprehensive testing ensures code quality, prevents regressions, and enables confident refactoring. ARC Labs uses Swift Testing for all test suites.**
 
