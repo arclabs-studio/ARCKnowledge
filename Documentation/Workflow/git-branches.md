@@ -16,7 +16,7 @@ ARC Labs uses a structured branch naming strategy integrated with Linear issue t
 ### Components
 
 1. **Type**: Branch category
-2. **Issue ID**: Linear issue reference (e.g., `ARC-123`)
+2. **Issue ID**: Linear issue reference (e.g., `ARC-123`). Optional, just if linear issue exists
 3. **Short Description**: Kebab-case summary (2-5 words)
 
 ---
@@ -191,24 +191,24 @@ git merge --no-ff release/1.2.0
 git branch -d release/1.2.0
 ```
 
-### Experiment Branches
+### Spike (Experiment) Branches
 
 For exploratory work or prototypes:
 ```
-experiment/<description>
+spike/<description>
 ```
 
 **Examples**:
 ```
-experiment/swiftui-animations
-experiment/core-ml-integration
-experiment/widget-prototype
-experiment/visionos-adaptation
+spike/swiftui-animations
+spike/core-ml-integration
+spike/widget-prototype
+spike/visionos-adaptation
 ```
 
 **Usage**:
 - Research and exploration
-- Technical spikes
+- Technical experiments
 - Proof of concepts
 - Learning new APIs
 
@@ -217,7 +217,7 @@ experiment/visionos-adaptation
 - Merge to: Optional (may be discarded)
 - Delete after: Decision to adopt or reject
 
-**Note**: No Linear issue required for experiments
+**Note**: No Linear issue required for spikes
 
 ### Documentation Branches
 
@@ -298,18 +298,18 @@ bugfix/ARC-245-fix-payment-failure-bug
 
 **Linear Issue Format**: `<PROJECT>-<NUMBER>`
 
-**Projects at ARC Labs**:
+**Projects at ARC Labs Studio**:
 - `ARC`: Core packages and infrastructure
-- `FR`: FavRes app
-- `FB`: FavBook app
-- `SS`: Spatial Shoes app
+- `FAVRES`: FavRes app
+- `PIZ`: Pizzeria La Famiglia app
+- `TIC`: TicketMind app
 
 **Examples**:
 ```
 feature/ARC-123-storage-abstraction     # ARCStorage package
-feature/FR-45-restaurant-search         # FavRes feature
-bugfix/FB-78-book-sync-error           # FavBook bugfix
-hotfix/SS-12-ar-rendering-crash        # Spatial Shoes hotfix
+feature/FAVRES-45-restaurant-search     # FavRes feature
+bugfix/PIZ-78-menu-sync-error           # Pizzeria La Famiglia bugfix
+hotfix/TIC-12-rendering-crash           # TicketMind hotfix
 ```
 
 ### Automatic Linking

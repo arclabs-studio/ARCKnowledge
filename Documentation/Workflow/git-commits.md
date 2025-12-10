@@ -2,7 +2,7 @@
 
 ## Overview
 
-ARC Labs follows strict commit message conventions to maintain a clear, searchable project history. Well-crafted commit messages facilitate code reviews, debugging, and understanding project evolution over time.
+ARC Labs Studio follows strict commit message conventions to maintain a clear, searchable project history. Well-crafted commit messages facilitate code reviews, debugging, and understanding project evolution over time.
 
 ---
 
