@@ -196,5 +196,5 @@ This documentation is proprietary to ARC Labs Studio. See [LICENSE](LICENSE) for
 ---
 
 **Maintained by:** ARC Labs Studio
-**Last Updated:** December 2024
+**Last Updated:** December 2025
 **Version:** See [CHANGELOG.md](CHANGELOG.md)
