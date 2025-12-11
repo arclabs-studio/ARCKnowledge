@@ -8,6 +8,7 @@
 xcuserdata/
 *.xcscmblueprint
 *.xccheckout
+*.xcodeproj
 
 # Swift Package Manager
 .build/
