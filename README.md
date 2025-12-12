@@ -1,53 +1,70 @@
 # 📜 ARCAgentsDocs
 
-[![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
-[![Platforms](https://img.shields.io/badge/Platforms-iOS%20|%20macOS%20|%20watchOS%20|%20tvOS%20|%20visionOS-blue.svg)](https://developer.apple.com)
-[![SPM Compatible](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](https://swift.org/package-manager)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)
+![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20watchOS%20%7C%20tvOS%20%7C%20visionOS-blue.svg)
+![SPM Compatible](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)
+![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-**Central knowledge base and development standards for AI agents at ARC Labs Studio.**
+**Central knowledge base and development standards for AI agents at ARC Labs Studio**
 
-ARCAgentsDocs is a Swift Package that provides programmatic access to ARC Labs Studio's development guidelines, architectural standards, and best practices. It serves as the single source of truth for coding standards, patterns, and workflows—designed specifically for AI agents (primarily Claude Code) working on ARC Labs projects.
+Development guidelines • Architecture standards • Best practices • AI agent collaboration
 
 ---
 
-## Overview
+## 🎯 Overview
 
-This package contains comprehensive documentation covering:
+ARCAgentsDocs is a Swift Package that provides programmatic access to ARC Labs Studio's development guidelines, architectural standards, and best practices. It serves as the **single source of truth** for coding standards, patterns, and workflows—designed specifically for AI agents (primarily Claude Code) working on ARC Labs projects.
 
-- **Architecture**: Clean Architecture, MVVM+C, SOLID principles, Protocol-Oriented Programming
-- **Implementation Layers**: Presentation, Domain, and Data layer guidelines
-- **Project Types**: Standards for iOS apps and Swift packages
-- **Quality Assurance**: Code review checklists, testing strategies, documentation standards
-- **Development Tools**: ARCDevTools integration, SPM best practices, Xcode configuration
-- **Workflow**: Git conventions, commit standards, AI agent collaboration patterns
+### Key Features
 
-### Why ARCAgentsDocs Exists
+- ✅ **Clean Architecture** - Comprehensive guidelines for layered architecture
+- ✅ **MVVM+C Pattern** - Coordinator-based navigation with Router implementation
+- ✅ **SOLID Principles** - Applied to Swift development
+- ✅ **Protocol-Oriented** - Design patterns and best practices
+- ✅ **Quality Standards** - Code review, testing, and documentation requirements
+- ✅ **Programmatic Access** - Swift API for dynamic context loading
+- ✅ **Version Controlled** - Semantic versioning for consistent standards
 
-At ARC Labs Studio, we maintain multiple iOS apps and reusable Swift packages. Our AI agents need consistent, accessible context to maintain quality standards across all projects. ARCAgentsDocs provides:
+---
 
-1. **Centralized Documentation**: Single source of truth for all development standards
-2. **Programmatic Access**: Swift API for AI agents to load context dynamically
-3. **Version Control**: Semantic versioning ensures consistent standards across projects
-4. **Easy Integration**: Add as a Swift Package dependency—no git submodules needed
+## 💡 Why ARCAgentsDocs?
 
-## Installation
+At ARC Labs Studio, we maintain multiple iOS apps and reusable Swift packages. Our AI agents need consistent, accessible context to maintain quality standards across all projects.
+
+**ARCAgentsDocs provides:**
+
+1. 📖 **Centralized Documentation** - Single source of truth for all development standards
+2. 🔌 **Programmatic Access** - Swift API for AI agents to load context dynamically
+3. 🏷️ **Version Control** - Semantic versioning ensures consistent standards across projects
+4. 📦 **Easy Integration** - Add as a Swift Package dependency—no git submodules needed
+
+---
+
+## 📋 Requirements
+
+- **Swift:** 6.0+
+- **Platforms:**
+  - iOS 17.0+
+  - macOS 14.0+
+  - watchOS 10.0+
+  - tvOS 17.0+
+  - visionOS 1.0+
+- **Xcode:** 16.0+
+
+---
+
+## 🚀 Installation
 
 ### Swift Package Manager
 
-Add ARCAgentsDocs to your project using Xcode or by editing your `Package.swift` file:
-
 #### Using Xcode
 
-1. Open your project in Xcode
-2. Select **File → Add Package Dependencies...**
-3. Enter the repository URL: `https://github.com/ARCLabsStudio/ARCAgentsDocs.git`
-4. Select the version or branch you want to use
-5. Click **Add Package**
+1. **File → Add Package Dependencies...**
+2. Enter repository URL: `https://github.com/ARCLabsStudio/ARCAgentsDocs.git`
+3. Select version or branch
+4. Click **Add Package**
 
 #### Using Package.swift
-
-Add ARCAgentsDocs as a dependency in your `Package.swift` file:
 
 ```swift
 // swift-tools-version: 6.0
@@ -71,7 +88,9 @@ let package = Package(
 )
 ```
 
-## Usage
+---
+
+## 📖 Usage
 
 ### For Developers
 
@@ -84,10 +103,14 @@ import ARCAgentsDocs
 let mainDoc = try ARCAgentsDocs.loadDocumentation(at: "CLAUDE.md")
 
 // Load specific architecture guidelines
-let cleanArchDoc = try ARCAgentsDocs.loadDocumentation(at: "Documentation/Architecture/clean-architecture.md")
+let cleanArchDoc = try ARCAgentsDocs.loadDocumentation(
+    at: "Documentation/Architecture/clean-architecture.md"
+)
 
 // Get URL to a documentation file
-let testingURL = try ARCAgentsDocs.documentURL(for: "Documentation/Quality/testing.md")
+let testingURL = try ARCAgentsDocs.documentURL(
+    for: "Documentation/Quality/testing.md"
+)
 
 // Explore available categories
 let categories = ARCAgentsDocs.availableCategories
@@ -104,7 +127,9 @@ let archDocs = try ARCAgentsDocs.listDocuments(in: .architecture)
 
 ```swift
 do {
-    let doc = try ARCAgentsDocs.loadDocumentation(at: "Documentation/Quality/testing.md")
+    let doc = try ARCAgentsDocs.loadDocumentation(
+        at: "Documentation/Quality/testing.md"
+    )
     print(doc)
 } catch DocumentationError.fileNotFound(let path) {
     print("Documentation not found at: \(path)")
@@ -115,16 +140,18 @@ do {
 }
 ```
 
+---
+
 ### For AI Agents
 
 #### Primary Entry Point
 
-The main entry point is `CLAUDE.md`, which provides:
+The main entry point is **`CLAUDE.md`**, which provides:
 
-- ARC Labs Studio philosophy and core values
-- Navigation to all specialized documentation
-- Quick reference checklists
-- Critical rules that must never be broken
+- 🎯 ARC Labs Studio philosophy and core values
+- 🧭 Navigation to all specialized documentation
+- ✅ Quick reference checklists
+- 🚨 Critical rules that must never be broken
 
 **Loading Claude.md:**
 
@@ -161,14 +188,22 @@ When working on ARC Labs projects, AI agents should:
 ```swift
 // AI Agent loads context before implementing a new iOS feature
 let mainContext = try ARCAgentsDocs.loadDocumentation(at: "CLAUDE.md")
-let cleanArch = try ARCAgentsDocs.loadDocumentation(at: "Documentation/Architecture/clean-architecture.md")
-let mvvm = try ARCAgentsDocs.loadDocumentation(at: "Documentation/Architecture/mvvm-c.md")
-let presentation = try ARCAgentsDocs.loadDocumentation(at: "Documentation/Layers/presentation.md")
+let cleanArch = try ARCAgentsDocs.loadDocumentation(
+    at: "Documentation/Architecture/clean-architecture.md"
+)
+let mvvm = try ARCAgentsDocs.loadDocumentation(
+    at: "Documentation/Architecture/mvvm-c.md"
+)
+let presentation = try ARCAgentsDocs.loadDocumentation(
+    at: "Documentation/Layers/presentation.md"
+)
 
 // Agent now has full context for implementing feature following ARC Labs standards
 ```
 
-## Documentation Structure
+---
+
+## 🏗️ Documentation Structure
 
 This is a **documentation-only package** following industry best practices. All markdown files are in the repository root for easy access by AI agents and developers:
 
@@ -183,7 +218,7 @@ ARCAgentsDocs/
 │
 ├── CLAUDE.md                               # Main AI agent entry point
 │
-├── Documentation/                          # All documentation (in root for accessibility)
+├── Documentation/                          # All documentation
 │   ├── Architecture/                       # Architectural patterns
 │   │   ├── clean-architecture.md
 │   │   ├── mvvm-c.md
@@ -215,18 +250,20 @@ ARCAgentsDocs/
 │       └── ARCAgentsDocs.swift            # Optional programmatic API
 │
 └── Tests/
-    └── ARCAgentsDocs Tests/
+    └── ARCAgentsDocsTests/
         └── ARCAgentsDocsTests.swift       # API tests
 ```
 
 ### Why This Structure?
 
-1. **Documentation in Root** - AI agents can directly access files without navigating complex package structures
-2. **No Resource Bundling** - Files accessed from their original locations using filesystem
-3. **Optional API** - Swift API provided for programmatic access, but not required
-4. **Industry Standard** - Follows documentation-only package best practices
+1. 📁 **Documentation in Root** - AI agents can directly access files without navigating complex package structures
+2. 🎯 **No Resource Bundling** - Files accessed from their original locations using filesystem
+3. 🔌 **Optional API** - Swift API provided for programmatic access, but not required
+4. ✨ **Industry Standard** - Follows documentation-only package best practices
 
-## Documentation Index
+---
+
+## 📚 Documentation Index
 
 ### Architecture
 
@@ -277,7 +314,9 @@ ARCAgentsDocs/
 | [git-commits.md](Documentation/Workflow/git-commits.md) | Conventional Commits specification |
 | [plan-mode.md](Documentation/Workflow/plan-mode.md) | When and how AI agents enter Plan Mode |
 
-## Core Principles
+---
+
+## 🎯 Core Principles
 
 ### ARC Labs Studio Values
 
@@ -289,25 +328,16 @@ ARCAgentsDocs/
 
 ### Technical Standards
 
-- **Clean Architecture** - Strict separation of Presentation, Domain, and Data layers
-- **SOLID Principles** - Single responsibility and clear abstractions
-- **Protocol-Oriented Design** - Use protocols for abstraction and testing
-- **Dependency Injection** - No singletons; all dependencies injected
-- **Swift 6** - Modern concurrency and type safety
-- **100% Test Coverage** - For packages (80%+ for apps)
+- ✅ **Clean Architecture** - Strict separation of Presentation, Domain, and Data layers
+- ✅ **SOLID Principles** - Single responsibility and clear abstractions
+- ✅ **Protocol-Oriented Design** - Use protocols for abstraction and testing
+- ✅ **Dependency Injection** - No singletons; all dependencies injected
+- ✅ **Swift 6** - Modern concurrency and type safety
+- ✅ **100% Test Coverage** - For packages (80%+ for apps)
 
-## Requirements
+---
 
-- **Swift**: 6.0+
-- **Platforms**:
-  - iOS 17.0+
-  - macOS 14.0+
-  - watchOS 10.0+
-  - tvOS 17.0+
-  - visionOS 1.0+
-- **Xcode**: 16.0+
-
-## Integration in ARC Labs Projects
+## 🔗 Integration in ARC Labs Projects
 
 ### iOS Apps
 
@@ -353,7 +383,9 @@ func loadDevelopmentContext() {
 }
 ```
 
-## Contributing
+---
+
+## 🤝 Contributing
 
 We welcome contributions to improve ARC Labs Studio's documentation standards!
 
@@ -386,34 +418,43 @@ Expanded presentation.md to include detailed requirements
 for SwiftUI preview implementation with examples.
 ```
 
-## Versioning
+---
+
+## 📦 Versioning
 
 ARCAgentsDocs follows [Semantic Versioning](https://semver.org/):
 
-- **MAJOR**: Breaking changes to API or fundamental documentation restructuring
-- **MINOR**: New documentation added or significant enhancements
-- **PATCH**: Fixes, clarifications, or minor updates
+- **MAJOR** - Breaking changes to API or fundamental documentation restructuring
+- **MINOR** - New documentation added or significant enhancements
+- **PATCH** - Fixes, clarifications, or minor updates
 
 See [CHANGELOG.md](CHANGELOG.md) for version history.
 
-## License
+---
+
+## 📄 License
 
 ARCAgentsDocs is available under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-**Maintained by:** [ARC Labs Studio](https://github.com/ARCLabsStudio)
-**Repository:** [ARCAgentsDocs](https://github.com/ARCLabsStudio/ARCAgentsDocs)
-**Version:** See [CHANGELOG.md](CHANGELOG.md)
-**Last Updated:** December 2025
+## 🔗 Quick Links
+
+- 📖 [Main Documentation Entry Point (CLAUDE.md)](CLAUDE.md)
+- 🤝 [Contributing Guidelines](#contributing)
+- 📚 [Documentation Index](#documentation-index)
+- 🔌 [API Documentation](#usage)
 
 ---
 
-## Quick Links
+<div align="center">
 
-- [Main Documentation Entry Point (CLAUDE.md)](CLAUDE.md)
-- [Contributing Guidelines](#contributing)
-- [Documentation Index](#documentation-index)
-- [API Documentation](#usage)
+**Maintained by:** [ARC Labs Studio](https://github.com/ARCLabsStudio)
 
-For questions or support, please open an issue on [GitHub](https://github.com/ARCLabsStudio/ARCAgentsDocs/issues).
+**Version:** See [CHANGELOG.md](CHANGELOG.md) • **Last Updated:** December 2025
+
+Made with 💛 by ARC Labs Studio
+
+For questions or support, open an issue on [GitHub](https://github.com/ARCLabsStudio/ARCAgentsDocs/issues)
+
+</div>

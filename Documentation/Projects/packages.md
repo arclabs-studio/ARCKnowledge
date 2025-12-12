@@ -277,7 +277,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Feature in development
 
-## [1.1.0] - 2024-01-15
+## [1.1.0] - 2025-01-15
 
 ### Added
 - New feature X

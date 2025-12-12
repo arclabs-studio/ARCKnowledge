@@ -54,6 +54,7 @@ This document serves as the **entry point** to ARC Labs Studio's development gui
 - [`testing.md`](Documentation/Quality/testing.md) - Swift Testing framework, coverage requirements, strategies
 - [`code-style.md`](Documentation/Quality/code-style.md) - SwiftLint, SwiftFormat, naming conventions
 - [`documentation.md`](Documentation/Quality/documentation.md) - DocC, README standards, inline comments
+- [`readme-standards.md`](Documentation/Quality/readme-standards.md) - Standardized README template with visual format
 
 ### Workflow
 - [`plan-mode.md`](Documentation/Workflow/plan-mode.md) - When and how to enter Plan Mode
