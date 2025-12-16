@@ -19,7 +19,7 @@ Every ARC Labs project (packages and apps) **MUST** include a comprehensive, wel
 
 ## 📐 Standard README Template
 
-All ARC Labs projects that include ARCAgentsDocs as a dependency should follow this template:
+All ARC Labs projects that include ARCKnowledge as a git submodule should follow this template:
 
 ```markdown
 # [Emoji] ProjectName
@@ -157,7 +157,7 @@ swift test
 - **Layers:** Presentation, Domain, Data
 - **Dependencies:** Protocol-based dependency injection
 
-For complete architecture guidelines, see [ARCAgentsDocs](https://github.com/arclabs-studio/ARCAgentsDocs).
+For complete architecture guidelines, see [ARCKnowledge](https://github.com/arclabs-studio/ARCKnowledge).
 
 ---
 
@@ -205,7 +205,7 @@ We welcome contributions! Please read our contributing guidelines:
 
 1. Fork the repository
 2. Create a feature branch: `feature/your-feature`
-3. Follow [ARCAgentsDocs](https://github.com/arclabs-studio/ARCAgentsDocs) standards
+3. Follow [ARCKnowledge](https://github.com/arclabs-studio/ARCKnowledge) standards
 4. Ensure tests pass: `swift test`
 5. Run quality checks: `make lint && make format`
 6. Create a pull request
@@ -215,14 +215,14 @@ We welcome contributions! Please read our contributing guidelines:
 This is an internal project for ARC Labs Studio. Team members:
 
 1. Create a feature branch: `feature/ARC-123-description`
-2. Follow [ARCAgentsDocs](https://github.com/arclabs-studio/ARCAgentsDocs) standards
+2. Follow [ARCKnowledge](https://github.com/arclabs-studio/ARCKnowledge) standards
 3. Ensure tests pass: `swift test`
 4. Run quality checks: `make lint && make format`
 5. Create a pull request to `develop`
 
 ### Commit Messages
 
-Follow [Conventional Commits](https://github.com/arclabs-studio/ARCAgentsDocs/blob/main/Documentation/Workflow/git-commits.md):
+Follow [Conventional Commits](https://github.com/arclabs-studio/ARCKnowledge/blob/main/Documentation/Workflow/git-commits.md):
 
 \`\`\`
 feat(ARC-123): add new authentication feature
@@ -254,7 +254,7 @@ See [LICENSE](LICENSE) for details.
 
 ## 🔗 Related Resources
 
-- **[ARCAgentsDocs](https://github.com/arclabs-studio/ARCAgentsDocs)** - Development standards and guidelines
+- **[ARCKnowledge](https://github.com/arclabs-studio/ARCKnowledge)** - Development standards and guidelines
 - **[ARCDevTools](https://github.com/arclabs-studio/ARCDevTools)** - Quality tooling and automation
 - [Any other related ARC Labs packages or resources]
 
@@ -345,12 +345,12 @@ Made with 💛 by ARC Labs Studio
 
 **For Packages:**
 - Brief architecture overview
-- Link to ARCAgentsDocs for details
+- Link to ARCKnowledge for details
 
 **For Apps:**
 - MVVM+C with Clean Architecture
 - Layer descriptions
-- Link to ARCAgentsDocs for complete guidelines
+- Link to ARCKnowledge for complete guidelines
 
 ### Development Section
 
@@ -365,7 +365,7 @@ Made with 💛 by ARC Labs Studio
 **Required Elements:**
 
 1. **Contribution Process** - Steps to contribute
-2. **Standards Reference** - Link to ARCAgentsDocs
+2. **Standards Reference** - Link to ARCKnowledge
 3. **Commit Message Format** - Conventional Commits
 
 ### Footer Section
@@ -374,7 +374,7 @@ Made with 💛 by ARC Labs Studio
 
 1. **Version Information** - Link to CHANGELOG
 2. **License** - Type and link to LICENSE file
-3. **Related Resources** - Links to ARCAgentsDocs, ARCDevTools, etc.
+3. **Related Resources** - Links to ARCKnowledge, ARCDevTools, etc.
 4. **Centered Footer** - "Made with 💛 by ARC Labs Studio" + links
 
 ---
@@ -443,7 +443,7 @@ Before considering a README complete, verify:
 
 ### Standards
 - [ ] Follows template structure
-- [ ] Links to ARCAgentsDocs for detailed standards
+- [ ] Links to ARCKnowledge for detailed standards
 - [ ] Includes contribution guidelines
 - [ ] References Conventional Commits
 - [ ] Includes version and license information
@@ -534,14 +534,14 @@ Feature X • Feature Y • Feature Z
 [Detailed explanation with visual structure]
 ```
 
-### Mistake 4: Missing Links to ARCAgentsDocs
+### Mistake 4: Missing Links to ARCKnowledge
 
 ```markdown
 ❌ WRONG:
 Follow our coding standards and best practices.
 
 ✅ RIGHT:
-Follow [ARCAgentsDocs](https://github.com/arclabs-studio/ARCAgentsDocs)
+Follow [ARCKnowledge](https://github.com/arclabs-studio/ARCKnowledge)
 for complete coding standards and best practices.
 ```
 
@@ -552,7 +552,7 @@ for complete coding standards and best practices.
 - [Markdown Guide](https://www.markdownguide.org/)
 - [Shields.io Badge Generator](https://shields.io/)
 - [GitHub Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet)
-- [ARCAgentsDocs](https://github.com/arclabs-studio/ARCAgentsDocs)
+- [ARCKnowledge](https://github.com/arclabs-studio/ARCKnowledge)
 
 ---
 
