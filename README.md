@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Git Submodule](https://img.shields.io/badge/Integration-Git%20Submodule-brightgreen.svg)
 
-**Central knowledge base and development standards for AI agents at ARC Labs Studio**
+**Central knowledge base and development standards at ARC Labs Studio**
 
 Development guidelines • Architecture standards • Best practices • AI agent collaboration
 
@@ -17,7 +17,6 @@ ARCKnowledge is a comprehensive documentation repository that serves as the **si
 ### Key Features
 
 - ✅ **Clean Architecture** - Comprehensive guidelines for layered architecture
-- ✅ **MVVM+C Pattern** - Coordinator-based navigation with Router implementation
 - ✅ **SOLID Principles** - Applied to Swift development
 - ✅ **Protocol-Oriented** - Design patterns and best practices
 - ✅ **Quality Standards** - Code review, testing, and documentation requirements
