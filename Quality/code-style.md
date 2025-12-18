@@ -182,41 +182,51 @@ swift package resolve
 
 **Configuration** (`.swiftformat`):
 ```
---swiftversion 6.0
-
 # Indentation
 --indent 4
---indentcase false
---trimwhitespace always
---indentstrings true
+--tabwidth 4
+--xcodeindentation enabled
 
-# Wrapping
+# Line width
 --maxwidth 120
+
+# Brace style
+--allman false
 --wraparguments before-first
 --wrapparameters before-first
 --wrapcollections before-first
---wrapreturntype preserve
+--closingparen balanced
+
+# Imports
+--importgrouping testable-bottom
+--stripunusedargs always
 
 # Spacing
---commas always
 --trimwhitespace always
---elseposition same-line
---guardelse same-line
+--commas never
+--semicolons inline
+--linebreaks lf
+
+# Self
+--self remove
+
+# Wrapping
+--wrapternary before-operators
+
+# Attributes - Always on same line (ARC Labs style)
+--type-attributes same-line
+--func-attributes same-line
+--stored-var-attributes same-line
+--computed-var-attributes same-line
+--complex-attributes same-line
 
 # Organization
---extensionacl on-extension
---patternlet inline
+--organizetypes actor,class,enum,struct
+--marktypes always
+--extensionacl on-declarations
 
-# Features
---self remove
---importgrouping testable-bottom
---redundanttype inferred
---stripunusedargs closure-only
-
-# Rules to enable
---enable isEmpty
---enable sortedImports
---enable blankLinesBetweenScopes
+# Exclude
+--exclude .build,DerivedData,Pods,Carthage,Generated
 ```
 
 **Usage**:

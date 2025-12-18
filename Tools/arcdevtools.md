@@ -117,44 +117,58 @@ custom_rules:
 
 ARCDevTools provides a `.swiftformat` file with ARC Labs' formatting rules:
 ```
-# Included in ARCDevTools/Resources/.swiftformat
-
---swiftversion 6.0
+# Included in ARCDevTools/configs/swiftformat
 
 # Indentation
 --indent 4
 --tabwidth 4
---indentcase false
---trimwhitespace always
+--xcodeindentation enabled
 
-# Wrapping
+# Line width
 --maxwidth 120
+
+# Brace style
+--allman false
 --wraparguments before-first
 --wrapparameters before-first
 --wrapcollections before-first
+--closingparen balanced
+
+# Imports
+--importgrouping testable-bottom
+--stripunusedargs always
 
 # Spacing
---insertlines enabled
---removelines enabled
---emptybraces spaced
-
-# Organization
---organizeimports alphabetized
---importgrouping testable-bottom
-
-# Bracing
---allman false
---elseposition same-line
-
-# Operators
---operatorfunc spaced
---ranges spaced
+--trimwhitespace always
+--commas never
+--semicolons inline
+--linebreaks lf
 
 # Self
 --self remove
 
-# Headers
---header "//\n//  {file}\n//  {project}\n//\n//  Created by ARC Labs Studio on {created}.\n//"
+# Wrapping
+--wrapternary before-operators
+
+# Attributes - Always on same line (ARC Labs style)
+--type-attributes same-line
+--func-attributes same-line
+--stored-var-attributes same-line
+--computed-var-attributes same-line
+--complex-attributes same-line
+
+# Organization
+--organizetypes actor,class,enum,struct
+--structthreshold 0
+--classthreshold 0
+--enumthreshold 0
+
+# Swift 6 specific
+--marktypes always
+--extensionacl on-declarations
+
+# Exclude
+--exclude .build,DerivedData,Pods,Carthage,Generated
 ```
 
 ### 3. Pre-Commit Hooks
