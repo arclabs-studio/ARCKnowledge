@@ -178,7 +178,7 @@ git clone https://github.com/arclabs-studio/ProjectName.git
 cd ProjectName
 
 # Run setup (if using ARCDevTools)
-swift run arc-setup
+swift run arcdevtools-setup
 
 # Build the project
 swift build
