@@ -4,6 +4,10 @@
 
 Swift Package Manager (SPM) is Apple's official dependency management and distribution tool for Swift code. At ARC Labs, SPM is the **exclusive method** for managing dependencies, creating reusable packages, and organizing modular architecture across all projects.
 
+> **📚 Related Documentation**
+> - For ARC Labs package standards, templates, and quality requirements, see [`packages.md`](../Projects/packages.md)
+> - This document focuses on SPM as a tool: commands, features, and troubleshooting
+
 ---
 
 ## Why SPM?
@@ -47,57 +51,21 @@ Swift Package Manager (SPM) is Apple's official dependency management and distri
 
 ## Package Structure
 
-### Minimal Package
+### Basic Structure
 ```
-ARCLogger/
-├── Package.swift
-├── README.md
+MyPackage/
+├── Package.swift          # Package manifest (required)
+├── README.md              # Documentation (required)
 ├── Sources/
-│   └── ARCLogger/
-│       └── Logger.swift
+│   └── MyPackage/
+│       └── MyPackage.swift
 └── Tests/
-    └── ARCLoggerTests/
-        └── LoggerTests.swift
+    └── MyPackageTests/
+        └── MyPackageTests.swift
 ```
 
-### Complete Package
-```
-ARCStorage/
-├── Package.swift
-├── README.md
-├── LICENSE
-├── CHANGELOG.md
-├── .swiftlint.yml
-├── .swiftformat
-├── .gitignore
-├── Sources/
-│   └── ARCStorage/
-│       ├── ARCStorage.swift
-│       ├── Protocols/
-│       │   ├── StorageProvider.swift
-│       │   └── Repository.swift
-│       ├── Providers/
-│       │   ├── SwiftDataProvider.swift
-│       │   ├── CloudKitProvider.swift
-│       │   └── UserDefaultsProvider.swift
-│       ├── Repositories/
-│       │   └── GenericRepository.swift
-│       └── Errors/
-│           └── StorageError.swift
-├── Tests/
-│   └── ARCStorageTests/
-│       ├── Unit/
-│       │   ├── ProvidersTests.swift
-│       │   └── RepositoryTests.swift
-│       ├── Integration/
-│       │   └── SwiftDataIntegrationTests.swift
-│       └── Mocks/
-│           └── MockStorageProvider.swift
-└── Documentation.docc/
-    ├── ARCStorage.md
-    └── Articles/
-        └── GettingStarted.md
-```
+> **📦 ARC Labs Standard**
+> For complete package structure with all required files (CHANGELOG, LICENSE, DocC, etc.), see [`packages.md`](../Projects/packages.md)
 
 ---
 
@@ -109,15 +77,15 @@ ARCStorage/
 import PackageDescription
 
 let package = Package(
-    name: "ARCLogger",
+    name: "MyPackage",
     platforms: [
         .iOS(.v17),
         .macOS(.v14)
     ],
     products: [
         .library(
-            name: "ARCLogger",
-            targets: ["ARCLogger"]
+            name: "MyPackage",
+            targets: ["MyPackage"]
         )
     ],
     dependencies: [
@@ -125,80 +93,20 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "ARCLogger",
+            name: "MyPackage",
             dependencies: []
         ),
         .testTarget(
-            name: "ARCLoggerTests",
-            dependencies: ["ARCLogger"]
+            name: "MyPackageTests",
+            dependencies: ["MyPackage"]
         )
     ],
     swiftLanguageModes: [.v6]
 )
 ```
 
-### Complete Example (ARCStorage)
-```swift
-// swift-tools-version: 6.0
-import PackageDescription
-
-let package = Package(
-    name: "ARCStorage",
-    
-    // MARK: Platforms
-    
-    platforms: [
-        .iOS(.v17),
-        .macOS(.v14),
-        .watchOS(.v10),
-        .tvOS(.v17)
-    ],
-    
-    // MARK: Products
-    
-    products: [
-        .library(
-            name: "ARCStorage",
-            targets: ["ARCStorage"]
-        )
-    ],
-    
-    // MARK: Dependencies
-    
-    dependencies: [
-        .package(
-            url: "https://github.com/arclabs/ARCLogger",
-            from: "1.2.0"
-        )
-    ],
-    
-    // MARK: Targets
-    
-    targets: [
-        // Main Target
-        .target(
-            name: "ARCStorage",
-            dependencies: [
-                .product(name: "ARCLogger", package: "ARCLogger")
-            ],
-            swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency"),
-                .enableExperimentalFeature("AccessLevelOnImport")
-            ]
-        ),
-        
-        // Test Target
-        .testTarget(
-            name: "ARCStorageTests",
-            dependencies: ["ARCStorage"]
-        )
-    ],
-    
-    // MARK: Swift Language Modes
-    
-    swiftLanguageModes: [.v6]
-)
-```
+> **📦 ARC Labs Template**
+> For the standard ARC Labs Package.swift template with all required settings, see [`packages.md`](../Projects/packages.md#-packageswift-configuration)
 
 ### Advanced Features
 
@@ -425,21 +333,10 @@ swift package purge-cache
 
 ### Versioning
 
-Follow [Semantic Versioning](https://semver.org/):
-```
-MAJOR.MINOR.PATCH
+Follow [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 
-1.2.3
-└─┴─┴─ PATCH: Bug fixes
-  └─┴─ MINOR: New features (backwards compatible)
-    └─ MAJOR: Breaking changes
-```
-
-**Examples**:
-- `1.0.0`: Initial release
-- `1.1.0`: Add new feature
-- `1.1.1`: Fix bug
-- `2.0.0`: Breaking API change
+> **📦 ARC Labs Versioning**
+> For detailed versioning strategy and version bumping rules, see [`packages.md`](../Projects/packages.md#-versioning-strategy)
 
 ### Tagging Releases
 ```bash
@@ -568,23 +465,13 @@ public import ARCLogger  // Clients must also import
 
 ### Testing
 
-**Comprehensive Coverage**:
+**Best Practices**:
 - 100% public API coverage
 - Integration tests for critical paths
 - Mock implementations for protocols
 
-**Test Organization**:
-```
-Tests/
-└── ARCStorageTests/
-    ├── Unit/
-    │   ├── ProvidersTests.swift
-    │   └── RepositoryTests.swift
-    ├── Integration/
-    │   └── SwiftDataIntegrationTests.swift
-    └── Mocks/
-        └── MockStorageProvider.swift
-```
+> **📦 ARC Labs Testing**
+> For testing requirements, coverage targets, and test organization, see [`packages.md`](../Projects/packages.md#-testing-requirements)
 
 ---
 

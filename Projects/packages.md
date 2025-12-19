@@ -2,6 +2,10 @@
 
 **Swift Packages at ARC Labs are public, reusable infrastructure components designed for professional quality and long-term maintainability.**
 
+> **🔧 Related Documentation**
+> - For SPM technical details (commands, troubleshooting, advanced features), see [`spm.md`](../Tools/spm.md)
+> - This document focuses on ARC Labs standards: philosophy, templates, and quality requirements
+
 ---
 
 ## 🎯 Package Philosophy
@@ -89,6 +93,9 @@
 ---
 
 ## 📝 Package.swift Configuration
+
+> **🔧 Advanced Features**
+> For resources, binary targets, conditional dependencies, and other advanced SPM features, see [`spm.md`](../Tools/spm.md#advanced-features)
 
 ### Standard Template
 
@@ -303,6 +310,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 🔢 Versioning Strategy
 
+> **🔧 Git Commands**
+> For tagging releases and publishing commands, see [`spm.md`](../Tools/spm.md#publishing-packages)
+
 ### Semantic Versioning
 
 Follow [SemVer](https://semver.org/) strictly:
@@ -346,6 +356,9 @@ Before 1.0.0, use `0.x.y`:
 ---
 
 ## 🧪 Testing Requirements
+
+> **🔧 Test Commands**
+> For `swift test`, coverage reports, and testing CLI commands, see [`spm.md`](../Tools/spm.md#building-and-testing)
 
 ### Coverage Target
 
