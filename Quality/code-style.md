@@ -192,9 +192,9 @@ swift package resolve
 
 # Brace style
 --allman false
---wraparguments before-first
---wrapparameters before-first
---wrapcollections before-first
+--wraparguments after-first
+--wrapparameters after-first
+--wrapcollections after-first
 --closingparen balanced
 
 # Imports
