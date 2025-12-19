@@ -2,587 +2,475 @@
 
 ## Overview
 
-**ARCDevTools** is ARC Labs' centralized quality automation package. It provides standardized tooling for code quality, project setup, and development workflows across all iOS projects and packages. By consolidating linting, formatting, and automation scripts, ARCDevTools ensures consistency and reduces configuration drift.
+**ARCDevTools** is ARC Labs Studio's centralized configuration repository that provides standardized tooling for all projects. It ensures consistent code quality, automated checks, and streamlined CI/CD across all packages and apps.
+
+**Repository**: `https://github.com/arclabs-studio/ARCDevTools`
+
+### What ARCDevTools Provides
+
+- **SwiftLint configuration** - Linting rules optimized for Swift 6 and ARC Labs standards
+- **SwiftFormat configuration** - Code formatting rules for consistency
+- **Git hooks** - Automated pre-commit and pre-push quality checks
+- **GitHub Actions workflows** - CI/CD templates for testing, docs, and releases
+- **Utility scripts** - Automation for common tasks
+- **Makefile generation** - Convenient commands for daily development
 
 ---
 
-## What is ARCDevTools?
+## 📋 Requirements
 
-ARCDevTools is a Swift package that bundles:
-- **SwiftLint** configuration and rules
-- **SwiftFormat** configuration and rules
-- **Pre-commit hooks** for automated quality checks
-- **Project setup scripts** for new projects
-- **CI/CD templates** for GitHub Actions
-- **Utility scripts** for common tasks
-
-**Repository**: `https://github.com/arclabs/ARCDevTools`
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| Swift | 6.0+ | Strict concurrency enabled |
+| Platforms | macOS 13.0+ / iOS 17.0+ | |
+| Xcode | 16.0+ | |
+| Git | 2.30+ | Submodule support required |
+| SwiftLint | Latest | `brew install swiftlint` |
+| SwiftFormat | Latest | `brew install swiftformat` |
 
 ---
 
-## Installation
+## 🚀 Installation
 
-### Adding to a Project
+### 1. Install Required Tools
 
-#### Swift Package Manager
-```swift
-// Package.swift
-dependencies: [
-    .package(url: "https://github.com/arclabs/ARCDevTools", from: "1.0.0")
-]
+```bash
+brew install swiftlint swiftformat
 ```
 
-#### Xcode Project
+### 2. Add ARCDevTools as Submodule
 
-1. File → Add Package Dependencies
-2. Enter: `https://github.com/arclabs/ARCDevTools`
-3. Select version: `1.0.0` or later
-4. Add to target: **None** (development-only tools)
+Navigate to your project root and add ARCDevTools:
 
-**Note**: ARCDevTools is not linked to app targets—it only provides development tools.
+```bash
+cd /path/to/your/project
+git submodule add https://github.com/arclabs-studio/ARCDevTools
+git submodule update --init --recursive
+```
+
+This creates an `ARCDevTools/` directory in your project with all configuration files and scripts.
+
+### 3. Run Setup Script
+
+```bash
+./ARCDevTools/arcdevtools-setup
+```
+
+**Setup options:**
+- `--with-workflows` - Include GitHub Actions workflows
+- `--no-workflows` - Skip workflows
+- No arguments - Interactive mode
+
+The setup script will:
+- Copy `.swiftlint.yml` to your project root
+- Copy `.swiftformat` to your project root
+- Install git hooks (pre-commit, pre-push)
+- Generate `Makefile` with useful commands
+- Optionally copy GitHub Actions workflows
+
+### 4. Commit the Integration
+
+```bash
+git add .gitmodules ARCDevTools/ .swiftlint.yml .swiftformat Makefile
+git commit -m "chore: integrate ARCDevTools for quality automation"
+git push
+```
 
 ---
 
-## Core Components
+## 📁 Project Structure
 
-### 1. SwiftLint Configuration
+```
+ARCDevTools/
+├── arcdevtools-setup            # Main setup script (Swift executable)
+├── configs/
+│   ├── swiftlint.yml           # SwiftLint configuration
+│   └── swiftformat             # SwiftFormat configuration
+├── hooks/
+│   ├── pre-commit              # Pre-commit hook
+│   ├── pre-push                # Pre-push hook
+│   └── install-hooks.sh        # Hook installer
+├── scripts/
+│   ├── lint.sh                 # Run SwiftLint
+│   ├── format.sh               # Run SwiftFormat
+│   ├── setup-github-labels.sh  # Configure GitHub labels
+│   └── setup-branch-protection.sh # Configure branch protection
+├── workflows/                   # GitHub Actions templates
+│   ├── quality.yml
+│   ├── tests.yml
+│   ├── docs.yml
+│   ├── enforce-gitflow.yml
+│   ├── sync-develop.yml
+│   ├── validate-release.yml
+│   └── release-drafter.yml
+├── templates/
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── release-drafter.yml
+│   └── markdown-link-check-config.json
+├── ARCKnowledge/               # Nested submodule (standards)
+├── README.md
+├── CHANGELOG.md
+└── LICENSE
+```
 
-ARCDevTools includes a comprehensive `.swiftlint.yml` that enforces ARC Labs' code style:
+---
+
+## 📖 Usage
+
+### Makefile Commands
+
+After setup, use the generated Makefile:
+
+```bash
+make help      # Show all available commands
+make lint      # Run SwiftLint
+make format    # Check formatting (dry-run)
+make fix       # Apply SwiftFormat
+make setup     # Re-run ARCDevTools setup
+make hooks     # Re-install git hooks only
+make clean     # Clean build artifacts
+```
+
+### Manual Access
+
+All resources are directly accessible in the `ARCDevTools/` directory:
+
+```bash
+# Configuration files
+ARCDevTools/configs/swiftlint.yml
+ARCDevTools/configs/swiftformat
+
+# Git hooks
+ARCDevTools/hooks/pre-commit
+ARCDevTools/hooks/pre-push
+
+# Utility scripts
+ARCDevTools/scripts/lint.sh
+ARCDevTools/scripts/format.sh
+
+# GitHub Actions templates
+ARCDevTools/workflows/*.yml
+```
+
+---
+
+## 🪝 Git Hooks
+
+ARCDevTools installs automatic quality checks via Git hooks.
+
+### Pre-commit Hook
+
+Runs automatically before each commit:
+
+1. Detects staged Swift files
+2. Runs SwiftFormat automatically (auto-fixes)
+3. Re-stages formatted files
+4. Runs SwiftLint in strict mode
+5. **Blocks commit if errors exist**
+
+### Pre-push Hook
+
+Runs automatically before each push:
+
+1. Executes `swift test --parallel`
+2. **Blocks push if tests fail**
+3. Bypass with `--no-verify` (not recommended)
+
+---
+
+## 🧹 SwiftLint Configuration
+
+**File**: `configs/swiftlint.yml`
+
+### Included Directories
+- `Sources`
+- `Tests`
+
+### Excluded Directories
+- `.build`, `DerivedData`, `Pods`, `Carthage`
+- `ARCDevTools`, `*/Generated/*`
+
+### Disabled Rules
+
+| Rule | Reason |
+|------|--------|
+| `trailing_whitespace` | SwiftFormat handles this |
+| `todo` | We allow TODOs in development |
+| `sorted_imports` | Conflicts with @testable imports |
+| `attributes` | SwiftFormat handles this |
+
+### Limits
+
+| Metric | Warning | Error |
+|--------|---------|-------|
+| Line length | 120 | 150 |
+| Type body length | 300 | 500 |
+| Function body length | 50 | 100 |
+| File length | 500 | 1000 |
+| Identifier name | min 2 | max 60 |
+| Type name | min 3 | max 50 |
+
+### Custom Rules (ARC Labs)
+
 ```yaml
-# Included in ARCDevTools/Resources/.swiftlint.yml
+# ViewModels must use @Observable
+observable_viewmodel:
+  regex: "final\\s+class\\s+\\w+ViewModel(?!.*@Observable)"
+  message: "ViewModels must use @Observable in Swift 6"
+  severity: warning
 
+# No empty line after guard
+no_empty_line_after_guard:
+  regex: 'guard\s+.+\{\s*\n\s*\n'
+  message: "Remove empty line after guard statement"
+  severity: warning
+
+# No force cast (as!)
+no_force_cast:
+  regex: 'as!'
+  message: "Avoid force casting. Use conditional cast (as?) instead"
+  severity: error
+
+# No force try (try!)
+no_force_try:
+  regex: 'try!'
+  message: "Avoid force try. Use proper error handling"
+  severity: error
+```
+
+### Opt-in Rules Enabled (40+)
+
+- `array_init`, `closure_spacing`, `empty_count`, `explicit_init`
+- `force_unwrapping`, `implicit_return`, `first_where`, `last_where`
+- `multiline_arguments`, `multiline_function_chains`, `multiline_parameters`
+- `operator_usage_whitespace`, `overridden_super_call`
+- `redundant_nil_coalescing`, `sorted_first_last`, `toggle_bool`
+- `vertical_whitespace_closing_braces`, `vertical_whitespace_opening_braces`
+- And more...
+
+### Analyzer Rules
+
+- `unused_import`
+- `unused_declaration`
+
+---
+
+## 🎨 SwiftFormat Configuration
+
+**File**: `configs/swiftformat`
+
+### Core Settings
+
+| Option | Value | Description |
+|--------|-------|-------------|
+| `--swiftversion` | 6.0 | Swift 6 support |
+| `--indent` | 4 | 4-space indentation |
+| `--maxwidth` | 120 | Maximum line width |
+| `--allman` | false | K&R brace style |
+| `--self` | remove | Omit self when not needed |
+| `--linebreaks` | lf | Unix line endings |
+
+### Wrapping
+
+| Option | Value |
+|--------|-------|
+| `--wraparguments` | before-first |
+| `--wrapparameters` | before-first |
+| `--wrapcollections` | before-first |
+
+### Imports
+
+| Option | Value |
+|--------|-------|
+| `--organizeimports` | alphabetized |
+| `--importgrouping` | testable-bottom |
+
+### Attributes (ARC Labs Style)
+
+| Option | Value | Example |
+|--------|-------|---------|
+| `--type-attributes` | prev-line | `@MainActor` on separate line |
+| `--func-attributes` | prev-line | `@discardableResult` on separate line |
+| `--stored-var-attributes` | same-line | `@Published var` on same line |
+| `--computed-var-attributes` | same-line | |
+| `--complex-attributes` | prev-line | Complex attributes on separate line |
+
+### Exclusions
+
+`.build`, `DerivedData`, `Pods`, `Carthage`, `Generated`
+
+---
+
+## 🔄 GitHub Actions Workflows
+
+ARCDevTools provides workflow templates in `ARCDevTools/workflows/`:
+
+| Workflow | Trigger | Description |
+|----------|---------|-------------|
+| `quality.yml` | push/PR | SwiftLint, SwiftFormat, Markdown link check |
+| `tests.yml` | push/PR | Tests on macOS 15 and Linux (Swift 6.0) |
+| `docs.yml` | push main | Generate and publish DocC documentation |
+| `enforce-gitflow.yml` | PR | Validate Git Flow rules and conventional commits |
+| `sync-develop.yml` | push main | Auto-sync main → develop |
+| `validate-release.yml` | tag v*.* | Validate and create releases from tags |
+| `release-drafter.yml` | push/PR main | Auto-draft release notes from PRs |
+
+### Git Flow Validations (enforce-gitflow.yml)
+
+- `feature/*` → can only target `develop`
+- `hotfix/*` → can only target `main`
+- Only `develop` or `hotfix/*` can target `main`
+- Validates conventional commit format (warning)
+
+### Installing Workflows
+
+Copy workflows to your project:
+
+```bash
+# During setup (interactive)
+./ARCDevTools/arcdevtools-setup
+
+# Or manually
+mkdir -p .github/workflows
+cp ARCDevTools/workflows/*.yml .github/workflows/
+```
+
+---
+
+## 🛠️ Utility Scripts
+
+### setup-github-labels.sh
+
+Configures 15 categorized labels in your GitHub repository:
+
+```bash
+./ARCDevTools/scripts/setup-github-labels.sh
+```
+
+**Requires**: `gh auth login` first
+
+**Categories**: features, bugs, docs, enhancement, breaking, etc.
+
+### setup-branch-protection.sh
+
+Configures branch protection rules:
+
+```bash
+./ARCDevTools/scripts/setup-branch-protection.sh
+```
+
+**Rules applied:**
+- `main`: 1 approval required, strict status checks, linear history
+- `develop`: Non-strict status checks
+- Disables force push and branch deletion
+
+---
+
+## 🔄 Updating ARCDevTools
+
+To get the latest configurations and scripts:
+
+```bash
+cd ARCDevTools
+git pull origin main
+cd ..
+./ARCDevTools/arcdevtools-setup  # Re-run setup to update configs
+git add ARCDevTools
+git commit -m "chore: update ARCDevTools to latest version"
+```
+
+---
+
+## ⚙️ Customization
+
+After setup, you can customize the copied configurations without affecting ARCDevTools:
+
+### Project-Specific SwiftLint Rules
+
+```yaml
+# .swiftlint.yml (your project root)
+
+# Inherit from base config
+parent_config: .swiftlint.yml
+
+# Project-specific overrides
 disabled_rules:
-  - trailing_whitespace  # Handled by SwiftFormat
-  - multiple_closures_with_trailing_closure  # Allow for clarity
-
-opt_in_rules:
-  - empty_count
-  - explicit_init
-  - first_where
-  - sorted_first_last
-  - contains_over_first_not_nil
-  - explicit_self
-  - explicit_type_interface
-  - file_header
-  - missing_docs
-
-included:
-  - Sources
-  - Tests
-
-excluded:
-  - .build
-  - .swiftpm
-  - DerivedData
-  - Packages
-
-line_length:
-  warning: 120
-  error: 150
-
-type_body_length:
-  warning: 300
-  error: 400
-
-file_length:
-  warning: 500
-  error: 800
-
-function_body_length:
-  warning: 40
-  error: 60
-
-identifier_name:
-  min_length:
-    warning: 3
-  excluded:
-    - id
-    - x
-    - y
-    - z
-
-type_name:
-  min_length: 3
-  max_length: 40
+  - line_length  # If needed for this project
 
 custom_rules:
-  no_empty_line_after_guard:
-    name: "No Empty Line After Guard"
-    regex: 'guard\s+.+\{\s*\n\s*\n'
-    message: "Remove empty line after guard statement"
+  my_project_rule:
+    name: "My Project Rule"
+    regex: "..."
+    message: "Custom message"
     severity: warning
 ```
 
-### 2. SwiftFormat Configuration
+### Disabling Rules Inline
 
-ARCDevTools provides a `.swiftformat` file with ARC Labs' formatting rules:
-```
-# Included in ARCDevTools/configs/swiftformat
+```swift
+// Disable for next line
+// swiftlint:disable:next force_cast
+let value = object as! MyType
 
-# Indentation
---indent 4
---tabwidth 4
---xcodeindentation enabled
+// Disable for section
+// swiftlint:disable line_length
+let veryLongString = "..."
+// swiftlint:enable line_length
 
-# Line width
---maxwidth 120
-
-# Brace style
---allman false
---wraparguments before-first
---wrapparameters before-first
---wrapcollections before-first
---closingparen balanced
-
-# Imports
---importgrouping testable-bottom
---stripunusedargs always
-
-# Spacing
---trimwhitespace always
---commas never
---semicolons inline
---linebreaks lf
-
-# Self
---self remove
-
-# Wrapping
---wrapternary before-operators
-
-# Attributes - Always on same line (ARC Labs style)
---type-attributes same-line
---func-attributes same-line
---stored-var-attributes same-line
---computed-var-attributes same-line
---complex-attributes same-line
-
-# Organization
---organizetypes actor,class,enum,struct
---structthreshold 0
---classthreshold 0
---enumthreshold 0
-
-# Swift 6 specific
---marktypes always
---extensionacl on-declarations
-
-# Exclude
---exclude .build,DerivedData,Pods,Carthage,Generated
+// Disable for file
+// swiftlint:disable:this file_length
 ```
 
-### 3. Pre-Commit Hooks
-
-ARCDevTools includes Git hooks for automated quality checks:
-```bash
-#!/bin/bash
-# ARCDevTools/Scripts/pre-commit
-
-echo "🔍 Running pre-commit checks..."
-
-# 1. SwiftLint
-echo "  → SwiftLint..."
-if which swiftlint >/dev/null; then
-    swiftlint lint --strict --quiet
-    if [ $? -ne 0 ]; then
-        echo "❌ SwiftLint failed"
-        exit 1
-    fi
-else
-    echo "⚠️  SwiftLint not installed"
-fi
-
-# 2. SwiftFormat
-echo "  → SwiftFormat..."
-if which swiftformat >/dev/null; then
-    swiftformat --lint . --quiet
-    if [ $? -ne 0 ]; then
-        echo "❌ SwiftFormat failed"
-        echo "💡 Run 'swiftformat .' to fix"
-        exit 1
-    fi
-else
-    echo "⚠️  SwiftFormat not installed"
-fi
-
-# 3. Build Check
-echo "  → Build Check..."
-swift build > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo "❌ Build failed"
-    exit 1
-fi
-
-echo "✅ Pre-commit checks passed"
-```
-
-### 4. Project Setup Scripts
-
-ARCDevTools provides scripts for setting up new projects:
-```bash
-#!/bin/bash
-# ARCDevTools/Scripts/setup-project.sh
-
-echo "🚀 Setting up ARC Labs project..."
-
-# 1. Install SwiftLint
-if ! which swiftlint >/dev/null; then
-    echo "📦 Installing SwiftLint..."
-    brew install swiftlint
-fi
-
-# 2. Install SwiftFormat
-if ! which swiftformat >/dev/null; then
-    echo "📦 Installing SwiftFormat..."
-    brew install swiftformat
-fi
-
-# 3. Copy configuration files
-echo "📋 Copying configuration files..."
-cp ARCDevTools/Resources/.swiftlint.yml .swiftlint.yml
-cp ARCDevTools/Resources/.swiftformat .swiftformat
-
-# 4. Install Git hooks
-echo "🪝 Installing Git hooks..."
-mkdir -p .git/hooks
-cp ARCDevTools/Scripts/pre-commit .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
-
-# 5. Create directory structure
-echo "📁 Creating directory structure..."
-mkdir -p Sources/Presentation/Features
-mkdir -p Sources/Domain/Entities
-mkdir -p Sources/Domain/UseCases
-mkdir -p Sources/Data/Repositories
-mkdir -p Tests
-
-echo "✅ Project setup complete!"
-echo ""
-echo "Next steps:"
-echo "  1. Review .swiftlint.yml and .swiftformat"
-echo "  2. Run 'swiftformat .' to format existing code"
-echo "  3. Run 'swiftlint autocorrect' to fix violations"
-echo "  4. Commit changes"
-```
+**Note**: Customizations are preserved when updating ARCDevTools.
 
 ---
 
-## Usage
+## 🍎 Xcode Integration
 
-### Running Quality Checks
+### Build Phase (Optional)
 
-#### SwiftLint
-```bash
-# Lint entire project
-swiftlint lint
-
-# Lint with strict mode (warnings as errors)
-swiftlint lint --strict
-
-# Auto-correct violations
-swiftlint autocorrect
-
-# Lint specific files
-swiftlint lint --path Sources/MyFile.swift
-
-# Generate HTML report
-swiftlint lint --reporter html > swiftlint-report.html
-```
-
-#### SwiftFormat
-```bash
-# Format entire project
-swiftformat .
-
-# Check formatting without changes
-swiftformat --lint .
-
-# Format specific files
-swiftformat Sources/MyFile.swift
-
-# Dry run (preview changes)
-swiftformat --dryrun .
-
-# Format with verbose output
-swiftformat --verbose .
-```
-
-### Setting Up a New Project
-```bash
-# 1. Add ARCDevTools package
-# (via SPM or Xcode)
-
-# 2. Run setup script
-swift run arcdevtools-setup
-
-# Or manually:
-# 3. Copy configurations
-cp .build/checkouts/ARCDevTools/Resources/.swiftlint.yml .
-cp .build/checkouts/ARCDevTools/Resources/.swiftformat .
-
-# 4. Install hooks
-cp .build/checkouts/ARCDevTools/Scripts/pre-commit .git/hooks/
-chmod +x .git/hooks/pre-commit
-
-# 5. Initial format
-swiftformat .
-swiftlint autocorrect
-
-# 6. Commit
-git add .
-git commit -m "chore: setup ARCDevTools"
-```
-
-### Setting Up an Existing Project
-```bash
-# 1. Add ARCDevTools package
-
-# 2. Copy configurations
-cp .build/checkouts/ARCDevTools/Resources/.swiftlint.yml .
-cp .build/checkouts/ARCDevTools/Resources/.swiftformat .
-
-# 3. Format existing code
-swiftformat .
-
-# 4. Review and fix SwiftLint violations
-swiftlint lint
-swiftlint autocorrect
-
-# 5. Install hooks
-cp .build/checkouts/ARCDevTools/Scripts/pre-commit .git/hooks/
-chmod +x .git/hooks/pre-commit
-
-# 6. Commit changes
-git add .
-git commit -m "chore: integrate ARCDevTools"
-```
-
----
-
-## Xcode Integration
-
-### Build Phases
-
-Add quality checks to Xcode build process:
-
-#### SwiftLint Build Phase
+Add SwiftLint as a build phase for real-time feedback:
 
 1. Target → Build Phases → + → New Run Script Phase
 2. Name: "SwiftLint"
 3. Script:
+
 ```bash
 if which swiftlint >/dev/null; then
     swiftlint lint --strict
 else
-    echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+    echo "warning: SwiftLint not installed"
 fi
 ```
 
 4. Move before "Compile Sources"
 
-#### SwiftFormat Build Phase (Optional)
+### PATH Configuration
 
-1. Target → Build Phases → + → New Run Script Phase
-2. Name: "SwiftFormat"
-3. Script:
+If Xcode can't find tools:
+
 ```bash
-if which swiftformat >/dev/null; then
-    swiftformat --lint .
-else
-    echo "warning: SwiftFormat not installed"
-fi
+# Add to Build Phase script
+export PATH="$PATH:/opt/homebrew/bin"
 ```
 
-4. **Warning**: This only checks formatting. Run `swiftformat .` manually to format.
+---
 
-### Xcode Scheme
+## 🔍 Troubleshooting
 
-Add pre-actions to run quality checks:
+### SwiftLint/SwiftFormat Not Found
 
-1. Product → Scheme → Edit Scheme
-2. Build → Pre-actions → + → New Run Script Action
-3. Provide build settings from: [Your Target]
-4. Script:
 ```bash
-# Run SwiftLint and SwiftFormat
-swiftlint lint --strict --quiet
-swiftformat --lint . --quiet
-```
-
----
-
-## CI/CD Integration
-
-### GitHub Actions
-
-ARCDevTools includes workflow templates:
-```yaml
-# .github/workflows/quality.yml
-name: Code Quality
-
-on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
-
-jobs:
-  quality:
-    runs-on: macos-latest
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Swift
-        uses: swift-actions/setup-swift@v1
-        with:
-          swift-version: '6.0'
-      
-      - name: Install SwiftLint
-        run: brew install swiftlint
-      
-      - name: Install SwiftFormat
-        run: brew install swiftformat
-      
-      - name: SwiftLint
-        run: swiftlint lint --strict
-      
-      - name: SwiftFormat Check
-        run: swiftformat --lint .
-      
-      - name: Build
-        run: swift build -v
-      
-      - name: Test
-        run: swift test -v
-```
-
-### Fastlane Integration
-```ruby
-# Fastfile
-lane :quality do
-  # Run SwiftLint
-  swiftlint(
-    mode: :lint,
-    strict: true,
-    quiet: true
-  )
-  
-  # Check SwiftFormat
-  sh("swiftformat --lint .")
-  
-  # Build
-  sh("swift build")
-end
-
-lane :format do
-  # Format code
-  sh("swiftformat .")
-  
-  # Auto-correct SwiftLint
-  swiftlint(
-    mode: :autocorrect
-  )
-end
-```
-
----
-
-## Customization
-
-### Project-Specific Rules
-
-Override ARCDevTools defaults when needed:
-```yaml
-# .swiftlint.yml (project root)
-
-# Import base configuration
-parent_config: .build/checkouts/ARCDevTools/Resources/.swiftlint.yml
-
-# Project-specific overrides
-line_length:
-  warning: 140  # Longer lines for this project
-
-disabled_rules:
-  - explicit_self  # Don't require explicit self
-
-custom_rules:
-  project_specific_rule:
-    name: "Custom Rule"
-    regex: 'pattern'
-    message: "Custom message"
-```
-
-### Disabling Rules Locally
-
-When necessary, disable rules inline:
-```swift
-// swiftlint:disable line_length
-let veryLongString = "This is an exceptionally long string that exceeds the line length limit but is necessary for this specific case"
-// swiftlint:enable line_length
-
-// Disable for entire file
-// swiftlint:disable:this file_length
-
-// Disable specific rule for next line
-// swiftlint:disable:next force_cast
-let value = object as! MyType
-```
-
-**Use Sparingly**: Inline disables should be rare and well-justified.
-
----
-
-## Best Practices
-
-### Do ✅
-
-- Run `swiftformat .` before committing
-- Fix SwiftLint violations immediately
-- Use pre-commit hooks
-- Keep configurations up to date
-- Document any rule overrides
-- Run quality checks in CI/CD
-- Review quality reports regularly
-
-### Don't ❌
-
-- Commit code with violations
-- Disable rules without justification
-- Ignore quality check failures
-- Skip pre-commit hooks
-- Modify ARCDevTools directly (fork if needed)
-- Use inline disables excessively
-- Ignore SwiftFormat suggestions
-
----
-
-## Troubleshooting
-
-### SwiftLint Not Found
-```bash
-# Install via Homebrew
-brew install swiftlint
-
-# Or via Mint
-mint install realm/SwiftLint
-
 # Verify installation
 which swiftlint
-swiftlint version
-```
-
-### SwiftFormat Not Found
-```bash
-# Install via Homebrew
-brew install swiftformat
-
-# Verify installation
 which swiftformat
-swiftformat --version
+
+# Reinstall if needed
+brew reinstall swiftlint swiftformat
 ```
 
-### Pre-Commit Hook Not Running
+### Pre-commit Hook Not Running
+
 ```bash
 # Make hook executable
 chmod +x .git/hooks/pre-commit
@@ -590,176 +478,64 @@ chmod +x .git/hooks/pre-commit
 # Test manually
 .git/hooks/pre-commit
 
-# Check Git config
-git config --get core.hooksPath
+# Reinstall hooks
+./ARCDevTools/hooks/install-hooks.sh
 ```
 
-### Configuration Not Found
-```bash
-# Copy from ARCDevTools
-cp .build/checkouts/ARCDevTools/Resources/.swiftlint.yml .
-cp .build/checkouts/ARCDevTools/Resources/.swiftformat .
+### Submodule Not Initialized
 
-# Or download directly
-curl -o .swiftlint.yml https://raw.githubusercontent.com/arclabs/ARCDevTools/main/Resources/.swiftlint.yml
-curl -o .swiftformat https://raw.githubusercontent.com/arclabs/ARCDevTools/main/Resources/.swiftformat
+```bash
+# Initialize submodules
+git submodule update --init --recursive
+
+# If ARCDevTools directory is empty
+git submodule sync
+git submodule update --init --force
 ```
 
-### Build Phase Errors
+### Configuration Not Applied
+
 ```bash
-# Xcode can't find tools
-# Add to Build Phase script:
+# Re-run setup
+./ARCDevTools/arcdevtools-setup
 
-export PATH="$PATH:/opt/homebrew/bin"
-
-if which swiftlint >/dev/null; then
-    swiftlint lint --strict
-fi
+# Verify configs exist
+ls -la .swiftlint.yml .swiftformat
 ```
 
 ---
 
-## Migration Guide
+## ✅ Best Practices
 
-### From No Tooling
-```bash
-# 1. Add ARCDevTools package
-# 2. Setup project
-swift run arcdevtools-setup
+### Do
 
-# 3. Format existing code
-swiftformat .
+- Run `make lint` before committing
+- Fix SwiftLint violations immediately
+- Use pre-commit hooks (don't skip)
+- Keep ARCDevTools updated
+- Document any rule overrides with comments
 
-# 4. Fix violations
-swiftlint autocorrect
+### Don't
 
-# 5. Review remaining violations
-swiftlint lint
-
-# 6. Fix manually or disable with justification
-
-# 7. Commit
-git add .
-git commit -m "chore: integrate ARCDevTools"
-```
-
-### From Custom Configuration
-```bash
-# 1. Backup existing configs
-cp .swiftlint.yml .swiftlint.yml.backup
-cp .swiftformat .swiftformat.backup
-
-# 2. Add ARCDevTools package
-
-# 3. Copy new configs
-cp .build/checkouts/ARCDevTools/Resources/.swiftlint.yml .
-cp .build/checkouts/ARCDevTools/Resources/.swiftformat .
-
-# 4. Migrate custom rules
-# Add project-specific overrides to .swiftlint.yml
-
-# 5. Test
-swiftformat .
-swiftlint lint
-
-# 6. Adjust as needed
-
-# 7. Commit
-git add .
-git commit -m "chore: migrate to ARCDevTools"
-```
+- Commit code with lint errors
+- Use `--no-verify` to bypass hooks
+- Modify files inside `ARCDevTools/` directly
+- Disable rules without justification
+- Ignore SwiftFormat suggestions
 
 ---
 
-## Advanced Usage
-
-### Custom Scripts
-
-Create project-specific scripts using ARCDevTools:
-```bash
-#!/bin/bash
-# scripts/quality-check.sh
-
-echo "🔍 Running comprehensive quality checks..."
-
-# 1. SwiftLint
-swiftlint lint --strict
-
-# 2. SwiftFormat
-swiftformat --lint .
-
-# 3. Build
-swift build
-
-# 4. Tests
-swift test
-
-# 5. Coverage
-swift test --enable-code-coverage
-
-echo "✅ All checks passed!"
-```
-
-### Pre-Push Hook
-
-Prevent pushing broken code:
-```bash
-#!/bin/bash
-# .git/hooks/pre-push
-
-echo "🚀 Running pre-push checks..."
-
-# Run full quality suite
-./scripts/quality-check.sh
-
-if [ $? -ne 0 ]; then
-    echo "❌ Pre-push checks failed"
-    echo "Fix issues before pushing"
-    exit 1
-fi
-
-echo "✅ Ready to push"
-```
-
----
-
-## Package Structure
-```
-ARCDevTools/
-├── Package.swift
-├── README.md
-├── Sources/
-│   └── ARCDevTools/
-│       └── ARCDevTools.swift
-├── Resources/
-│   ├── .swiftlint.yml
-│   ├── .swiftformat
-│   └── .gitignore
-├── Scripts/
-│   ├── pre-commit
-│   ├── pre-push
-│   ├── setup-project.sh
-│   └── quality-check.sh
-└── Templates/
-    ├── GitHub/
-    │   └── workflows/
-    │       ├── quality.yml
-    │       └── tests.yml
-    └── Fastlane/
-        └── Fastfile
-```
-
----
-
-## Resources
+## 📚 Resources
 
 - [SwiftLint Documentation](https://realm.github.io/SwiftLint/)
 - [SwiftFormat Documentation](https://github.com/nicklockwood/SwiftFormat)
-- [Git Hooks Documentation](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks)
-- [Swift Package Manager](https://swift.org/package-manager/)
+- [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
+- [ARCDevTools Repository](https://github.com/arclabs-studio/ARCDevTools)
 
 ---
 
 ## Summary
 
-ARCDevTools is the cornerstone of code quality at ARC Labs. By centralizing linting, formatting, and automation scripts, it ensures consistency across all projects while reducing configuration overhead. Every project should integrate ARCDevTools from day one, enabling automated quality checks that maintain our high standards without manual intervention. Quality is not optional—it's automated.
+ARCDevTools is the cornerstone of code quality at ARC Labs Studio. By centralizing linting, formatting, and automation as a Git submodule, it ensures consistency across all projects while allowing easy updates and customization. Every project should integrate ARCDevTools from day one, enabling automated quality checks that maintain our high standards without manual intervention.
+
+**Quality is not optional—it's automated.**
