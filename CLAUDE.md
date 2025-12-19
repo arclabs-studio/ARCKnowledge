@@ -35,36 +35,37 @@ You must help design, implement and maintain **high-quality Apple platform apps*
 This document serves as the **entry point** to ARC Labs Studio's development guidelines. For detailed information, reference the specialized documents:
 
 ### Architecture
-- [`clean-architecture.md`](Documentation/Architecture/clean-architecture.md) - Layers, dependencies rule, data flow
-- [`mvvm-c.md`](Documentation/Architecture/mvvm-c.md) - MVVM+Coordinator pattern with Router
-- [`solid-principles.md`](Documentation/Architecture/solid-principles.md) - SOLID applied to Swift
-- [`protocol-oriented.md`](Documentation/Architecture/protocol-oriented.md) - When and how to use protocols
+- [`clean-architecture.md`](Architecture/clean-architecture.md) - Layers, dependencies rule, data flow
+- [`mvvm-c.md`](Architecture/mvvm-c.md) - MVVM+Coordinator pattern with Router
+- [`solid-principles.md`](Architecture/solid-principles.md) - SOLID applied to Swift
+- [`protocol-oriented.md`](Architecture/protocol-oriented.md) - When and how to use protocols
 
 ### Project Types
-- [`packages.md`](Documentation/Projects/packages.md) - Swift Package guidelines (public, documented, versioned)
-- [`apps.md`](Documentation/Projects/apps.md) - iOS App guidelines (private, feature-focused)
+- [`packages.md`](Projects/packages.md) - Swift Package guidelines (public, documented, versioned)
+- [`apps.md`](Projects/apps.md) - iOS App guidelines (private, feature-focused)
 
 ### Implementation Layers
-- [`presentation.md`](Documentation/Layers/presentation.md) - Views, ViewModels, Routers/Coordinators
-- [`domain.md`](Documentation/Layers/domain.md) - Entities, Use Cases, Business Logic
-- [`data.md`](Documentation/Layers/data.md) - Repositories, Data Sources, Persistence
+- [`presentation.md`](Layers/presentation.md) - Views, ViewModels, Routers/Coordinators
+- [`domain.md`](Layers/domain.md) - Entities, Use Cases, Business Logic
+- [`data.md`](Layers/data.md) - Repositories, Data Sources, Persistence
 
 ### Quality Assurance
-- [`code-review.md`](Documentation/Quality/code-review.md) - Code review checklist and AI-generated code standards
-- [`testing.md`](Documentation/Quality/testing.md) - Swift Testing framework, coverage requirements, strategies
-- [`code-style.md`](Documentation/Quality/code-style.md) - SwiftLint, SwiftFormat, naming conventions
-- [`documentation.md`](Documentation/Quality/documentation.md) - DocC, README standards, inline comments
-- [`readme-standards.md`](Documentation/Quality/readme-standards.md) - Standardized README template with visual format
+- [`code-review.md`](Quality/code-review.md) - Code review checklist and AI-generated code standards
+- [`testing.md`](Quality/testing.md) - Swift Testing framework, coverage requirements, strategies
+- [`code-style.md`](Quality/code-style.md) - SwiftLint, SwiftFormat, naming conventions
+- [`documentation.md`](Quality/documentation.md) - DocC, README standards, inline comments
+- [`readme-standards.md`](Quality/readme-standards.md) - Standardized README template with visual format
+- [`package-structure.md`](Quality/package-structure.md) - Package folder organization by size
 
 ### Workflow
-- [`plan-mode.md`](Documentation/Workflow/plan-mode.md) - When and how to enter Plan Mode
-- [`git-commits.md`](Documentation/Workflow/git-commits.md) - Conventional Commits specification
-- [`git-branches.md`](Documentation/Workflow/git-branches.md) - Branch naming and Git flow
+- [`plan-mode.md`](Workflow/plan-mode.md) - When and how to enter Plan Mode
+- [`git-commits.md`](Workflow/git-commits.md) - Conventional Commits specification
+- [`git-branches.md`](Workflow/git-branches.md) - Branch naming and Git flow
 
 ### Tools & Integration
-- [`arcdevtools.md`](Documentation/Tools/arcdevtools.md) - ARCDevTools package integration
-- [`xcode.md`](Documentation/Tools/xcode.md) - Project configuration, schemes, build settings
-- [`spm.md`](Documentation/Tools/spm.md) - Swift Package Manager best practices
+- [`arcdevtools.md`](Tools/arcdevtools.md) - ARCDevTools package integration
+- [`xcode.md`](Tools/xcode.md) - Project configuration, schemes, build settings
+- [`spm.md`](Tools/spm.md) - Swift Package Manager best practices
 
 ---
 

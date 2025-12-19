@@ -2,6 +2,10 @@
 
 **Swift Packages at ARC Labs are public, reusable infrastructure components designed for professional quality and long-term maintainability.**
 
+> **🔧 Related Documentation**
+> - For SPM technical details (commands, troubleshooting, advanced features), see [`spm.md`](../Tools/spm.md)
+> - This document focuses on ARC Labs standards: philosophy, templates, and quality requirements
+
 ---
 
 ## 🎯 Package Philosophy
@@ -21,6 +25,203 @@
 - **Reliable** - Production-ready, battle-tested
 - **Maintainable** - Clear code, comprehensive docs
 - **Professional** - Enterprise-level quality
+
+---
+
+## 📁 Standard Package Structure
+
+All ARC Labs packages **MUST** follow a consistent folder structure. The organization depends on package size:
+
+| Size | Files | Organization |
+|------|-------|--------------|
+| Small | < 10 | Flat structure (no subfolders) |
+| Medium | 10-30 | By component type (`Protocols/`, `Implementations/`, `Models/`) |
+| Large | > 30 | By type + by functionality |
+
+### Quick Reference
+
+```
+ARCPackageName/
+├── Package.swift              # Manifest (required)
+├── README.md                  # Documentation (required)
+├── LICENSE                    # MIT license
+├── CHANGELOG.md               # Version history
+├── Sources/
+│   └── ARCPackageName/
+│       ├── Protocols/         # Abstractions
+│       ├── Implementations/   # Concrete types
+│       ├── Models/            # Data types
+│       └── Resources/         # Assets (if needed)
+├── Tests/
+│   └── ARCPackageNameTests/
+│       ├── Unit/
+│       ├── Integration/
+│       └── Helpers/Mocks/
+├── Examples/                  # Demo app (optional, see below)
+│   └── ARCPackageNameDemo/
+└── Documentation.docc/
+```
+
+> **📁 Detailed Structure Guide**
+> For complete structure guidelines by package size, folder naming conventions, and industry references, see [`package-structure.md`](../Quality/package-structure.md)
+
+---
+
+## 🎬 Example Demo App
+
+Every package **SHOULD** include a demo app that showcases its features. This helps developers understand usage patterns and serves as a living documentation.
+
+### Purpose
+- **Developer-only**: Demo apps are for internal testing and showcase
+- **Not for production**: Never imported by consuming apps or packages
+- **Living documentation**: Shows real usage patterns and edge cases
+- **Quick validation**: Test changes visually before committing
+
+### Demo App Structure
+
+```
+Examples/
+├── README.md                     # How to run the demo
+└── ARCPackageNameDemo/
+    ├── ARCPackageNameDemoApp.swift
+    ├── Views/
+    │   ├── DemoHomeView.swift    # Main navigation
+    │   ├── Feature1DemoView.swift
+    │   └── Feature2DemoView.swift
+    └── Helpers/
+        └── SampleData.swift      # Mock data for demos
+```
+
+### Demo App Implementation
+
+```swift
+// Examples/ARCPackageNameDemo/ARCPackageNameDemoApp.swift
+import SwiftUI
+import ARCPackageName
+
+@main
+struct ARCPackageNameDemoApp: App {
+    var body: some Scene {
+        WindowGroup {
+            DemoHomeView()
+        }
+    }
+}
+```
+
+```swift
+// Examples/ARCPackageNameDemo/Views/DemoHomeView.swift
+import SwiftUI
+import ARCPackageName
+
+struct DemoHomeView: View {
+    var body: some View {
+        NavigationStack {
+            List {
+                Section("Components") {
+                    NavigationLink("Feature 1 Demo") {
+                        Feature1DemoView()
+                    }
+                    NavigationLink("Feature 2 Demo") {
+                        Feature2DemoView()
+                    }
+                }
+
+                Section("States") {
+                    NavigationLink("Loading States") {
+                        LoadingStatesDemoView()
+                    }
+                    NavigationLink("Error Handling") {
+                        ErrorHandlingDemoView()
+                    }
+                }
+            }
+            .navigationTitle("ARCPackageName Demo")
+        }
+    }
+}
+
+#Preview {
+    DemoHomeView()
+}
+```
+
+### Package.swift Configuration (Demo Isolation)
+
+**Critical**: The demo app must be configured as a separate executable target that is NOT included in the library product. This ensures consumers never accidentally import demo code.
+
+```swift
+// Key configuration points:
+targets: [
+    // Main library - exported via products
+    .target(
+        name: "ARCPackageName",
+        path: "Sources/ARCPackageName"
+    ),
+
+    // Demo app - NOT in products array, never exported
+    .executableTarget(
+        name: "ARCPackageNameDemo",
+        dependencies: ["ARCPackageName"],
+        path: "Examples/ARCPackageNameDemo"
+    )
+]
+```
+
+> **📝 Complete Template**
+> See [Package.swift Configuration](#-packageswift-configuration) for the full template with all required settings.
+
+### Running the Demo
+
+```bash
+# From package root directory
+# Option 1: Run in Xcode
+open Package.swift
+# Select "ARCPackageNameDemo" scheme → Run on iOS Simulator
+
+# Option 2: Build from command line
+swift build --target ARCPackageNameDemo
+```
+
+### Demo README Template
+
+Each demo should include a README:
+
+```markdown
+# ARCPackageName Demo
+
+Standalone demo app showcasing ARCPackageName features.
+
+## Running the Demo
+
+1. Open `Package.swift` in Xcode
+2. Select the `ARCPackageNameDemo` scheme
+3. Choose an iOS Simulator
+4. Run (⌘R)
+
+## Features Demonstrated
+
+- **Feature 1**: Description of what's shown
+- **Feature 2**: Description of what's shown
+- **Error States**: How errors are displayed
+- **Loading States**: Loading indicators and skeletons
+
+## Screenshots
+
+[Add screenshots here]
+```
+
+### When to Skip Demo App
+
+Demo apps are **optional** for:
+- Pure utility packages (e.g., ARCLogger, ARCDevTools)
+- Packages with no visual components
+- Very small, single-purpose packages
+
+Demo apps are **required** for:
+- UI component packages (ARCUIComponents, ARCDesignSystem)
+- Feature packages with visual output
+- Packages with complex APIs that benefit from examples
 
 ---
 
@@ -90,7 +291,12 @@
 
 ## 📝 Package.swift Configuration
 
-### Standard Template
+> **🔧 Advanced Features**
+> For resources, binary targets, conditional dependencies, and other advanced SPM features, see [`spm.md`](../Tools/spm.md#advanced-features)
+
+### Complete Template
+
+This template includes the main library, tests, and demo app (isolated from production exports):
 
 ```swift
 // swift-tools-version: 6.0
@@ -98,47 +304,80 @@ import PackageDescription
 
 let package = Package(
     name: "ARCPackageName",
+
+    // MARK: - Platforms
+
     platforms: [
         .iOS(.v17),
         .macOS(.v14),
         .watchOS(.v10),
         .tvOS(.v17)
     ],
+
+    // MARK: - Products
+    // Only export the main library - Demo is NOT included
+
     products: [
         .library(
             name: "ARCPackageName",
             targets: ["ARCPackageName"]
         )
+        // Note: Demo app is intentionally NOT a product
     ],
+
+    // MARK: - Dependencies
+
     dependencies: [
         // Prefer zero dependencies
         // If needed, only use other ARC packages or Apple frameworks
         .package(url: "https://github.com/arclabs-studio/ARCLogger", from: "1.0.0")
     ],
+
+    // MARK: - Targets
+
     targets: [
+        // Main library
         .target(
             name: "ARCPackageName",
             dependencies: [
                 .product(name: "ARCLogger", package: "ARCLogger")
             ],
+            path: "Sources/ARCPackageName",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency")
             ]
         ),
+
+        // Tests
         .testTarget(
             name: "ARCPackageNameTests",
-            dependencies: ["ARCPackageName"]
+            dependencies: ["ARCPackageName"],
+            path: "Tests/ARCPackageNameTests"
+        ),
+
+        // Demo app (developer-only, not exported)
+        .executableTarget(
+            name: "ARCPackageNameDemo",
+            dependencies: ["ARCPackageName"],
+            path: "Examples/ARCPackageNameDemo"
         )
-    ]
+    ],
+
+    // MARK: - Swift Language
+
+    swiftLanguageModes: [.v6]
 )
 ```
 
 ### Key Requirements
 
-- **Swift 6.0+** - Modern Swift features
-- **iOS 17+** - Latest platform features
-- **Strict Concurrency** - Thread-safe by default
-- **Minimal Dependencies** - Reduce coupling
+| Requirement | Value | Rationale |
+|-------------|-------|-----------|
+| Swift Tools | 6.0+ | Modern Swift features, strict concurrency |
+| iOS Target | 17+ | Latest platform APIs, SwiftData support |
+| Concurrency | Strict | Thread-safe by default |
+| Dependencies | Minimal | Reduce coupling, prefer ARC packages |
+| Demo Export | Never | Demo is `.executableTarget`, not in products |
 
 ---
 
@@ -303,6 +542,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 🔢 Versioning Strategy
 
+> **🔧 Git Commands**
+> For tagging releases and publishing commands, see [`spm.md`](../Tools/spm.md#publishing-packages)
+
 ### Semantic Versioning
 
 Follow [SemVer](https://semver.org/) strictly:
@@ -346,6 +588,9 @@ Before 1.0.0, use `0.x.y`:
 ---
 
 ## 🧪 Testing Requirements
+
+> **🔧 Test Commands**
+> For `swift test`, coverage reports, and testing CLI commands, see [`spm.md`](../Tools/spm.md#building-and-testing)
 
 ### Coverage Target
 
@@ -588,6 +833,13 @@ jobs:
 
 Before releasing a package, verify:
 
+### Structure
+- [ ] Standard folder structure followed (Public/, Internal/, Models/, etc.)
+- [ ] Sources organized by responsibility
+- [ ] Tests organized in Unit/, Integration/, Mocks/
+- [ ] Demo app in Examples/ (if applicable)
+- [ ] Demo app NOT listed in products (isolated from exports)
+
 ### Code Quality
 - [ ] 80%+ test coverage (target 100%)
 - [ ] All tests pass
@@ -595,13 +847,16 @@ Before releasing a package, verify:
 - [ ] SwiftFormat applied
 - [ ] No force unwrapping
 - [ ] Sendable conformance where needed
+- [ ] `@MainActor` on ViewModels and Views
+- [ ] Accessibility labels on UI components
 
 ### Documentation
 - [ ] README.md complete
 - [ ] CHANGELOG.md updated
 - [ ] All public APIs have DocC comments
 - [ ] DocC builds without warnings
-- [ ] Examples provided
+- [ ] Demo app with README (if applicable)
+- [ ] SwiftUI Previews on all visual components
 
 ### Architecture
 - [ ] Clean Architecture followed
@@ -609,6 +864,7 @@ Before releasing a package, verify:
 - [ ] Protocol-oriented design
 - [ ] Zero business logic
 - [ ] Minimal dependencies
+- [ ] `@Observable` (not `@Published`)
 
 ### Versioning
 - [ ] Version number updated (SemVer)
@@ -621,6 +877,7 @@ Before releasing a package, verify:
 - [ ] CI/CD configured
 - [ ] Pre-commit hooks working
 - [ ] Builds on all platforms (iOS, macOS, watchOS, tvOS)
+- [ ] Demo app runs on iOS Simulator
 
 ---
 
