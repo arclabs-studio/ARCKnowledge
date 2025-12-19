@@ -57,171 +57,14 @@ ARCPackageName/
 │       ├── Unit/
 │       ├── Integration/
 │       └── Helpers/Mocks/
-├── Examples/                  # Demo app (optional, see below)
-│   └── ARCPackageNameDemo/
+├── Example/                   # Demo app (standalone Xcode project, optional)
+│   └── ExampleApp/
+│       └── ExampleApp.xcodeproj
 └── Documentation.docc/
 ```
 
 > **📁 Detailed Structure Guide**
 > For complete structure guidelines by package size, folder naming conventions, and industry references, see [`package-structure.md`](../Quality/package-structure.md)
-
----
-
-## 🎬 Example Demo App
-
-Every package **SHOULD** include a demo app that showcases its features. This helps developers understand usage patterns and serves as a living documentation.
-
-### Purpose
-- **Developer-only**: Demo apps are for internal testing and showcase
-- **Not for production**: Never imported by consuming apps or packages
-- **Living documentation**: Shows real usage patterns and edge cases
-- **Quick validation**: Test changes visually before committing
-
-### Demo App Structure
-
-```
-Examples/
-├── README.md                     # How to run the demo
-└── ARCPackageNameDemo/
-    ├── ARCPackageNameDemoApp.swift
-    ├── Views/
-    │   ├── DemoHomeView.swift    # Main navigation
-    │   ├── Feature1DemoView.swift
-    │   └── Feature2DemoView.swift
-    └── Helpers/
-        └── SampleData.swift      # Mock data for demos
-```
-
-### Demo App Implementation
-
-```swift
-// Examples/ARCPackageNameDemo/ARCPackageNameDemoApp.swift
-import SwiftUI
-import ARCPackageName
-
-@main
-struct ARCPackageNameDemoApp: App {
-    var body: some Scene {
-        WindowGroup {
-            DemoHomeView()
-        }
-    }
-}
-```
-
-```swift
-// Examples/ARCPackageNameDemo/Views/DemoHomeView.swift
-import SwiftUI
-import ARCPackageName
-
-struct DemoHomeView: View {
-    var body: some View {
-        NavigationStack {
-            List {
-                Section("Components") {
-                    NavigationLink("Feature 1 Demo") {
-                        Feature1DemoView()
-                    }
-                    NavigationLink("Feature 2 Demo") {
-                        Feature2DemoView()
-                    }
-                }
-
-                Section("States") {
-                    NavigationLink("Loading States") {
-                        LoadingStatesDemoView()
-                    }
-                    NavigationLink("Error Handling") {
-                        ErrorHandlingDemoView()
-                    }
-                }
-            }
-            .navigationTitle("ARCPackageName Demo")
-        }
-    }
-}
-
-#Preview {
-    DemoHomeView()
-}
-```
-
-### Package.swift Configuration (Demo Isolation)
-
-**Critical**: The demo app must be configured as a separate executable target that is NOT included in the library product. This ensures consumers never accidentally import demo code.
-
-```swift
-// Key configuration points:
-targets: [
-    // Main library - exported via products
-    .target(
-        name: "ARCPackageName",
-        path: "Sources/ARCPackageName"
-    ),
-
-    // Demo app - NOT in products array, never exported
-    .executableTarget(
-        name: "ARCPackageNameDemo",
-        dependencies: ["ARCPackageName"],
-        path: "Examples/ARCPackageNameDemo"
-    )
-]
-```
-
-> **📝 Complete Template**
-> See [Package.swift Configuration](#-packageswift-configuration) for the full template with all required settings.
-
-### Running the Demo
-
-```bash
-# From package root directory
-# Option 1: Run in Xcode
-open Package.swift
-# Select "ARCPackageNameDemo" scheme → Run on iOS Simulator
-
-# Option 2: Build from command line
-swift build --target ARCPackageNameDemo
-```
-
-### Demo README Template
-
-Each demo should include a README:
-
-```markdown
-# ARCPackageName Demo
-
-Standalone demo app showcasing ARCPackageName features.
-
-## Running the Demo
-
-1. Open `Package.swift` in Xcode
-2. Select the `ARCPackageNameDemo` scheme
-3. Choose an iOS Simulator
-4. Run (⌘R)
-
-## Features Demonstrated
-
-- **Feature 1**: Description of what's shown
-- **Feature 2**: Description of what's shown
-- **Error States**: How errors are displayed
-- **Loading States**: Loading indicators and skeletons
-
-## Screenshots
-
-[Add screenshots here]
-```
-
-### When to Skip Demo App
-
-Demo apps are **optional** for:
-- Pure utility packages (e.g., ARCLogger, ARCDevTools)
-- Packages with no visual components
-- Very small, single-purpose packages
-
-Demo apps are **required** for:
-- UI component packages (ARCUIComponents, ARCDesignSystem)
-- Feature packages with visual output
-- Packages with complex APIs that benefit from examples
 
 ---
 
@@ -353,14 +196,9 @@ let package = Package(
             name: "ARCPackageNameTests",
             dependencies: ["ARCPackageName"],
             path: "Tests/ARCPackageNameTests"
-        ),
-
-        // Demo app (developer-only, not exported)
-        .executableTarget(
-            name: "ARCPackageNameDemo",
-            dependencies: ["ARCPackageName"],
-            path: "Examples/ARCPackageNameDemo"
         )
+        // Note: Demo apps are standalone Xcode projects in Example/ folder
+        // NOT executable targets in Package.swift
     ],
 
     // MARK: - Swift Language
@@ -377,7 +215,6 @@ let package = Package(
 | iOS Target | 17+ | Latest platform APIs, SwiftData support |
 | Concurrency | Strict | Thread-safe by default |
 | Dependencies | Minimal | Reduce coupling, prefer ARC packages |
-| Demo Export | Never | Demo is `.executableTarget`, not in products |
 
 ---
 
@@ -430,9 +267,9 @@ import ARCPackageName
 
 Full documentation available at [link to DocC site]
 
-## Examples
+## Example App
 
-See `Examples/` folder for complete demos.
+See `Example/` folder for a standalone demo Xcode project.
 
 ## License
 
@@ -672,6 +509,120 @@ public final class MockLogger: Logger {
 
 ---
 
+## 📱 Example Demo Apps
+
+### Purpose
+
+Every package **SHOULD** include an Example Demo App that demonstrates:
+- Real-world usage of the package APIs
+- Integration patterns and best practices
+- Visual components and interactions (for UI packages)
+- Testing the package during development
+
+### Required Structure
+
+**Example Demo Apps MUST be standalone Xcode projects, NOT executable targets in the package.**
+
+```
+ARCPackageName/
+├── Package.swift              # Package manifest (library only)
+├── Sources/
+│   └── ARCPackageName/
+├── Tests/
+│   └── ARCPackageNameTests/
+├── Example/                   # Example app folder (separate from package)
+│   └── ExampleApp/
+│       ├── ExampleApp.xcodeproj   # Standalone Xcode project
+│       ├── ExampleApp/
+│       │   ├── App.swift
+│       │   ├── ContentView.swift
+│       │   └── Assets.xcassets
+│       └── README.md          # Instructions for running the example
+└── README.md
+```
+
+### Key Rules
+
+1. **Standalone Xcode Project** - The Example App must be a `.xcodeproj` (or `.xcworkspace`) inside the `Example/` folder, completely independent from the package
+
+2. **NOT an Executable Target** - Never add executable targets to `Package.swift`. The package should only expose library products:
+   ```swift
+   // ✅ CORRECT: Library product only
+   products: [
+       .library(
+           name: "ARCPackageName",
+           targets: ["ARCPackageName"]
+       )
+   ]
+
+   // ❌ WRONG: Do not add executable targets
+   products: [
+       .library(name: "ARCPackageName", targets: ["ARCPackageName"]),
+       .executable(name: "ExampleApp", targets: ["ExampleApp"])  // Never do this
+   ]
+   ```
+
+3. **Not Tracked by Package** - The Example App folder can be excluded from the package index. Add to `.gitignore` if desired, but generally keep it for developers
+
+4. **Local Package Reference** - The Example App references the parent package locally:
+   ```swift
+   // In Example App's Package Dependencies (via Xcode):
+   // Add Local Package → Select parent directory containing Package.swift
+   ```
+
+5. **Developer Utility Only** - Example Apps are development tools, not shipped products. They help developers:
+   - Test the package during development
+   - Demonstrate features for documentation
+   - Debug issues in a real app context
+
+### Example App Xcode Project Setup
+
+1. Create a new iOS App in Xcode
+2. Save it inside `Example/ExampleApp/`
+3. Add the parent package as a local dependency:
+   - File → Add Package Dependencies → Add Local...
+   - Select the package root folder (where `Package.swift` lives)
+4. Import and use the package in your example app
+
+### Example App README
+
+Include a `README.md` inside the Example folder:
+
+```markdown
+# ExampleApp
+
+Demo application for ARCPackageName.
+
+## Requirements
+
+- Xcode 16.0+
+- iOS 17.0+
+
+## Running the Example
+
+1. Open `ExampleApp.xcodeproj` in Xcode
+2. The package is referenced locally from the parent directory
+3. Select a simulator and press Run (⌘R)
+
+## Features Demonstrated
+
+- Feature 1: Brief description
+- Feature 2: Brief description
+```
+
+### Why Not Executable Targets?
+
+Using executable targets in `Package.swift` causes several issues:
+
+1. **Build Configuration Conflicts** - Packages with executables can't be imported by other packages cleanly
+2. **Platform Restrictions** - iOS executables require different handling than command-line tools
+3. **Dependency Confusion** - Consumers may accidentally depend on example code
+4. **SPM Limitations** - iOS apps require Xcode-specific features (storyboards, asset catalogs, Info.plist) that SPM handles poorly
+
+**Standard**: All ARC Labs packages use standalone Xcode projects for Example Apps.
+
+---
+
 ## 🎨 API Design Guidelines
 
 ### Protocol-First Design
@@ -834,11 +785,9 @@ jobs:
 Before releasing a package, verify:
 
 ### Structure
-- [ ] Standard folder structure followed (Public/, Internal/, Models/, etc.)
+- [ ] Standard folder structure followed (Protocols/, Implementations/, Models/, etc.)
 - [ ] Sources organized by responsibility
 - [ ] Tests organized in Unit/, Integration/, Mocks/
-- [ ] Demo app in Examples/ (if applicable)
-- [ ] Demo app NOT listed in products (isolated from exports)
 
 ### Code Quality
 - [ ] 80%+ test coverage (target 100%)
@@ -877,13 +826,48 @@ Before releasing a package, verify:
 - [ ] CI/CD configured
 - [ ] Pre-commit hooks working
 - [ ] Builds on all platforms (iOS, macOS, watchOS, tvOS)
-- [ ] Demo app runs on iOS Simulator
+
+### Example Demo App (if applicable)
+- [ ] Example App is standalone Xcode project (`.xcodeproj`)
+- [ ] Example App is NOT an executable target in `Package.swift`
+- [ ] Example App is located in `Example/` folder
+- [ ] Example App includes README with setup instructions
 
 ---
 
 ## 🚫 Common Mistakes
 
-### Mistake 1: Including Business Logic
+### Mistake 1: Example App as Executable Target
+
+```swift
+// ❌ WRONG: Executable target in Package.swift
+let package = Package(
+    name: "ARCUIComponents",
+    products: [
+        .library(name: "ARCUIComponents", targets: ["ARCUIComponents"]),
+        .executable(name: "ExampleApp", targets: ["ExampleApp"])  // Never do this!
+    ],
+    targets: [
+        .target(name: "ARCUIComponents"),
+        .executableTarget(name: "ExampleApp", dependencies: ["ARCUIComponents"])
+    ]
+)
+
+// ✅ RIGHT: Library only, Example App as separate Xcode project
+let package = Package(
+    name: "ARCUIComponents",
+    products: [
+        .library(name: "ARCUIComponents", targets: ["ARCUIComponents"])
+    ],
+    targets: [
+        .target(name: "ARCUIComponents"),
+        .testTarget(name: "ARCUIComponentsTests", dependencies: ["ARCUIComponents"])
+    ]
+)
+// Example App lives in Example/ExampleApp/ExampleApp.xcodeproj
+```
+
+### Mistake 2: Including Business Logic
 
 ```swift
 // ❌ WRONG: Business logic in package
@@ -901,7 +885,7 @@ public protocol Validator {
 }
 ```
 
-### Mistake 2: Tight Coupling to App
+### Mistake 3: Tight Coupling to App
 
 ```swift
 // ❌ WRONG: Package knows about app
@@ -927,7 +911,7 @@ public struct Logger {
 }
 ```
 
-### Mistake 3: Missing Documentation
+### Mistake 4: Missing Documentation
 
 ```swift
 // ❌ WRONG: No documentation

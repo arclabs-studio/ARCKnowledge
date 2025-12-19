@@ -64,8 +64,53 @@ MyPackage/
         └── MyPackageTests.swift
 ```
 
-> **📦 ARC Labs Standard**
-> For complete package structure with all required files (CHANGELOG, LICENSE, DocC, etc.), see [`packages.md`](../Projects/packages.md)
+### Complete Package
+```
+ARCStorage/
+├── Package.swift
+├── README.md
+├── LICENSE
+├── CHANGELOG.md
+├── .swiftlint.yml
+├── .swiftformat
+├── .gitignore
+├── Sources/
+│   └── ARCStorage/
+│       ├── ARCStorage.swift
+│       ├── Protocols/
+│       │   ├── StorageProvider.swift
+│       │   └── Repository.swift
+│       ├── Providers/
+│       │   ├── SwiftDataProvider.swift
+│       │   ├── CloudKitProvider.swift
+│       │   └── UserDefaultsProvider.swift
+│       ├── Repositories/
+│       │   └── GenericRepository.swift
+│       └── Errors/
+│           └── StorageError.swift
+├── Tests/
+│   └── ARCStorageTests/
+│       ├── Unit/
+│       │   ├── ProvidersTests.swift
+│       │   └── RepositoryTests.swift
+│       ├── Integration/
+│       │   └── SwiftDataIntegrationTests.swift
+│       └── Mocks/
+│           └── MockStorageProvider.swift
+├── Example/                          # Example Demo App (standalone Xcode project)
+│   └── ExampleApp/
+│       ├── ExampleApp.xcodeproj      # Independent Xcode project
+│       ├── ExampleApp/
+│       │   ├── App.swift
+│       │   └── ContentView.swift
+│       └── README.md
+└── Documentation.docc/
+    ├── ARCStorage.md
+    └── Articles/
+        └── GettingStarted.md
+```
+
+**Note**: The Example folder contains a standalone Xcode project (`.xcodeproj`), NOT an executable target in `Package.swift`. See [packages.md](../Projects/packages.md#-example-demo-apps) for detailed guidelines.
 
 ---
 
