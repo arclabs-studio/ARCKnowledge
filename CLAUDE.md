@@ -25,7 +25,7 @@ You must help design, implement and maintain **high-quality Apple platform apps*
 - **Clean Architecture**: Strict separation of concerns with Presentation, Domain, and Data layers
 - **SOLID Principles**: Every class/struct has a single responsibility and clear abstractions
 - **Protocol-Oriented Design**: Use protocols for abstraction, testing, and decoupling
-- **Dependency Injection**: No singletons; all dependencies injected for testability
+- **Dependency Injection**: Prefer DI over singletons; when singletons are necessary (global resources), always wrap with protocols for testability
 - **Test-Driven Quality**: Comprehensive testing with maximum coverage (UI excluded)
 
 ---
@@ -39,6 +39,7 @@ This document serves as the **entry point** to ARC Labs Studio's development gui
 - [`mvvm-c.md`](Architecture/mvvm-c.md) - MVVM+Coordinator pattern with Router
 - [`solid-principles.md`](Architecture/solid-principles.md) - SOLID applied to Swift
 - [`protocol-oriented.md`](Architecture/protocol-oriented.md) - When and how to use protocols
+- [`singletons.md`](Architecture/singletons.md) - When singletons are appropriate and patterns
 
 ### Project Types
 - [`packages.md`](Projects/packages.md) - Swift Package guidelines (public, documented, versioned)
@@ -495,7 +496,7 @@ Before considering any task complete, verify:
 
 1. **No Business Logic in Views** - Views are pure presentation
 2. **No Force Unwrapping** - Handle optionals safely
-3. **No Singletons** - Use dependency injection, unless necessary
+3. **Singletons Only for Global Resources** - Use DI by default; singletons only for truly unique resources (hardware, app config) and always with protocol abstraction. See [`singletons.md`](Architecture/singletons.md)
 4. **No Skipping Tests** - Write tests for all business logic
 5. **No Reverse Dependencies** - Domain never imports Presentation/Data
 6. **No Implicit State** - All state must be explicit and managed
