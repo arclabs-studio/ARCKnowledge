@@ -520,6 +520,8 @@ final class UpdateUserUseCase {
 
 **Translation**: Depend on **protocols**, not concrete implementations.
 
+> 💡 **Related**: For guidance on when singletons are appropriate and how to wrap them with protocols, see [`singletons.md`](singletons.md).
+
 ### ❌ Violation Example
 
 ```swift
