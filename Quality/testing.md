@@ -676,6 +676,286 @@ Before considering a feature complete:
 
 ---
 
+## 📱 Testing iOS Apps with xcodebuild
+
+### Overview
+
+iOS apps use `xcodebuild` instead of `swift test` for running tests. This section covers the differences and CI configuration.
+
+### xcodebuild vs swift test
+
+| Aspect | `swift test` (Packages) | `xcodebuild test` (iOS Apps) |
+|--------|------------------------|------------------------------|
+| Project Type | Swift Package | Xcode Project/Workspace |
+| Platform | macOS, Linux | iOS Simulator (macOS host) |
+| Configuration | `Package.swift` | `.xcodeproj` + Scheme |
+| Parallel Execution | `--parallel` flag | Built-in (per scheme settings) |
+| Coverage | `--enable-code-coverage` | `-enableCodeCoverage YES` |
+| Output Format | Console | Console + `.xcresult` bundle |
+
+### Running Tests Locally
+
+```bash
+# Basic test command
+xcodebuild test \
+  -scheme "YourApp" \
+  -destination "platform=iOS Simulator,name=iPhone 16"
+
+# With code coverage
+xcodebuild test \
+  -scheme "YourApp" \
+  -destination "platform=iOS Simulator,name=iPhone 16" \
+  -enableCodeCoverage YES
+
+# Save results to bundle
+xcodebuild test \
+  -scheme "YourApp" \
+  -destination "platform=iOS Simulator,name=iPhone 16" \
+  -resultBundlePath TestResults.xcresult
+
+# Skip code signing (required for CI)
+xcodebuild test \
+  -scheme "YourApp" \
+  -destination "platform=iOS Simulator,name=iPhone 16" \
+  CODE_SIGNING_ALLOWED=NO
+```
+
+### Simulator Configuration
+
+#### Finding Available Simulators
+
+```bash
+# List all available destinations for a scheme
+xcodebuild -scheme "YourApp" -showdestinations
+
+# List all simulators
+xcrun simctl list devices
+
+# Boot a specific simulator (optional, xcodebuild does this automatically)
+xcrun simctl boot "iPhone 16"
+```
+
+#### Common Simulator Destinations
+
+```bash
+# iPhone simulators
+-destination "platform=iOS Simulator,name=iPhone 16"
+-destination "platform=iOS Simulator,name=iPhone 16 Pro"
+-destination "platform=iOS Simulator,name=iPhone 16 Pro Max"
+-destination "platform=iOS Simulator,name=iPhone SE (3rd generation)"
+
+# iPad simulators
+-destination "platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation)"
+-destination "platform=iOS Simulator,name=iPad Air (5th generation)"
+
+# With specific OS version
+-destination "platform=iOS Simulator,name=iPhone 16,OS=18.2"
+```
+
+#### CI Simulator Recommendations
+
+For GitHub Actions, use stable simulators that are available on the runner:
+
+```yaml
+# Recommended: Use latest iPhone without specifying OS
+-destination "platform=iOS Simulator,name=iPhone 16"
+
+# Alternative: Specify OS for reproducibility
+-destination "platform=iOS Simulator,name=iPhone 16,OS=18.2"
+```
+
+### GitHub Actions CI Configuration
+
+#### Basic Test Workflow
+
+```yaml
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Run Tests
+        run: |
+          xcodebuild test \
+            -scheme "YourApp" \
+            -destination "platform=iOS Simulator,name=iPhone 16" \
+            -configuration Debug \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: TestResults.xcresult
+```
+
+#### Test Workflow with Coverage
+
+```yaml
+name: Tests with Coverage
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Run Tests with Coverage
+        run: |
+          xcodebuild test \
+            -scheme "YourApp" \
+            -destination "platform=iOS Simulator,name=iPhone 16" \
+            -configuration Debug \
+            -enableCodeCoverage YES \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Generate Coverage Report
+        run: |
+          xcrun xccov view --report TestResults.xcresult
+
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: TestResults.xcresult
+```
+
+### Code Coverage for iOS Apps
+
+#### Viewing Coverage Locally
+
+```bash
+# Run tests with coverage
+xcodebuild test \
+  -scheme "YourApp" \
+  -destination "platform=iOS Simulator,name=iPhone 16" \
+  -enableCodeCoverage YES \
+  -resultBundlePath TestResults.xcresult
+
+# View coverage summary
+xcrun xccov view --report TestResults.xcresult
+
+# View coverage for specific file
+xcrun xccov view --file "YourApp/ViewModels/HomeViewModel.swift" TestResults.xcresult
+
+# Export coverage as JSON
+xcrun xccov view --report --json TestResults.xcresult > coverage.json
+```
+
+#### Coverage in Xcode
+
+1. Run tests with ⌘U
+2. Open Report Navigator (⌘9)
+3. Select test run → Coverage tab
+4. View per-file and per-function coverage
+
+### Test Scheme Configuration
+
+Ensure your test scheme is properly configured:
+
+1. **Share the Scheme**: Product → Scheme → Manage Schemes → Check "Shared"
+2. **Include Test Targets**: Edit Scheme → Test → Add test targets
+3. **Enable Coverage**: Edit Scheme → Test → Options → Code Coverage → Gather coverage
+
+### Troubleshooting iOS Tests
+
+#### Tests Don't Run: "Scheme not found"
+
+```bash
+# Error: xcodebuild: error: Unable to find a scheme named "YourApp"
+
+# Solution 1: List available schemes
+xcodebuild -list
+
+# Solution 2: Share the scheme in Xcode
+# Product → Scheme → Manage Schemes → Check "Shared"
+
+# Solution 3: Commit the shared scheme
+git add YourApp.xcodeproj/xcshareddata/xcschemes/
+git commit -m "chore: share test scheme"
+```
+
+#### Tests Fail: "No matching destination"
+
+```bash
+# Error: Unable to find a destination matching...
+
+# Solution: List available destinations
+xcodebuild -scheme "YourApp" -showdestinations
+
+# Use an available destination from the list
+```
+
+#### Tests Hang: "Waiting for simulator"
+
+```bash
+# Solution 1: Reset simulators
+xcrun simctl shutdown all
+xcrun simctl erase all
+
+# Solution 2: Boot simulator manually
+xcrun simctl boot "iPhone 16"
+```
+
+#### CI Fails: "Code signing error"
+
+```bash
+# Error: Signing for "YourApp" requires a development team
+
+# Solution: Add CODE_SIGNING_ALLOWED=NO
+xcodebuild test \
+  -scheme "YourApp" \
+  -destination "platform=iOS Simulator,name=iPhone 16" \
+  CODE_SIGNING_ALLOWED=NO  # Required for CI
+```
+
+### Best Practices for iOS Testing
+
+✅ **DO**:
+- Always use `CODE_SIGNING_ALLOWED=NO` in CI
+- Save results to `.xcresult` bundle for debugging
+- Upload test artifacts for failed runs
+- Use specific Xcode version with `xcode-select`
+- Share schemes and commit them to git
+
+❌ **DON'T**:
+- Run tests on physical devices in CI (use simulators)
+- Specify exact OS versions without checking runner availability
+- Skip code coverage in CI pipelines
+- Forget to commit shared schemes
+
+---
+
 ## 🚫 Common Mistakes
 
 ### Mistake 1: Testing Implementation Details
