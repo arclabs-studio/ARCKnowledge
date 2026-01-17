@@ -58,8 +58,8 @@ ARCPackageName/
 │       ├── Integration/
 │       └── Helpers/Mocks/
 ├── Example/                   # Demo app (standalone Xcode project, optional)
-│   └── ARCPackageNameDemoAppApp/
-│       └── ARCPackageNameDemoAppApp.xcodeproj
+│   └── ARCPackageNameDemoApp/
+│       └── ARCPackageNameDemoApp.xcodeproj
 └── Documentation.docc/
 ```
 
