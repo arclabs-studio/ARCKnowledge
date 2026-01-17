@@ -60,8 +60,8 @@ ARCPackageName/
 │   └── ARCPackageNameTests/
 │       └── [tests]
 ├── Example/                   # Demo app (Xcode project independiente, ver packages.md)
-│   └── ExampleApp/
-│       └── ExampleApp.xcodeproj
+│   └── ARCPackageNameDemoApp/
+│       └── ARCPackageNameDemoApp.xcodeproj
 └── Documentation.docc/        # Documentación DocC
     ├── ARCPackageName.md
     └── Articles/

@@ -58,8 +58,8 @@ ARCPackageName/
 │       ├── Integration/
 │       └── Helpers/Mocks/
 ├── Example/                   # Demo app (standalone Xcode project, optional)
-│   └── ExampleApp/
-│       └── ExampleApp.xcodeproj
+│   └── ARCPackageNameDemoApp/
+│       └── ARCPackageNameDemoApp.xcodeproj
 └── Documentation.docc/
 ```
 
@@ -519,6 +519,28 @@ Every package **SHOULD** include an Example Demo App that demonstrates:
 - Visual components and interactions (for UI packages)
 - Testing the package during development
 
+### Naming Convention
+
+All Example Demo Apps **MUST** follow a standardized naming pattern:
+
+```
+[PackageName]DemoApp
+```
+
+**Examples:**
+| Package | Demo App Name |
+|---------|---------------|
+| ARCNavigation | ARCNavigationDemoApp |
+| ARCMaps | ARCMapsDemoApp |
+| ARCStorage | ARCStorageDemoApp |
+| ARCUIComponents | ARCUIComponentsDemoApp |
+| ARCLogger | ARCLoggerDemoApp |
+
+This naming convention ensures:
+- **Consistency** across all ARC Labs packages
+- **Discoverability** – easy to identify demo apps in Xcode and Finder
+- **Clear association** between package and its demo app
+
 ### Required Structure
 
 **Example Demo Apps MUST be standalone Xcode projects, NOT executable targets in the package.**
@@ -531,9 +553,9 @@ ARCPackageName/
 ├── Tests/
 │   └── ARCPackageNameTests/
 ├── Example/                   # Example app folder (separate from package)
-│   └── ExampleApp/
-│       ├── ExampleApp.xcodeproj   # Standalone Xcode project
-│       ├── ExampleApp/
+│   └── ARCPackageNameDemoApp/
+│       ├── ARCPackageNameDemoApp.xcodeproj   # Standalone Xcode project
+│       ├── ARCPackageNameDemoApp/
 │       │   ├── App.swift
 │       │   ├── ContentView.swift
 │       │   └── Assets.xcassets
@@ -589,7 +611,7 @@ ARCPackageName/
 Include a `README.md` inside the Example folder:
 
 ```markdown
-# ExampleApp
+# ARCPackageNameDemoApp
 
 Demo application for ARCPackageName.
 
@@ -600,7 +622,7 @@ Demo application for ARCPackageName.
 
 ## Running the Example
 
-1. Open `ExampleApp.xcodeproj` in Xcode
+1. Open `ARCPackageNameDemoApp.xcodeproj` in Xcode
 2. The package is referenced locally from the parent directory
 3. Select a simulator and press Run (⌘R)
 
