@@ -57,6 +57,7 @@ This document serves as the **entry point** to ARC Labs Studio's development gui
 - [`documentation.md`](Quality/documentation.md) - DocC, README standards, inline comments
 - [`readme-standards.md`](Quality/readme-standards.md) - Standardized README template with visual format
 - [`package-structure.md`](Quality/package-structure.md) - Package folder organization by size
+- [`ui-guidelines.md`](Quality/ui-guidelines.md) - HIG-based UI/UX, accessibility, dark mode, localization
 
 ### Workflow
 - [`plan-mode.md`](Workflow/plan-mode.md) - When and how to enter Plan Mode
