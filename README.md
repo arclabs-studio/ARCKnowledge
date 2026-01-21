@@ -3,6 +3,7 @@
 ![Documentation](https://img.shields.io/badge/Type-Documentation-blue.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Git Submodule](https://img.shields.io/badge/Integration-Git%20Submodule-brightgreen.svg)
+![Skills](https://img.shields.io/badge/Claude%20Code-Skills%20Enabled-purple.svg)
 
 **Central knowledge base and development standards at ARC Labs Studio**
 
@@ -21,6 +22,39 @@ ARCKnowledge is the **single source of truth** for ARC Labs Studio's development
 - Quality standards (testing, code review, documentation)
 - Git workflow & commit conventions
 - Development tools integration
+
+---
+
+## 🧠 Claude Code Skills Integration
+
+ARCKnowledge now uses **Claude Code Skills** for progressive context loading, reducing token usage by ~87% compared to loading all documentation at once.
+
+### Available Skills
+
+| Skill | Command | Use When |
+|-------|---------|----------|
+| **Swift Architecture** | `/arc-swift-architecture` | Designing features, MVVM+C, Clean Architecture, SOLID |
+| **TDD Patterns** | `/arc-tdd-patterns` | Writing tests, Swift Testing, coverage requirements |
+| **Quality Standards** | `/arc-quality-standards` | Code review, SwiftLint/Format, documentation, accessibility |
+| **Data Layer** | `/arc-data-layer` | Repositories, API clients, DTOs, caching |
+| **Presentation Layer** | `/arc-presentation-layer` | Views, ViewModels, @Observable, navigation |
+| **Workflow** | `/arc-workflow` | Git commits, branches, PRs, Plan Mode |
+| **Project Setup** | `/arc-project-setup` | New packages/apps, ARCDevTools, Xcode, CI/CD |
+
+### How It Works
+
+1. **CLAUDE.md** loads automatically with core philosophy and critical rules (~200 lines)
+2. Use **slash commands** to load detailed context only when needed
+3. Each skill includes a **SKILL.md** summary + detailed documentation files
+
+### Example Usage
+
+```
+User: "I need to implement a new repository for user data"
+
+Claude: [Uses /arc-data-layer to load data layer patterns]
+        [Uses /arc-swift-architecture if architecture questions arise]
+```
 
 ---
 
@@ -59,44 +93,19 @@ git add ARCKnowledge
 git commit -m "chore: update ARCKnowledge documentation"
 ```
 
-### Pinning to Specific Version
-
-```bash
-cd ARCKnowledge
-git checkout v1.0.0
-cd ..
-git add ARCKnowledge
-git commit -m "chore: pin ARCKnowledge to v1.0.0"
-```
-
 ---
 
 ## 📖 Usage
 
-### For AI Agents
+### For AI Agents (Claude Code)
 
-**Start with `CLAUDE.md`** - the main entry point containing ARC Labs philosophy, core values, and navigation to all specialized documentation.
+**Start with `CLAUDE.md`** - loads automatically with core philosophy, critical rules, and skill references.
 
-**Context loading strategy:**
-
-1. Load `CLAUDE.md` for overarching guidelines
-2. Load category-specific docs based on task:
-   - New feature → Architecture + Layers
-   - Bug fix → Quality + Testing
-   - Code review → Quality/code-review.md
-   - Git workflow → Workflow
-
-**Recommended docs by task:**
-
-| Task | Documents |
-|------|-----------|
-| **New iOS Feature** | `CLAUDE.md`, `Architecture/clean-architecture.md`, `Architecture/mvvm-c.md`, `Layers/presentation.md` |
-| **Adding Use Case** | `CLAUDE.md`, `Layers/domain.md`, `Quality/testing.md` |
-| **Data Layer Work** | `CLAUDE.md`, `Layers/data.md`, `Architecture/protocol-oriented.md` |
-| **Code Review** | `CLAUDE.md`, `Quality/code-review.md`, `Quality/code-style.md` |
-| **Setting Up Tests** | `CLAUDE.md`, `Quality/testing.md`, `Architecture/solid-principles.md` |
-| **New Swift Package** | `CLAUDE.md`, `Projects/packages.md`, `Tools/spm.md` |
-| **Git Workflow** | `Workflow/git-commits.md`, `Workflow/git-branches.md` |
+**Load skills on-demand:**
+- Use `/arc-swift-architecture` when designing features
+- Use `/arc-tdd-patterns` when writing tests
+- Use `/arc-quality-standards` when reviewing code
+- Use `/arc-workflow` when committing code
 
 ### For Developers
 
@@ -106,10 +115,12 @@ Access documentation directly from your project:
 # View main guidelines
 cat ARCKnowledge/CLAUDE.md
 
+# View skill documentation
+cat ARCKnowledge/.claude/skills/arc-swift-architecture/SKILL.md
+
 # Check specific topics
 cat ARCKnowledge/Architecture/clean-architecture.md
 cat ARCKnowledge/Quality/testing.md
-cat ARCKnowledge/Workflow/git-commits.md
 ```
 
 ---
@@ -118,36 +129,50 @@ cat ARCKnowledge/Workflow/git-commits.md
 
 ```
 ARCKnowledge/
-├── CLAUDE.md                    # Main AI agent entry point
+├── CLAUDE.md                    # Main entry point (minified)
+├── README.md                    # This file
 │
-├── Architecture/                # Architectural patterns
+├── .claude/                     # Claude Code Skills
+│   └── skills/
+│       ├── arc-swift-architecture/
+│       ├── arc-tdd-patterns/
+│       ├── arc-quality-standards/
+│       ├── arc-data-layer/
+│       ├── arc-presentation-layer/
+│       ├── arc-workflow/
+│       └── arc-project-setup/
+│
+├── Architecture/                # Architectural patterns (reference)
 │   ├── clean-architecture.md
 │   ├── mvvm-c.md
 │   ├── protocol-oriented.md
+│   ├── singletons.md
 │   └── solid-principles.md
 │
-├── Layers/                      # Implementation layers
+├── Layers/                      # Implementation layers (reference)
 │   ├── data.md
 │   ├── domain.md
 │   └── presentation.md
 │
-├── Projects/                    # Project types
+├── Projects/                    # Project types (reference)
 │   ├── apps.md
 │   └── packages.md
 │
-├── Quality/                     # QA standards
+├── Quality/                     # QA standards (reference)
 │   ├── code-review.md
 │   ├── code-style.md
 │   ├── documentation.md
+│   ├── package-structure.md
 │   ├── readme-standards.md
-│   └── testing.md
+│   ├── testing.md
+│   └── ui-guidelines.md
 │
-├── Tools/                       # Development tools
+├── Tools/                       # Development tools (reference)
 │   ├── arcdevtools.md
 │   ├── spm.md
 │   └── xcode.md
 │
-└── Workflow/                    # Development workflow
+└── Workflow/                    # Development workflow (reference)
     ├── git-branches.md
     ├── git-commits.md
     └── plan-mode.md
@@ -155,57 +180,49 @@ ARCKnowledge/
 
 ---
 
-## 📚 Documentation Index
+## 📚 Skills Documentation Index
 
-### Architecture
+### arc-swift-architecture
+Covers Clean Architecture, MVVM+C pattern, SOLID principles, Protocol-Oriented Design, dependency injection, and singleton patterns.
 
-| Document | Description |
-|----------|-------------|
-| [clean-architecture.md](Architecture/clean-architecture.md) | Clean Architecture layers, dependency rules, data flow |
-| [mvvm-c.md](Architecture/mvvm-c.md) | MVVM+Coordinator pattern with Router implementation |
-| [solid-principles.md](Architecture/solid-principles.md) | SOLID principles applied to Swift development |
-| [protocol-oriented.md](Architecture/protocol-oriented.md) | Protocol-oriented programming guidelines |
+**Files included:**
+- `clean-architecture.md`, `mvvm-c.md`, `solid-principles.md`, `protocol-oriented.md`, `singletons.md`, `domain.md`
 
-### Implementation Layers
+### arc-tdd-patterns
+Covers Swift Testing framework, TDD workflow, mocking patterns, coverage requirements, and CI testing.
 
-| Document | Description |
-|----------|-------------|
-| [presentation.md](Layers/presentation.md) | Views, ViewModels, Routers/Coordinators |
-| [domain.md](Layers/domain.md) | Entities, Use Cases, business logic |
-| [data.md](Layers/data.md) | Repositories, Data Sources, persistence |
+**Files included:**
+- `testing.md`
 
-### Project Types
+### arc-quality-standards
+Covers code review checklists, SwiftLint/SwiftFormat, documentation, README templates, package structure, and UI guidelines.
 
-| Document | Description |
-|----------|-------------|
-| [apps.md](Projects/apps.md) | iOS App development guidelines |
-| [packages.md](Projects/packages.md) | Swift Package development guidelines |
+**Files included:**
+- `code-review.md`, `code-style.md`, `documentation.md`, `readme-standards.md`, `package-structure.md`, `ui-guidelines.md`
 
-### Quality Assurance
+### arc-data-layer
+Covers Repository pattern, Data Sources, DTOs, caching strategies, error mapping, and SwiftData integration.
 
-| Document | Description |
-|----------|-------------|
-| [code-review.md](Quality/code-review.md) | Code review checklist and AI-generated code standards |
-| [code-style.md](Quality/code-style.md) | SwiftLint, SwiftFormat, naming conventions |
-| [documentation.md](Quality/documentation.md) | DocC, README standards, inline comments |
-| [readme-standards.md](Quality/readme-standards.md) | Standardized README template with visual format |
-| [testing.md](Quality/testing.md) | Swift Testing framework and coverage requirements |
+**Files included:**
+- `data.md`
 
-### Tools & Integration
+### arc-presentation-layer
+Covers SwiftUI Views, @Observable ViewModels, ARCNavigation Router, state management, and MVVM+C implementation.
 
-| Document | Description |
-|----------|-------------|
-| [arcdevtools.md](Tools/arcdevtools.md) | ARCDevTools package integration |
-| [spm.md](Tools/spm.md) | Swift Package Manager best practices |
-| [xcode.md](Tools/xcode.md) | Xcode project configuration, schemes, build settings |
+**Files included:**
+- `presentation.md`
 
-### Workflow
+### arc-workflow
+Covers Conventional Commits, branch naming, Git Flow, PRs, and Plan Mode.
 
-| Document | Description |
-|----------|-------------|
-| [git-branches.md](Workflow/git-branches.md) | Branch naming conventions and Git flow |
-| [git-commits.md](Workflow/git-commits.md) | Conventional Commits specification |
-| [plan-mode.md](Workflow/plan-mode.md) | When and how AI agents enter Plan Mode |
+**Files included:**
+- `git-commits.md`, `git-branches.md`, `plan-mode.md`
+
+### arc-project-setup
+Covers Swift Package creation, iOS App setup, ARCDevTools integration, Xcode configuration, and CI/CD.
+
+**Files included:**
+- `packages.md`, `apps.md`, `arcdevtools.md`, `spm.md`, `xcode.md`
 
 ---
 
@@ -230,7 +247,7 @@ Contributions to improve ARC Labs Studio's documentation are welcome!
 1. Fork and clone the repository
 2. Create a feature branch following [git-branches.md](Workflow/git-branches.md)
 3. Make focused changes - keep documents concise
-4. Follow existing markdown formatting
+4. Update relevant SKILL.md if changing skill documentation
 5. Create a pull request with clear description
 
 **Commit format:**
