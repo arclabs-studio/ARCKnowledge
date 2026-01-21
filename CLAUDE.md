@@ -57,6 +57,7 @@ This document serves as the **entry point** to ARC Labs Studio's development gui
 - [`documentation.md`](Quality/documentation.md) - DocC, README standards, inline comments
 - [`readme-standards.md`](Quality/readme-standards.md) - Standardized README template with visual format
 - [`package-structure.md`](Quality/package-structure.md) - Package folder organization by size
+- [`ui-guidelines.md`](Quality/ui-guidelines.md) - HIG-based UI/UX, accessibility, dark mode, localization
 
 ### Workflow
 - [`plan-mode.md`](Workflow/plan-mode.md) - When and how to enter Plan Mode
@@ -504,6 +505,9 @@ Before considering any task complete, verify:
 8. **No Commented Code** - Delete it or fix it
 9. **No TODO Without Ticket** - Create Linear issue first
 10. **No Merging Without Review** - All code reviewed before merge
+11. **No Hardcoded Strings** - All user-facing text must use `String(localized:)` with keys in English
+12. **No Skipping Accessibility** - All interactive elements must have VoiceOver labels; support Dynamic Type
+13. **No Skipping Dark Mode** - All views must render correctly in both light and dark modes
 
 ---
 
