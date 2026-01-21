@@ -741,12 +741,20 @@ Before releasing a feature:
 - [ ] Business logic in Use Cases
 - [ ] No business logic in Views
 
-### UX
+### UX & States
 - [ ] Loading states handled
 - [ ] Error states handled
 - [ ] Empty states handled
-- [ ] Accessibility labels provided
-- [ ] Dark mode supported
+
+### Accessibility, Appearance & Localization (Required)
+
+See [`ui-guidelines.md`](../Quality/ui-guidelines.md) for full checklist. Key items:
+
+- [ ] VoiceOver labels on interactive elements
+- [ ] Dynamic Type supported
+- [ ] Dark/Light mode renders correctly
+- [ ] All strings use `String(localized:)`
+- [ ] English + Spanish translations provided
 
 ### Integration
 - [ ] ARCLogger used for logging
@@ -821,6 +829,18 @@ ARCDevTools auto-detects iOS apps (by finding `.xcodeproj` or `.xcworkspace`) an
 - GitHub Actions workflows from `workflows-ios/`
 
 > 📖 **Full Documentation**: See [`arcdevtools.md`](../Tools/arcdevtools.md) for complete setup instructions, configuration options, workflow details, and troubleshooting guides.
+
+---
+
+## ♿ Accessibility, Appearance & Localization
+
+All ARC Labs apps **MUST** implement full accessibility support, appearance adaptation, and localization. These are not optional.
+
+> 📖 **Full Documentation**: See [`ui-guidelines.md`](../Quality/ui-guidelines.md) for complete implementation details, code examples, and checklists covering:
+> - SF Symbols & Animations
+> - Dark/Light Mode Support
+> - Accessibility (VoiceOver, Dynamic Type, Reduce Motion)
+> - Localization (String Catalogs, key conventions)
 
 ---
 
