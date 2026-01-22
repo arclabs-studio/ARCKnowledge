@@ -60,16 +60,9 @@ Making commits or creating PRs          → /arc-workflow
 
 **Progressive Disclosure**: Start with this document. Load skills only when needed for specific tasks.
 
-> **Rule**: If unsure about ARC Labs standards in any area, invoke the corresponding skill BEFORE proceeding.
+### Skills Setup
 
-### Using Skills from Other Projects
-
-These skills are **knowledge-only** - they provide context and guidelines without executing commands. They work from any ARC Labs project that references ARCKnowledge.
-
-**Important notes:**
-- Skills are automatically available when ARCKnowledge is linked (submodule or reference)
-- Skills do NOT require Bash permissions - they only load documentation
-- If you encounter permission errors, check your project's settings, not the skill
+Skills are **installed automatically** when you run `./ARCDevTools/arcdevtools-setup`. The setup script also updates `.gitignore` to exclude symlinked skills. No additional configuration required.
 
 ---
 

@@ -93,6 +93,7 @@ ARCDevTools/
 ├── scripts/
 │   ├── lint.sh                 # Run SwiftLint
 │   ├── format.sh               # Run SwiftFormat
+│   ├── setup-skills.sh         # Setup Claude Code skills
 │   ├── setup-github-labels.sh  # Configure GitHub labels
 │   └── setup-branch-protection.sh # Configure branch protection
 ├── workflows-spm/               # GitHub Actions for Swift Packages
@@ -522,7 +523,92 @@ cp ARCDevTools/workflows-ios/*.yml .github/workflows/
 
 ---
 
+## 🤖 Claude Code Skills
+
+ARCDevTools includes ARCKnowledge, which provides specialized Claude Code skills for ARC Labs development patterns. **Skills are installed automatically** when you run `arcdevtools-setup`.
+
+### How It Works
+
+Claude Code only discovers skills in `.claude/skills/` at the project root. The setup script automatically:
+1. **Copies** ARCDevTools-specific skills (like `arc-package-validator`)
+2. **Symlinks** ARCKnowledge skills to maintain single source of truth
+3. **Updates `.gitignore`** to exclude symlinked skills
+
+This happens automatically during `./ARCDevTools/arcdevtools-setup` — no additional steps required.
+
+### Available Skills
+
+| Skill | Purpose |
+|-------|---------|
+| `/arc-swift-architecture` | Clean Architecture, MVVM+C patterns |
+| `/arc-tdd-patterns` | Swift Testing framework, TDD workflow |
+| `/arc-quality-standards` | Code review, SwiftLint, accessibility |
+| `/arc-data-layer` | Repositories, API clients, caching |
+| `/arc-presentation-layer` | Views, ViewModels, navigation |
+| `/arc-workflow` | Git commits, branches, PRs |
+| `/arc-project-setup` | New packages/apps, CI/CD setup |
+| `/arc-package-validator` | Validate packages against ARC standards |
+
+### Verifying Skills
+
+After setup, you should see:
+
+```
+🤖 Installing Claude Code skills...
+   arc-package-validator (copied)
+   arc-data-layer (linked)
+   arc-presentation-layer (linked)
+   arc-project-setup (linked)
+   arc-quality-standards (linked)
+   arc-swift-architecture (linked)
+   arc-tdd-patterns (linked)
+   arc-workflow (linked)
+   .gitignore updated with symlinked skills
+```
+
+### Manual Re-installation
+
+If skills need to be reinstalled:
+
+```bash
+# Re-run full setup
+./ARCDevTools/arcdevtools-setup
+
+# Or use standalone script for skills only
+./ARCDevTools/scripts/setup-skills.sh
+```
+
+### Troubleshooting Skills
+
+```bash
+# Skills not showing up after setup
+ls -la .claude/skills/
+# Should show arc-* directories (some symlinks, some copied)
+
+# ARCKnowledge submodule not initialized
+git submodule update --init --recursive
+
+# Broken symlinks
+./ARCDevTools/scripts/setup-skills.sh  # Re-create symlinks
+```
+
+---
+
 ## 🛠️ Utility Scripts
+
+### setup-skills.sh
+
+Configures Claude Code skills by creating symlinks from project root to ARCKnowledge:
+
+```bash
+./ARCDevTools/scripts/setup-skills.sh
+```
+
+**Features:**
+- Auto-detects ARCKnowledge location (direct submodule or nested in ARCDevTools)
+- Creates relative symlinks for portability
+- Idempotent (safe to run multiple times)
+- Reports status of all skills
 
 ### setup-github-labels.sh
 
