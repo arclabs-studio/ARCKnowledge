@@ -37,6 +37,10 @@ Use these slash commands to load detailed context when needed:
 
 **Progressive Disclosure**: Start with this document. Load skills only when needed for specific tasks.
 
+### Skills Setup
+
+Skills are **installed automatically** when you run `./ARCDevTools/arcdevtools-setup`. The setup script also updates `.gitignore` to exclude symlinked skills. No additional configuration required.
+
 ---
 
 ## Current ARC Labs Products
