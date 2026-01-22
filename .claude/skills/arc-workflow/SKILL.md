@@ -5,9 +5,15 @@ description: |
   specification (feat, fix, docs, refactor, test, chore), Git branch naming with
   Linear integration (feature/, bugfix/, hotfix/), branch protection rules, PR
   templates, Plan Mode for complex tasks, Git Flow with main/develop branches,
-  release process, and commit message templates. Use when committing code, creating
-  branches, opening PRs, planning complex features, following Git workflow, or
-  setting up branch protection.
+  release process, and commit message templates.
+
+  **INVOKE THIS SKILL** when:
+  - Writing commit messages (Conventional Commits format)
+  - Creating branches with proper naming
+  - Opening Pull Requests with ARC Labs template
+  - Planning complex features with Plan Mode
+  - Understanding Git Flow (main/develop branches)
+  - Setting up branch protection rules
 ---
 
 # ARC Labs Studio - Git Workflow & Development Process
@@ -277,9 +283,13 @@ git commit -m "test(repository): add comprehensive CRUD tests"
 git commit -m "chore(deps): update ARCLogger to 1.2.0"
 ```
 
-## Need More Help?
+## Related Skills
 
-For related topics:
-- Code quality → Use `/arc-quality-standards`
-- Architecture → Use `/arc-swift-architecture`
-- Testing → Use `/arc-tdd-patterns`
+When working on Git workflow, you may also need:
+
+| If you need...              | Use                       |
+|-----------------------------|---------------------------|
+| Code quality standards      | `/arc-quality-standards`  |
+| Architecture decisions      | `/arc-swift-architecture` |
+| Testing patterns            | `/arc-tdd-patterns`       |
+| Project setup               | `/arc-project-setup`      |

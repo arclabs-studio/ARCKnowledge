@@ -5,10 +5,15 @@ description: |
   checklists for AI-generated code, SwiftLint and SwiftFormat configuration, naming
   conventions, documentation standards with DocC, README templates, package folder
   structure guidelines, UI/UX guidelines following Apple HIG, accessibility (VoiceOver,
-  Dynamic Type), dark mode support, and localization. Use when reviewing code,
-  setting up linting tools, fixing style issues, writing documentation, creating
-  READMEs, organizing package folders, implementing accessibility features, supporting
-  dark mode, or ensuring UI follows Human Interface Guidelines.
+  Dynamic Type), dark mode support, and localization.
+
+  **INVOKE THIS SKILL** when:
+  - Reviewing ANY code (before approving or suggesting changes)
+  - Writing DocC documentation for public APIs
+  - Creating or updating README files
+  - Checking naming conventions or file structure
+  - Implementing accessibility or dark mode support
+  - Setting up or fixing SwiftLint/SwiftFormat issues
 ---
 
 # ARC Labs Studio - Code Quality Standards
@@ -277,7 +282,7 @@ For complete guidelines:
 
 ## Critical Rules (Never Break)
 
-1. **No Force Unwrapping** (`!`, `try!`, `as!`)
+1. **No Force Unwrapping** - Avoid force unwrap, force try, and force cast operators
 2. **No print()** - Use ARCLogger
 3. **No Magic Numbers** - Use named constants
 4. **No Hardcoded Strings** - Use localization
@@ -314,10 +319,13 @@ swiftformat --lint .
 - ❌ Using `onTapGesture` for interactive elements
 - ❌ Deprecated SwiftUI APIs
 
-## Need More Help?
+## Related Skills
 
-For related topics:
-- Architecture patterns → Use `/arc-swift-architecture`
-- Testing → Use `/arc-tdd-patterns`
-- Git workflow → Use `/arc-workflow`
-- Project setup → Use `/arc-project-setup`
+When working on quality-related tasks, you may also need:
+
+| If you need...              | Use                       |
+|-----------------------------|---------------------------|
+| Architecture decisions      | `/arc-swift-architecture` |
+| Writing tests               | `/arc-tdd-patterns`       |
+| Git commits/PRs             | `/arc-workflow`           |
+| Project setup/ARCDevTools   | `/arc-project-setup`      |

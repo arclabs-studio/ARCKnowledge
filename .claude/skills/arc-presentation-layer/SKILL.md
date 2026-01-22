@@ -5,8 +5,13 @@ description: |
   @Observable ViewModels with @MainActor, state management with LoadingState enum,
   ARCNavigation Router pattern for navigation, data flow between View-ViewModel-UseCase,
   accessibility, dark mode, SwiftUI previews, and MVVM+C pattern implementation.
-  Use when creating Views, implementing ViewModels, setting up navigation with Router,
-  managing UI state, handling user actions, or structuring Presentation layer code.
+  **INVOKE THIS SKILL** when:
+  - Creating SwiftUI Views with proper structure
+  - Implementing @Observable ViewModels with @MainActor
+  - Setting up navigation with ARCNavigation Router
+  - Managing UI state (loading, error, success states)
+  - Handling user actions in ViewModels
+  - Structuring Presentation layer feature folders
 ---
 
 # ARC Labs Studio - Presentation Layer Patterns
@@ -364,10 +369,13 @@ if rating > 4.0 && price < 50 { }  // Move to Use Case
 For complete patterns:
 - **@presentation.md** - Complete Presentation layer guide
 
-## Need More Help?
+## Related Skills
 
-For related topics:
-- Architecture patterns → Use `/arc-swift-architecture`
-- Testing ViewModels → Use `/arc-tdd-patterns`
-- UI guidelines → Use `/arc-quality-standards`
-- Navigation → Use `/arc-swift-architecture`
+When working on the presentation layer, you may also need:
+
+| If you need...              | Use                       |
+|-----------------------------|---------------------------|
+| Architecture patterns       | `/arc-swift-architecture` |
+| Testing ViewModels          | `/arc-tdd-patterns`       |
+| UI/Accessibility guidelines | `/arc-quality-standards`  |
+| Data layer implementation   | `/arc-data-layer`         |
