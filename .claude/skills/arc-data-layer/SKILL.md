@@ -5,9 +5,15 @@ description: |
   implementation, Data Sources (remote API and local persistence), DTOs (Data
   Transfer Objects), caching strategies (memory, disk, cache-first), error mapping,
   SwiftData integration, API client patterns, and data transformation between DTOs
-  and Domain entities. Use when implementing data access, building repositories,
-  creating API clients, setting up local persistence, designing caching strategies,
-  mapping DTOs to domain entities, or handling data layer errors.
+  and Domain entities.
+
+  **INVOKE THIS SKILL** when:
+  - Implementing Repository pattern for data access
+  - Creating API clients for network requests
+  - Setting up local persistence with SwiftData
+  - Designing caching strategies (memory, disk, cache-first)
+  - Creating DTOs and mapping to Domain entities
+  - Handling data layer errors properly
 ---
 
 # ARC Labs Studio - Data Layer Patterns
@@ -312,9 +318,13 @@ For complete patterns:
 - ❌ Storing Domain entities in database (use DTOs)
 - ❌ Tight coupling to specific data source
 
-## Need More Help?
+## Related Skills
 
-For related topics:
-- Architecture patterns → Use `/arc-swift-architecture`
-- Testing data layer → Use `/arc-tdd-patterns`
-- Domain layer → Use `/arc-swift-architecture`
+When working on the data layer, you may also need:
+
+| If you need...              | Use                       |
+|-----------------------------|---------------------------|
+| Architecture patterns       | `/arc-swift-architecture` |
+| Testing data layer          | `/arc-tdd-patterns`       |
+| Presentation layer          | `/arc-presentation-layer` |
+| Code quality standards      | `/arc-quality-standards`  |

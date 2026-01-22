@@ -222,7 +222,7 @@ do {
 **Why This Pattern?**
 1. `create()` allows explicit error handling when needed
 2. `.live` maintains ergonomic API for common cases
-3. `fatalError` with descriptive message is better than silent `try!`
+3. `fatalError` with descriptive message is better than silent force-try
 4. Follows Apple's "fail fast with useful message" philosophy
 
 ---
