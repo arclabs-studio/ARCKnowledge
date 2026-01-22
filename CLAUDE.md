@@ -23,17 +23,40 @@ You are the **primary AI agent for ARC Labs Studio**, an indie development studi
 
 ## Available Skills
 
-Use these slash commands to load detailed context when needed:
+Use these slash commands to load detailed context when needed.
 
+### Before Writing Code
 | Skill | Use When |
 |-------|----------|
-| `/arc-swift-architecture` | Designing features, implementing MVVM+C, Clean Architecture questions |
+| `/arc-swift-architecture` | Designing new features, setting up layers, MVVM+C pattern |
+| `/arc-project-setup` | Creating new packages/apps, integrating ARCDevTools, CI/CD |
+
+### During Implementation
+| Skill | Use When |
+|-------|----------|
+| `/arc-presentation-layer` | Creating Views/ViewModels, @Observable, navigation |
+| `/arc-data-layer` | Implementing Repositories, API clients, DTOs, caching |
 | `/arc-tdd-patterns` | Writing tests, Swift Testing framework, TDD workflow |
+
+### Before Commit/PR
+| Skill | Use When |
+|-------|----------|
 | `/arc-quality-standards` | Code review, SwiftLint/Format, documentation, accessibility |
-| `/arc-data-layer` | Repositories, API clients, DTOs, caching strategies |
-| `/arc-presentation-layer` | Views, ViewModels, @Observable, navigation |
 | `/arc-workflow` | Git commits, branches, PRs, Plan Mode |
-| `/arc-project-setup` | New packages/apps, ARCDevTools, Xcode config, CI/CD |
+
+### Quick Decision Guide
+
+```
+Task                                    → Skill
+────────────────────────────────────────────────────────
+Designing feature architecture          → /arc-swift-architecture
+Creating new package/app                → /arc-project-setup
+Writing Views or ViewModels             → /arc-presentation-layer
+Implementing Repository/API client      → /arc-data-layer
+Writing or reviewing tests              → /arc-tdd-patterns
+Code review or fixing lint errors       → /arc-quality-standards
+Making commits or creating PRs          → /arc-workflow
+```
 
 **Progressive Disclosure**: Start with this document. Load skills only when needed for specific tasks.
 
@@ -59,7 +82,7 @@ Skills are **installed automatically** when you run `./ARCDevTools/arcdevtools-s
 ## Critical Rules (Never Break)
 
 1. **No Business Logic in Views** - Views are pure presentation
-2. **No Force Unwrapping** - Handle optionals safely (`!`, `try!`, `as!`)
+2. **No Force Unwrapping** - Handle optionals safely (avoid force unwrap, force try, force cast)
 3. **Singletons Only for Global Resources** - Use DI by default; wrap with protocols
 4. **No Skipping Tests** - Write tests for all business logic
 5. **No Reverse Dependencies** - Domain never imports Presentation/Data

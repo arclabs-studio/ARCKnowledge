@@ -5,11 +5,14 @@ description: |
   Architecture with three layers (Presentation, Domain, Data), MVVM+Coordinator
   pattern with ARCNavigation Router, SOLID principles applied to Swift, Protocol-Oriented
   Design, dependency injection, layer boundaries, data flow, and singleton patterns.
-  Use when designing new features, refactoring code structure, discussing architecture
-  decisions, setting up layer boundaries, implementing ViewModels, Use Cases, Repositories,
-  Entities, Routers, or Coordinators. Also use for architecture reviews, understanding
-  dependency rules, explaining architectural patterns, or when working with domain layer
-  business logic.
+
+  **INVOKE THIS SKILL** when:
+  - Designing a new feature or module architecture
+  - Setting up layer boundaries (Presentation/Domain/Data)
+  - Implementing MVVM+C pattern with ViewModels and Routers
+  - Creating Use Cases, Entities, or Repository protocols
+  - Reviewing code for architectural compliance
+  - Discussing or explaining architectural decisions
 ---
 
 # ARC Labs Studio - Swift Architecture Patterns
@@ -266,10 +269,13 @@ For complete patterns, examples, and guidelines:
 - ❌ Business logic in Views
 - ❌ Reverse dependencies (Domain importing Presentation/Data)
 
-## Need More Help?
+## Related Skills
 
-For related topics:
-- Data layer implementation → Use `/arc-data-layer`
-- Presentation layer patterns → Use `/arc-presentation-layer`
-- Testing patterns → Use `/arc-tdd-patterns`
-- Code quality → Use `/arc-quality-standards`
+When working on architecture, you may also need:
+
+| If you need...              | Use                       |
+|-----------------------------|---------------------------|
+| Data layer implementation   | `/arc-data-layer`         |
+| Presentation layer patterns | `/arc-presentation-layer` |
+| Testing patterns            | `/arc-tdd-patterns`       |
+| Code quality standards      | `/arc-quality-standards`  |

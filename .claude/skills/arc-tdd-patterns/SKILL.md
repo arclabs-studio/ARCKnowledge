@@ -5,11 +5,15 @@ description: |
   framework. Covers TDD methodology (Red-Green-Refactor), test structure with
   Swift Testing macros (@Test, @Suite, #expect), mocking patterns, parameterized
   tests, async testing, test organization, coverage requirements (100% for packages,
-  80%+ for apps), and xcodebuild testing for iOS apps. Use when writing tests,
-  setting up test infrastructure, discussing testing strategy, implementing TDD
-  workflow, creating mocks and test doubles, checking test coverage, reviewing
-  test quality, debugging failing tests, or configuring CI pipelines with GitHub
-  Actions for test automation.
+  80%+ for apps), and xcodebuild testing for iOS apps.
+
+  **INVOKE THIS SKILL** when:
+  - Writing new tests for features or components
+  - Setting up test infrastructure for a project
+  - Following TDD workflow (Red-Green-Refactor)
+  - Creating mocks and test doubles
+  - Checking or improving test coverage
+  - Configuring CI pipelines for test automation
 ---
 
 # ARC Labs Studio - TDD Patterns & Swift Testing
@@ -400,9 +404,13 @@ xcodebuild -scheme "YourApp" -showdestinations
 # Add CODE_SIGNING_ALLOWED=NO to xcodebuild command
 ```
 
-## Need More Help?
+## Related Skills
 
-For related topics:
-- Architecture patterns → Use `/arc-swift-architecture`
-- Code quality → Use `/arc-quality-standards`
-- Data layer testing → Use `/arc-data-layer`
+When working on testing, you may also need:
+
+| If you need...              | Use                       |
+|-----------------------------|---------------------------|
+| Architecture patterns       | `/arc-swift-architecture` |
+| Code quality standards      | `/arc-quality-standards`  |
+| Data layer implementation   | `/arc-data-layer`         |
+| Git workflow                | `/arc-workflow`           |

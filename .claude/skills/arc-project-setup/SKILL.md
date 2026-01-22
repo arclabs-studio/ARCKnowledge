@@ -5,9 +5,14 @@ description: |
   (Package.swift templates, structure, versioning), iOS App setup, ARCDevTools
   integration (SwiftLint, SwiftFormat, Git hooks), Xcode project configuration,
   SPM best practices, GitHub Actions CI/CD, and development workflow automation.
-  Use when creating new packages, setting up iOS apps, integrating ARCDevTools,
-  configuring Xcode projects, managing package dependencies, setting up CI/CD
-  pipelines, or troubleshooting build issues.
+
+  **INVOKE THIS SKILL** when:
+  - Creating new Swift Packages with proper structure
+  - Setting up new iOS Apps following ARC Labs standards
+  - Integrating ARCDevTools (SwiftLint, SwiftFormat, hooks)
+  - Configuring Xcode projects or CI/CD pipelines
+  - Managing SPM dependencies
+  - Troubleshooting build or configuration issues
 ---
 
 # ARC Labs Studio - Project Setup & Configuration
@@ -320,10 +325,13 @@ xcodebuild test -scheme "App" CODE_SIGNING_ALLOWED=NO
 git submodule update --init --recursive
 ```
 
-## Need More Help?
+## Related Skills
 
-For related topics:
-- Architecture → Use `/arc-swift-architecture`
-- Testing → Use `/arc-tdd-patterns`
-- Code quality → Use `/arc-quality-standards`
-- Git workflow → Use `/arc-workflow`
+When working on project setup, you may also need:
+
+| If you need...              | Use                       |
+|-----------------------------|---------------------------|
+| Architecture decisions      | `/arc-swift-architecture` |
+| Testing patterns            | `/arc-tdd-patterns`       |
+| Code quality standards      | `/arc-quality-standards`  |
+| Git workflow                | `/arc-workflow`           |
