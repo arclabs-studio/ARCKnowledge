@@ -4,7 +4,8 @@ description: |
   ARC Labs Studio Presentation layer patterns. Covers SwiftUI Views structure,
   @Observable ViewModels with @MainActor, state management with LoadingState enum,
   ARCNavigation Router pattern for navigation, data flow between View-ViewModel-UseCase,
-  accessibility, dark mode, SwiftUI previews, and MVVM+C pattern implementation.
+  accessibility, dark mode, SwiftUI previews with @Previewable, iOS 26 Liquid Glass
+  patterns, and MVVM+C pattern implementation.
   **INVOKE THIS SKILL** when:
   - Creating SwiftUI Views with proper structure
   - Implementing @Observable ViewModels with @MainActor
@@ -12,6 +13,8 @@ description: |
   - Managing UI state (loading, error, success states)
   - Handling user actions in ViewModels
   - Structuring Presentation layer feature folders
+  - Implementing iOS 26 Liquid Glass effects
+  - Using @Previewable for SwiftUI previews
 ---
 
 # ARC Labs Studio - Presentation Layer Patterns
@@ -26,7 +29,8 @@ Use this skill when:
 - **Handling user actions** in ViewModels
 - **Structuring feature folders** (View, ViewModel, Router)
 - **Implementing MVVM+C pattern**
-- **Adding SwiftUI previews** for testing
+- **Adding SwiftUI previews** with @Previewable
+- **Implementing iOS 26 Liquid Glass** effects and patterns
 
 ## Quick Reference
 
@@ -364,6 +368,155 @@ var destinationView: ProfileView?  // NEVER
 if rating > 4.0 && price < 50 { }  // Move to Use Case
 ```
 
+## iOS 26+ Patterns (Liquid Glass)
+
+### Liquid Glass Materials (iOS 26+)
+
+```swift
+import SwiftUI
+
+struct ProfileCardView: View {
+    var body: some View {
+        VStack {
+            Image(systemName: "person.circle.fill")
+                .font(.largeTitle)
+            Text("John Doe")
+                .font(.headline)
+        }
+        .padding()
+        .glassEffect()  // iOS 26+ Liquid Glass effect
+    }
+}
+
+// Backward compatible version
+struct ProfileCardView: View {
+    var body: some View {
+        VStack {
+            Image(systemName: "person.circle.fill")
+                .font(.largeTitle)
+            Text("John Doe")
+                .font(.headline)
+        }
+        .padding()
+        .background {
+            if #available(iOS 26, *) {
+                Color.clear.glassEffect()
+            } else {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.ultraThinMaterial)
+            }
+        }
+    }
+}
+```
+
+### Glass Effect Tinting
+
+```swift
+// Tinted glass for brand colors
+VStack {
+    content
+}
+.glassEffect()
+.tint(.blue)  // Applies tint to glass effect
+
+// Different tint intensities
+.tint(.blue.opacity(0.3))  // Subtle tint
+```
+
+### Toolbar with Liquid Glass
+
+```swift
+struct ContentView: View {
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                // Content
+            }
+            .navigationTitle("Home")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: {}) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            // iOS 26: Toolbars automatically get Liquid Glass treatment
+        }
+    }
+}
+```
+
+## SwiftUI Previews
+
+### @Previewable Macro (iOS 18+)
+
+Use `@Previewable` to simplify previews with state:
+
+```swift
+// ✅ Modern approach with @Previewable
+#Preview {
+    @Previewable @State var isEnabled = true
+
+    Toggle("Enable Feature", isOn: $isEnabled)
+}
+
+// ✅ Preview with ViewModel
+#Preview("Profile Loaded") {
+    @Previewable @State var viewModel = UserProfileViewModel.mock
+
+    UserProfileView(viewModel: viewModel)
+}
+
+// ❌ Old approach (still works but verbose)
+struct PreviewWrapper: View {
+    @State private var isEnabled = true
+
+    var body: some View {
+        Toggle("Enable Feature", isOn: $isEnabled)
+    }
+}
+
+#Preview {
+    PreviewWrapper()
+}
+```
+
+### Preview Best Practices
+
+```swift
+// ✅ Multiple preview states
+#Preview("Loaded State") {
+    let viewModel = UserProfileViewModel.mock
+    viewModel.user = .mock
+    return UserProfileView(viewModel: viewModel)
+}
+
+#Preview("Loading State") {
+    let viewModel = UserProfileViewModel.mock
+    viewModel.isLoading = true
+    return UserProfileView(viewModel: viewModel)
+}
+
+#Preview("Error State") {
+    let viewModel = UserProfileViewModel.mock
+    viewModel.errorMessage = "Failed to load profile"
+    return UserProfileView(viewModel: viewModel)
+}
+
+// ✅ Preview with different color schemes
+#Preview("Dark Mode") {
+    UserProfileView(viewModel: .mock)
+        .preferredColorScheme(.dark)
+}
+
+// ✅ Preview with different dynamic type sizes
+#Preview("Large Text") {
+    UserProfileView(viewModel: .mock)
+        .dynamicTypeSize(.xxxLarge)
+}
+```
+
 ## Detailed Documentation
 
 For complete patterns:
@@ -373,9 +526,12 @@ For complete patterns:
 
 When working on the presentation layer, you may also need:
 
-| If you need...              | Use                       |
-|-----------------------------|---------------------------|
-| Architecture patterns       | `/arc-swift-architecture` |
-| Testing ViewModels          | `/arc-tdd-patterns`       |
-| UI/Accessibility guidelines | `/arc-quality-standards`  |
-| Data layer implementation   | `/arc-data-layer`         |
+| If you need...                    | Use                                     |
+|-----------------------------------|-----------------------------------------|
+| Architecture patterns             | `/arc-swift-architecture`               |
+| Testing ViewModels                | `/arc-tdd-patterns`                     |
+| UI/Accessibility guidelines       | `/arc-quality-standards`                |
+| Data layer implementation         | `/arc-data-layer`                       |
+| Advanced iOS 26 Liquid Glass      | `axiom-liquid-glass`, `axiom-swiftui-26-ref` |
+| SwiftUI general patterns          | `swiftui-expert-skill`                  |
+| Swift Concurrency in ViewModels   | `swift-concurrency`                     |
