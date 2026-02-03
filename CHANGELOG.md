@@ -5,6 +5,43 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-02-03
+
+### Added
+- **Skills Index** (`Skills/skills-index.md`) - Comprehensive guide for choosing the right skill source (ARC Labs, Van der Lee, Axiom)
+- **iOS 26 Liquid Glass patterns** in `arc-presentation-layer` skill
+  - `.glassEffect()` modifier examples
+  - Backward compatible implementations
+  - Glass effect tinting patterns
+- **@Previewable macro** documentation for SwiftUI previews (iOS 18+)
+- **Git Worktrees workflow skill** (`arc-worktrees-workflow`) for parallel feature development
+- **Memory skill** (`arc-memory`) for persistent context across Claude Code sessions
+
+### Changed
+- Updated `arc-presentation-layer` to include iOS 26 patterns and modern preview syntax
+- Expanded related skills table with Axiom iOS 26 references
+
+## [2.2.0] - 2026-01-28
+
+### Added
+- Claude GitHub Actions workflows for automated code review
+  - `claude.yml`: Respond to @claude mentions in issues/PRs
+  - `claude-code-review.yml`: Automated PR code reviews
+
+## [2.1.0] - 2026-01-24
+
+### Added
+- Automatic skills installation documentation
+- Skills setup via `arcdevtools-setup` script
+
+## [2.0.1] - 2026-01-22
+
+### Added
+- Initial CHANGELOG.md with version history
+
+### Fixed
+- Various documentation improvements
+
 ## [2.0.0] - 2026-01-21
 
 ### Added
@@ -87,6 +124,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[2.3.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.2.0...v2.3.0
+[2.2.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.1.0...v2.2.0
+[2.1.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.0.1...v2.1.0
+[2.0.1]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v1.6.0...v2.0.0
 [1.6.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v1.4.0...v1.5.0
