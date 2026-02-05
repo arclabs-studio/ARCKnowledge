@@ -41,6 +41,7 @@ Use these slash commands to load detailed context when needed.
 ### Before Commit/PR
 | Skill | Use When |
 |-------|----------|
+| `/arc-final-review` | **Final review before merge** - comprehensive quality check by domain |
 | `/arc-quality-standards` | Code review, SwiftLint/Format, documentation, accessibility |
 | `/arc-workflow` | Git commits, branches, PRs, Plan Mode |
 
@@ -55,6 +56,7 @@ Writing Views or ViewModels             → /arc-presentation-layer
 Implementing Repository/API client      → /arc-data-layer
 Writing or reviewing tests              → /arc-tdd-patterns
 Code review or fixing lint errors       → /arc-quality-standards
+Final review before merge               → /arc-final-review
 Making commits or creating PRs          → /arc-workflow
 ```
 
