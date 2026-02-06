@@ -426,6 +426,49 @@ extension UserProfileViewModel {
 
 ### ViewModel Best Practices
 
+#### ⚠️ @Observable + lazy var Incompatibility
+
+**Critical**: The `@Observable` macro is incompatible with `lazy var`. This causes cryptic compiler errors.
+
+```swift
+// ❌ WRONG: This will NOT compile
+@MainActor
+@Observable
+final class AppCoordinator {
+    lazy var searchUseCase: SearchRestaurantsUseCase = {
+        SearchRestaurantsUseCase()  // ❌ Compiler error!
+    }()
+}
+```
+
+**Solution**: Use implicitly unwrapped optionals and initialize in `init()`:
+
+```swift
+// ✅ CORRECT: Use implicitly unwrapped optionals
+@MainActor
+@Observable
+final class AppCoordinator {
+    // Declare as implicitly unwrapped optionals
+    private var searchUseCase: SearchRestaurantsUseCaseProtocol!
+    private var filterUseCase: FilterRestaurantsUseCaseProtocol!
+    private var sortUseCase: SortRestaurantsUseCaseProtocol!
+
+    init() {
+        // Initialize in init()
+        self.searchUseCase = SearchRestaurantsUseCase()
+        self.filterUseCase = FilterRestaurantsUseCase()
+        self.sortUseCase = SortRestaurantsUseCase()
+    }
+}
+```
+
+**Why this works**:
+- Implicitly unwrapped optionals defer initialization safely
+- All initialization happens in `init()` where `self` is fully available
+- Use Cases are created once and reused throughout the app
+
+---
+
 #### 1. Use Enums for Complex State
 
 ```swift
@@ -575,6 +618,86 @@ extension HomeViewModel {
 }
 ```
 
+### Composition Root Pattern (AppCoordinator)
+
+The **Composition Root** is where all dependencies are wired together. In ARC Labs apps, the `AppCoordinator` serves this role:
+
+```swift
+// AppCoordinator.swift - The Composition Root
+@MainActor
+@Observable
+final class AppCoordinator {
+    // MARK: - Infrastructure (owns concrete implementations)
+
+    private var repository: RestaurantRepositoryProtocol!
+    private var geocodingService: GeocodingServiceProtocol!
+
+    // MARK: - Use Cases (created once, reused)
+
+    private var getRestaurantsUseCase: GetRestaurantsUseCaseProtocol!
+    private var filterUseCase: FilterRestaurantsUseCaseProtocol!
+    private var searchUseCase: SearchRestaurantsUseCaseProtocol!
+    private var sortUseCase: SortRestaurantsUseCaseProtocol!
+    private var toggleFavoriteUseCase: ToggleFavoriteUseCaseProtocol!
+    private var addRestaurantUseCase: AddRestaurantUseCaseProtocol!
+
+    // MARK: - Initialization (Wire All Dependencies)
+
+    init(modelContainer: ModelContainer? = nil) {
+        // 1. Create infrastructure
+        self.repository = RestaurantRepositoryImpl(storage: storage)
+        self.geocodingService = GeocodingService()
+
+        // 2. Create use cases with their dependencies
+        self.getRestaurantsUseCase = GetRestaurantsUseCase(repository: repository)
+        self.filterUseCase = FilterRestaurantsUseCase()
+        self.searchUseCase = SearchRestaurantsUseCase()
+        self.sortUseCase = SortRestaurantsUseCase()
+        self.toggleFavoriteUseCase = ToggleFavoriteUseCase(
+            reader: repository,
+            writer: repository
+        )
+        self.addRestaurantUseCase = AddRestaurantUseCase(
+            writer: repository,
+            geocodingService: geocodingService
+        )
+    }
+
+    // MARK: - Factory Methods (Create ViewModels with Dependencies)
+
+    @ViewBuilder
+    func makeRestaurantGridView() -> some View {
+        let viewModel = RestaurantGridViewModel(
+            getRestaurantsUseCase: getRestaurantsUseCase,
+            filterUseCase: filterUseCase,
+            sortUseCase: sortUseCase,
+            toggleFavoriteUseCase: toggleFavoriteUseCase,
+            coordinator: self
+        )
+        RestaurantGridView(viewModel: viewModel)
+    }
+
+    @ViewBuilder
+    func makeSearchView() -> some View {
+        let viewModel = SearchViewModel(
+            getRestaurantsUseCase: getRestaurantsUseCase,
+            searchUseCase: searchUseCase,
+            filterUseCase: filterUseCase,
+            coordinator: self
+        )
+        SearchView(viewModel: viewModel)
+    }
+}
+```
+
+**Key Principles**:
+1. **Single Point of DI**: All dependencies wired in one place
+2. **Factory Methods**: ViewModels created with correct dependencies
+3. **Protocol-Based**: ViewModels depend on protocols, not concrete types
+4. **Use Cases Reused**: Same use case instance shared across ViewModels
+
+---
+
 ### Feature-Specific Router (for complex features)
 
 ```swift
@@ -584,25 +707,25 @@ import ARCNavigation
 @MainActor
 @Observable
 final class RestaurantFlowRouter {
-    
+
     private let appRouter: Router<AppRoute>
-    
+
     init(appRouter: Router<AppRoute>) {
         self.appRouter = appRouter
     }
-    
+
     func showRestaurantList() {
         appRouter.navigate(to: .home)
     }
-    
+
     func showRestaurantDetail(_ restaurant: Restaurant) {
         appRouter.navigate(to: .restaurantDetail(restaurant))
     }
-    
+
     func showRestaurantSearch(query: String? = nil) {
         appRouter.navigate(to: .search(query: query))
     }
-    
+
     func dismissFlow() {
         appRouter.popToRoot()
     }

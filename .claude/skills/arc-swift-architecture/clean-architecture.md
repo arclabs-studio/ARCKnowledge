@@ -269,6 +269,108 @@ protocol UserRepositoryProtocol: Sendable {
 }
 ```
 
+### Interface Segregation Principle (ISP) for Repositories
+
+**Problem**: A single fat repository protocol forces use cases to depend on methods they don't need.
+
+**Solution**: Split repositories by responsibility (Reader/Writer).
+
+```swift
+// Domain/Repositories/RestaurantReaderProtocol.swift
+/// Read-only restaurant operations (ISP: separate read from write)
+protocol RestaurantReaderProtocol: Sendable {
+    func fetchAll() async throws -> [Restaurant]
+    func fetch(by id: UUID) async throws -> Restaurant?
+    func fetchVisited() async throws -> [Restaurant]
+    func fetchPending() async throws -> [Restaurant]
+    func fetchFavorites() async throws -> [Restaurant]
+}
+
+// Domain/Repositories/RestaurantWriterProtocol.swift
+/// Write restaurant operations
+protocol RestaurantWriterProtocol: Sendable {
+    func save(_ restaurant: Restaurant) async throws
+    func delete(id: UUID) async throws
+    func updateFavoriteStatus(id: UUID, isFavorite: Bool) async throws
+    func updateStatus(id: UUID, status: RestaurantStatus) async throws
+    func addVisit(to restaurantID: UUID, visit: Visit) async throws
+}
+
+// Domain/Repositories/RestaurantRepositoryProtocol.swift
+/// Combined protocol when both read and write needed
+typealias RestaurantRepositoryProtocol = RestaurantReaderProtocol & RestaurantWriterProtocol
+```
+
+**Benefits**:
+- Use Cases depend only on what they need
+- `FilterRestaurantsUseCase` needs no repository (pure function)
+- `ToggleFavoriteUseCase` needs both reader and writer
+- `GetRestaurantsUseCase` only needs reader
+
+```swift
+// ✅ Use Case with minimal dependencies (ISP applied)
+final class ToggleFavoriteUseCase: ToggleFavoriteUseCaseProtocol {
+    private let reader: RestaurantReaderProtocol  // Only what's needed
+    private let writer: RestaurantWriterProtocol  // Only what's needed
+
+    init(reader: RestaurantReaderProtocol, writer: RestaurantWriterProtocol) {
+        self.reader = reader
+        self.writer = writer
+    }
+
+    func execute(restaurantID: UUID) async throws {
+        guard let restaurant = try await reader.fetch(by: restaurantID) else {
+            throw DomainError.notFound
+        }
+        try await writer.updateFavoriteStatus(
+            id: restaurantID,
+            isFavorite: !restaurant.isFavorite
+        )
+    }
+}
+```
+
+### Pure Use Cases (No State)
+
+Some Use Cases are **pure functions** that transform data without side effects:
+
+```swift
+// ✅ Pure Use Case - No dependencies, stateless
+final class FilterRestaurantsUseCase: FilterRestaurantsUseCaseProtocol, Sendable {
+    func execute(
+        restaurants: [Restaurant],
+        cuisineTypes: Set<CuisineType>
+    ) -> [Restaurant] {
+        guard !cuisineTypes.isEmpty else { return restaurants }
+        return restaurants.filter { cuisineTypes.contains($0.cuisineType) }
+    }
+}
+
+// ✅ Pure Use Case - Search logic extracted from ViewModel
+final class SearchRestaurantsUseCase: SearchRestaurantsUseCaseProtocol, Sendable {
+    func execute(query: String, in restaurants: [Restaurant]) -> [Restaurant] {
+        let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedQuery.isEmpty else { return restaurants }
+
+        let lowercaseQuery = trimmedQuery.lowercased()
+        return restaurants.filter { restaurant in
+            restaurant.name.lowercased().contains(lowercaseQuery) ||
+            restaurant.cuisineType.name.lowercased().contains(lowercaseQuery) ||
+            restaurant.location.city.lowercased().contains(lowercaseQuery) ||
+            (restaurant.location.zone?.lowercased().contains(lowercaseQuery) ?? false) ||
+            (restaurant.signatureDish?.lowercased().contains(lowercaseQuery) ?? false)
+        }
+    }
+}
+```
+
+**Characteristics of Pure Use Cases**:
+- No repository dependencies
+- No async operations
+- Input → Output transformation only
+- Conform to `Sendable` for thread safety
+- Can be called synchronously
+
 ---
 
 ### 3. Data Layer

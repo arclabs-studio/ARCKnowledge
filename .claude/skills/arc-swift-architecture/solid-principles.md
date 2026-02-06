@@ -497,7 +497,7 @@ typealias UserRepository = UserReader & UserWriter
 // Use cases depend only on what they need
 final class GetUserUseCase {
     private let reader: UserReader  // Only needs reading
-    
+
     init(reader: UserReader) {
         self.reader = reader
     }
@@ -505,12 +505,98 @@ final class GetUserUseCase {
 
 final class UpdateUserUseCase {
     private let writer: UserWriter  // Only needs writing
-    
+
     init(writer: UserWriter) {
         self.writer = writer
     }
 }
 ```
+
+### Real-World ISP: Restaurant Repository Split
+
+From FVRS-73 Clean Architecture audit - splitting a "god" `RestaurantDataManager` into focused protocols:
+
+```swift
+// Domain/Repositories/RestaurantReaderProtocol.swift
+/// Read-only restaurant operations
+protocol RestaurantReaderProtocol: Sendable {
+    func fetchAll() async throws -> [Restaurant]
+    func fetch(by id: UUID) async throws -> Restaurant?
+    func fetchVisited() async throws -> [Restaurant]
+    func fetchPending() async throws -> [Restaurant]
+    func fetchFavorites() async throws -> [Restaurant]
+}
+
+// Domain/Repositories/RestaurantWriterProtocol.swift
+/// Write restaurant operations
+protocol RestaurantWriterProtocol: Sendable {
+    func save(_ restaurant: Restaurant) async throws
+    func delete(id: UUID) async throws
+    func updateFavoriteStatus(id: UUID, isFavorite: Bool) async throws
+    func updateStatus(id: UUID, status: RestaurantStatus) async throws
+    func addVisit(to restaurantID: UUID, visit: Visit) async throws
+}
+
+// Combined protocol for use cases that need both
+typealias RestaurantRepositoryProtocol = RestaurantReaderProtocol & RestaurantWriterProtocol
+```
+
+**Use Cases with Minimal Dependencies**:
+
+```swift
+// ✅ Pure function - NO repository dependencies
+final class FilterRestaurantsUseCase: FilterRestaurantsUseCaseProtocol, Sendable {
+    func execute(
+        restaurants: [Restaurant],
+        cuisineTypes: Set<CuisineType>
+    ) -> [Restaurant] {
+        guard !cuisineTypes.isEmpty else { return restaurants }
+        return restaurants.filter { cuisineTypes.contains($0.cuisineType) }
+    }
+}
+
+// ✅ Needs both reader AND writer
+final class ToggleFavoriteUseCase: ToggleFavoriteUseCaseProtocol {
+    private let reader: RestaurantReaderProtocol
+    private let writer: RestaurantWriterProtocol
+
+    init(reader: RestaurantReaderProtocol, writer: RestaurantWriterProtocol) {
+        self.reader = reader
+        self.writer = writer
+    }
+
+    func execute(restaurantID: UUID) async throws {
+        guard let restaurant = try await reader.fetch(by: restaurantID) else {
+            throw DomainError.notFound
+        }
+        try await writer.updateFavoriteStatus(
+            id: restaurantID,
+            isFavorite: !restaurant.isFavorite
+        )
+    }
+}
+
+// ✅ Only needs reader
+final class GetRestaurantsUseCase: GetRestaurantsUseCaseProtocol {
+    private let reader: RestaurantReaderProtocol  // Only what's needed
+
+    init(repository: RestaurantReaderProtocol) {
+        self.reader = repository
+    }
+
+    func execute() async throws -> [Restaurant] {
+        try await reader.fetchAll()
+    }
+}
+```
+
+**Benefits Realized**:
+- `FilterRestaurantsUseCase`: Zero dependencies (pure function)
+- `SearchRestaurantsUseCase`: Zero dependencies (pure function)
+- `SortRestaurantsUseCase`: Zero dependencies (pure function)
+- `GetRestaurantsUseCase`: Only reader dependency
+- `ToggleFavoriteUseCase`: Reader + writer (minimal set)
+- `AddRestaurantUseCase`: Writer + geocoding service
 
 ---
 

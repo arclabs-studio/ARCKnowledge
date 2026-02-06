@@ -956,6 +956,197 @@ xcodebuild test \
 
 ---
 
+## ⚡️ Swift 6 Concurrency in Tests
+
+### @MainActor Isolation for Tests
+
+**Problem**: When testing `@MainActor` ViewModels or using mock factory methods that create domain entities with MainActor-isolated properties, you'll encounter concurrency errors.
+
+**Error Example**:
+```
+Call to main actor-isolated initializer 'mock' in a synchronous nonisolated context
+```
+
+**Solution**: Add `@MainActor` to test structs when using mocks that access MainActor-isolated code.
+
+```swift
+import Testing
+@testable import FavRes_iOS
+
+@Suite("FilterRestaurantsUseCase Tests", .tags(.unit, .domain))
+@MainActor  // ✅ Required when Restaurant.mock is @MainActor isolated
+struct FilterRestaurantsUseCaseTests {
+
+    @Test("Filters by single cuisine type")
+    func filtersBySingleCuisineType() {
+        // Given
+        let sut = makeSUT()
+        let restaurants = [
+            Restaurant.mock(name: "Italian 1", cuisineType: .italian),
+            Restaurant.mock(name: "Japanese 1", cuisineType: .japanese),
+            Restaurant.mock(name: "Italian 2", cuisineType: .italian)
+        ]
+
+        // When
+        let result = sut.execute(restaurants: restaurants, cuisineTypes: [.italian])
+
+        // Then
+        #expect(result.count == 2)
+    }
+
+    // MARK: - Helpers
+
+    private func makeSUT() -> FilterRestaurantsUseCase {
+        FilterRestaurantsUseCase()
+    }
+}
+```
+
+### Mock Extension Isolation
+
+When mock factory methods use `@Observable` models or other MainActor-isolated types:
+
+```swift
+// ✅ Correct: Isolate mock extension to MainActor
+@MainActor
+extension Restaurant {
+    static var mock: Restaurant {
+        Restaurant(
+            id: UUID(),
+            name: "Test Restaurant",
+            cuisineType: .italian,
+            location: .mock,
+            averageRating: 7.5,
+            priceRange: .moderate,
+            visits: [],
+            status: .visited,
+            isFavorite: false
+        )
+    }
+
+    static func mock(
+        name: String = "Test Restaurant",
+        cuisineType: CuisineType = .italian,
+        isFavorite: Bool = false
+    ) -> Restaurant {
+        // ...
+    }
+}
+```
+
+---
+
+## 🏷️ Test Tag Centralization
+
+### Problem: Ambiguous Tag Definitions
+
+Multiple test files defining the same tags causes compilation errors:
+
+```
+Ambiguous use of 'unit'
+```
+
+### Solution: Single Tag Definition
+
+Define all tags in **ONE** file (typically the first test file alphabetically or a dedicated file):
+
+```swift
+// FavRes-iOSTests/Helpers/TestTags.swift (or first alphabetical test file)
+import Testing
+
+extension Tag {
+    @Tag static var unit: Self
+    @Tag static var domain: Self
+    @Tag static var integration: Self
+    @Tag static var presentation: Self
+}
+```
+
+Then **NEVER** define the same tags in other test files:
+
+```swift
+// ❌ WRONG - Duplicate tag definition
+// SomeOtherTests.swift
+extension Tag {
+    @Tag static var unit: Self  // ❌ Already defined elsewhere!
+}
+
+// ✅ CORRECT - Just use the tags
+// SomeOtherTests.swift
+@Suite("Some Feature Tests", .tags(.unit, .domain))
+struct SomeFeatureTests { }
+```
+
+---
+
+## 🎭 Mock Factory Best Practices
+
+### Avoid Default Values That Cause False Matches
+
+**Problem**: Default mock values can cause unintended test matches.
+
+```swift
+// ❌ BAD: Default location includes "Madrid" in administrativeArea
+extension Location {
+    static var mock: Location {
+        Location(
+            city: "Madrid",
+            administrativeArea: "Comunidad de Madrid",  // Contains "Madrid"
+            country: "España"
+        )
+    }
+}
+
+@Test("Searches by city")
+func searchesByCity() {
+    let restaurants = [
+        Restaurant.mock(name: "Place 1", location: .mock(city: "Madrid")),
+        Restaurant.mock(name: "Place 2", location: .mock(city: "Barcelona")),
+        Restaurant.mock(name: "Place 3", location: .mock(city: "Madrid"))
+    ]
+
+    // ❌ This might match 3 items because "Barcelona" location
+    // still has administrativeArea: "Comunidad de Madrid" by default!
+    let result = sut.execute(query: "Madrid", in: restaurants)
+    #expect(result.count == 2)  // ❌ May fail
+}
+```
+
+**Solution**: Use explicit, non-overlapping values in tests:
+
+```swift
+// ✅ GOOD: Explicit values that don't overlap
+@Test("Searches by city")
+func searchesByCity() {
+    let restaurants = [
+        Restaurant.mock(
+            name: "Place 1",
+            location: .mock(city: "Valencia", administrativeArea: "Valencia")
+        ),
+        Restaurant.mock(
+            name: "Place 2",
+            location: .mock(city: "Barcelona", administrativeArea: "Cataluña")
+        ),
+        Restaurant.mock(
+            name: "Place 3",
+            location: .mock(city: "Valencia", administrativeArea: "Valencia")
+        )
+    ]
+
+    let result = sut.execute(query: "Valencia", in: restaurants)
+    #expect(result.count == 2)  // ✅ Deterministic
+}
+```
+
+### Mock Factory Guidelines
+
+1. **Minimal defaults**: Only set required properties in `.mock`
+2. **Explicit test values**: Override all relevant properties in tests
+3. **No overlapping strings**: Avoid default values that could match search queries
+4. **Unique identifiers**: Each mock should have a unique UUID
+
+---
+
 ## 🚫 Common Mistakes
 
 ### Mistake 1: Testing Implementation Details
