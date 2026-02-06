@@ -5,6 +5,25 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-02-06
+
+### Added
+- **Swift 6 Concurrency Testing Patterns** - @MainActor isolation, mock extension isolation, tag centralization
+- **Clean Architecture Learnings** from FVRS-73 audit
+  - @Observable + lazy var incompatibility patterns (use IUOs + init)
+  - Composition Root pattern for AppCoordinator DI
+  - Interface Segregation: Reader/Writer protocol separation for repositories
+  - Pure Use Cases (stateless, no dependencies)
+  - Real-world ISP example with Toggle/Get/Filter use cases
+- **Mock Factory Best Practices** - avoiding false matches, Swift 6 compatibility
+
+### Changed
+- Updated `arc-presentation-layer` skill with @Observable/lazy var patterns
+- Updated `arc-swift-architecture` skill with ISP examples and Composition Root
+- Updated `arc-tdd-patterns` skill with Swift 6 testing patterns
+- Updated `Layers/presentation.md` with comprehensive ViewModel patterns
+- Updated `Quality/testing.md` with Swift 6 mock isolation patterns
+
 ## [2.4.0] - 2026-02-05
 
 ### Added
@@ -137,6 +156,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[2.5.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.1.0...v2.2.0
