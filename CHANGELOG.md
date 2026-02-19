@@ -5,6 +5,28 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-02-19
+
+### Added
+- **arc-audit skill** (`.claude/skills/arc-audit/`) - Comprehensive project compliance audit against all ARCKnowledge standards
+- **ARC Labs security patterns** in `.gitignore` - Protects sensitive files from accidental commits
+
+### Changed
+- **CLAUDE.md** major expansion with detailed architecture patterns
+  - Progressive concurrency model (`@MainActor` only where needed, not blanket)
+  - Grouped Use Case pattern with action enums
+  - Private extension pattern enforcement (all private methods in `private extension`)
+  - Multiline declaration alignment rules (first param on same line)
+  - Enhanced critical rules (15 rules, up from 13)
+- **arc-swift-architecture skill** - Added Use Case grouping patterns, ISP examples, concurrency guidelines
+- **arc-presentation-layer skill** - Enhanced ViewModel patterns with progressive `@MainActor`
+- **arc-quality-standards skill** - Added audit checklist sections
+- **arc-tdd-patterns skill** - Enhanced testing patterns and coverage requirements
+- **arc-final-review skill** - Refined review workflow
+- **Layers/domain.md** - Expanded Domain layer documentation with grouped Use Cases and business rules
+- **Quality/code-style.md** - Updated with private extension pattern and multiline alignment rules
+- **Skills/skills-index.md** - Updated routing guide
+
 ## [2.5.0] - 2026-02-06
 
 ### Added
@@ -156,6 +178,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[2.6.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.2.0...v2.3.0
