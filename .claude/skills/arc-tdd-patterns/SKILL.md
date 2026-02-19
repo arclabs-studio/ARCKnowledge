@@ -184,11 +184,13 @@ func validEmailsPassValidation(email: String) {
 }
 ```
 
-### Testing ViewModels (@MainActor)
+### Testing ViewModels
+
+ViewModels MUST have unit tests covering state transitions and user action delegation.
+Use `@MainActor` on the test suite only if the ViewModel methods under test require it.
 
 ```swift
 @Suite("User Profile ViewModel Tests")
-@MainActor
 struct UserProfileViewModelTests {
 
     @Test("Initial state is correct")
@@ -202,6 +204,7 @@ struct UserProfileViewModelTests {
     }
 
     @Test("Load user with success updates user")
+    @MainActor
     func loadUser_withSuccessUpdatesUser() async {
         let mockUseCase = MockGetUserProfileUseCase()
         mockUseCase.executeResult = .success(.mock)
@@ -211,6 +214,46 @@ struct UserProfileViewModelTests {
 
         #expect(viewModel.user != nil)
         #expect(viewModel.isLoading == false)
+    }
+}
+```
+
+### Testing Use Cases (Mandatory)
+
+Every UseCase MUST have unit tests covering business rules, validation, and error paths:
+
+```swift
+@Suite("Get Restaurants UseCase Tests")
+struct GetRestaurantsUseCaseTests {
+
+    @Test("Returns only valid restaurants sorted by rating")
+    func returnsOnlyValidRestaurantsSortedByRating() async throws {
+        // Given
+        let repository = MockRestaurantRepository()
+        repository.restaurantsToReturn = [
+            .mock(name: "Low", rating: 2.0),
+            .mock(name: "High", rating: 4.5),
+            .mock(name: "Invalid", rating: -1.0)  // Invalid
+        ]
+        let sut = GetRestaurantsUseCase(repository: repository)
+
+        // When
+        let result = try await sut.execute()
+
+        // Then
+        #expect(result.count == 2)
+        #expect(result.first?.name == "High")  // Sorted by rating
+    }
+
+    @Test("Throws error when repository fails")
+    func throwsErrorWhenRepositoryFails() async {
+        let repository = MockRestaurantRepository()
+        repository.errorToThrow = RepositoryError.networkError
+        let sut = GetRestaurantsUseCase(repository: repository)
+
+        await #expect(throws: RepositoryError.networkError) {
+            try await sut.execute()
+        }
     }
 }
 ```

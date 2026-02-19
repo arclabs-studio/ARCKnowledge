@@ -272,7 +272,10 @@ Use Cases are **business operations** that:
 - Implement specific business workflows
 - Coordinate between entities and repositories
 - Contain business logic and validation
-- Are single-responsibility (one operation each)
+- Are single-responsibility by default (one operation each)
+- Can be grouped with enum actions when sharing dependencies
+- MUST conform to `Sendable`
+- MUST have unit tests (Swift Testing)
 
 ### Use Case Structure
 
@@ -296,60 +299,57 @@ protocol GetRestaurantsUseCaseProtocol: Sendable {
 /// 2. Fetches restaurants from repository
 /// 3. Applies business rules (sorting, filtering)
 /// 4. Returns processed results
-final class GetRestaurantsUseCase: GetRestaurantsUseCaseProtocol {
-    
-    // MARK: - Properties
-    
+final class GetRestaurantsUseCase: GetRestaurantsUseCaseProtocol, Sendable {
+
+    // MARK: Private Attributes
+
     private let repository: RestaurantRepositoryProtocol
-    
-    // MARK: - Initialization
-    
+
+    // MARK: Initializer
+
     init(repository: RestaurantRepositoryProtocol) {
         self.repository = repository
     }
-    
-    // MARK: - Execute
-    
+
+    // MARK: Public Functions
+
     func execute(filter: RestaurantFilter? = nil) async throws -> [Restaurant] {
-        // Fetch from repository
         var restaurants = try await repository.getRestaurants()
-        
-        // Apply business rules
-        
+
         // Rule 1: Only show valid restaurants
         restaurants = restaurants.filter { $0.isValid }
-        
+
         // Rule 2: Apply filter if provided
         if let filter = filter {
             restaurants = applyFilter(filter, to: restaurants)
         }
-        
+
         // Rule 3: Sort by rating (highest first)
         restaurants.sort { $0.rating > $1.rating }
-        
+
         return restaurants
     }
-    
-    // MARK: - Private Methods
-    
-    private func applyFilter(
-        _ filter: RestaurantFilter,
-        to restaurants: [Restaurant]
-    ) -> [Restaurant] {
+}
+
+// MARK: - Private Functions
+
+private extension GetRestaurantsUseCase {
+    func applyFilter(_ filter: RestaurantFilter,
+                     to restaurants: [Restaurant]) -> [Restaurant] {
         var filtered = restaurants
-        
+
         if let cuisine = filter.cuisine {
             filtered = filtered.filter { $0.cuisine == cuisine }
         }
-        
+
         if let minRating = filter.minRating {
             filtered = filtered.filter { $0.rating >= minRating }
         }
-        
+
         if let maxPriceLevel = filter.maxPriceLevel {
             filtered = filtered.filter { $0.priceLevel <= maxPriceLevel }
         }
-        
+
         return filtered
     }
 }
@@ -500,25 +500,110 @@ final class CalculateRestaurantScoreUseCase: CalculateRestaurantScoreUseCaseProt
 }
 ```
 
-### Use Case Best Practices
+### Use Case Patterns
 
-#### 1. Single Responsibility
+#### Single-Responsibility (Default)
+
+One operation per UseCase. This is the preferred pattern:
 
 ```swift
 // ✅ Good: One operation per use case
-final class GetRestaurantsUseCase {
+protocol GetRestaurantsUseCaseProtocol: Sendable {
+    func execute() async throws -> [Restaurant]
+}
+
+final class GetRestaurantsUseCase: GetRestaurantsUseCaseProtocol, Sendable {
+    private let repository: RestaurantRepositoryProtocol
+
+    init(repository: RestaurantRepositoryProtocol) {
+        self.repository = repository
+    }
+
+    func execute() async throws -> [Restaurant] {
+        let restaurants = try await repository.getRestaurants()
+        return restaurants.filter { $0.isValid }.sorted { $0.rating > $1.rating }
+    }
+}
+```
+
+#### Grouped UseCase (When Appropriate)
+
+Use a grouped UseCase with enum actions ONLY when:
+- Actions share the **same dependencies** (same repositories)
+- Actions are **semantically related** (CRUD on the same resource)
+- Splitting would create near-duplicate classes with identical dependencies
+
+```swift
+protocol UserFavoritesUseCaseProtocol: Sendable {
+    func execute(_ action: UserFavoritesAction) async throws
+}
+
+enum UserFavoritesAction: Sendable {
+    case add(restaurantID: UUID)
+    case remove(restaurantID: UUID)
+    case check(restaurantID: UUID)
+}
+
+final class UserFavoritesUseCase: UserFavoritesUseCaseProtocol, Sendable {
+    private let repository: RestaurantRepositoryProtocol
+    private let userRepository: UserRepositoryProtocol
+
+    init(repository: RestaurantRepositoryProtocol,
+         userRepository: UserRepositoryProtocol) {
+        self.repository = repository
+        self.userRepository = userRepository
+    }
+
+    func execute(_ action: UserFavoritesAction) async throws {
+        switch action {
+        case .add(let restaurantID):
+            try await addFavorite(restaurantID)
+        case .remove(let restaurantID):
+            try await removeFavorite(restaurantID)
+        case .check(let restaurantID):
+            try await checkFavorite(restaurantID)
+        }
+    }
+}
+
+// MARK: - Private Functions
+
+private extension UserFavoritesUseCase {
+    func addFavorite(_ restaurantID: UUID) async throws { /* ... */ }
+    func removeFavorite(_ restaurantID: UUID) async throws { /* ... */ }
+    func checkFavorite(_ restaurantID: UUID) async throws { /* ... */ }
+}
+```
+
+### Testing Requirement
+
+**Every UseCase MUST have unit tests** using Swift Testing framework covering:
+- Business rules and validation logic
+- Error paths and edge cases
+- All enum actions (for grouped UseCases)
+
+See `/arc-tdd-patterns` for testing patterns and examples.
+
+### Use Case Best Practices
+
+#### 1. Single Responsibility (Preferred)
+
+```swift
+// ✅ Good: One operation per use case
+final class GetRestaurantsUseCase: GetRestaurantsUseCaseProtocol, Sendable {
     func execute() async throws -> [Restaurant] { }
 }
 
-final class SaveFavoriteUseCase {
+final class SaveFavoriteUseCase: SaveFavoriteUseCaseProtocol, Sendable {
     func execute(restaurantId: UUID) async throws { }
 }
 
-// ❌ Bad: Multiple operations
+// ❌ Bad: Unrelated operations grouped together
 final class RestaurantUseCase {
     func getRestaurants() async throws -> [Restaurant] { }
     func saveFavorite() async throws { }
     func deleteFavorite() async throws { }
+    func calculateScore() async throws -> Double { }
 }
 ```
 
@@ -713,13 +798,16 @@ Before considering Domain Layer complete:
 - [ ] Conform to Identifiable, Equatable, Sendable (structs are Sendable by default)
 
 ### Use Cases
-- [ ] One operation per use case
-- [ ] Protocol defined for each use case
+- [ ] Single-responsibility (default) or grouped with enum actions (when appropriate)
+- [ ] Protocol defined for each use case with `Sendable` conformance
+- [ ] UseCase implementation conforms to `Sendable`
 - [ ] Input validation performed
 - [ ] Business rules enforced
 - [ ] Repository protocols used (not implementations)
+- [ ] Private methods in `private extension` (not inside type body)
 - [ ] Proper error handling
 - [ ] DocC documentation
+- [ ] **Unit tests written** (Swift Testing, Given-When-Then)
 
 ### Repository Protocols
 - [ ] Protocols in Domain Layer only

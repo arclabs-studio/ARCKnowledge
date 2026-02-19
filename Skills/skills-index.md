@@ -32,6 +32,8 @@ Build failures                            → axiom-ios-build
 Data persistence                          → axiom-ios-data
 Performance profiling                     → axiom-ios-performance
 Accessibility audit                       → axiom-ios-accessibility
+Project standards audit (ARC Labs)        → arc-audit ⭐
+Pre-merge review                          → arc-final-review
 ```
 
 ⭐ = Recommended primary source for this topic
@@ -49,6 +51,8 @@ Use for **ARC Labs projects** where consistency with studio standards is require
 | `/arc-data-layer` | Repositories, API clients, DTOs, caching |
 | `/arc-tdd-patterns` | Writing tests, Swift Testing, TDD workflow |
 | `/arc-quality-standards` | Code review, SwiftLint/Format, documentation |
+| `/arc-audit` | Comprehensive project audit (9 domains, A-F grading) |
+| `/arc-final-review` | Pre-merge review of branch changes |
 | `/arc-workflow` | Git commits, branches, PRs, Plan Mode |
 | `/arc-project-setup` | New packages/apps, ARCDevTools, CI/CD |
 | `/arc-worktrees-workflow` | Parallel feature development with git worktrees |
@@ -213,7 +217,7 @@ When multiple skills could apply:
 
 | Skill Source | Last Updated | Key Features |
 |--------------|--------------|--------------|
-| ARC Labs | Jan 2025 | MVVM+C, Swift Testing, @Observable |
+| ARC Labs | Feb 2026 | MVVM+C, Swift Testing, @Observable, @MainActor per-method, /arc-audit |
 | Van der Lee | Feb 2026 | iOS 26, Swift 6.2, Liquid Glass |
 | Axiom | Feb 2026 | WWDC 2025, iOS 26, @concurrent |
 
