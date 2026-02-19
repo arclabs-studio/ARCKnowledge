@@ -277,33 +277,34 @@ import ARCNavigation
 ### Type Organization
 
 ```swift
-
-// MARK: - Type Declaration
-
 struct UserProfile {
-    
-    // MARK: Private Properties
-    
-    private(set) var email: String
-    
-    // MARK: Public Properties
-    
+
+    // MARK: Public Attributes
+
     let id: UUID
     let name: String
     var displayName: String {
         name.isEmpty ? "Anonymous" : name
     }
-    
-    // MARK: Initialization
-    
+
+    // MARK: Internal Attributes
+
+    // (if any internal properties)
+
+    // MARK: Private Attributes
+
+    private(set) var email: String
+
+    // MARK: Initializer
+
     init(id: UUID, name: String, email: String) {
         self.id = id
         self.name = name
         self.email = email
     }
-    
+
     // MARK: Public Functions
-    
+
     func validate() -> Bool {
         // Implementation
     }
@@ -328,14 +329,54 @@ extension UserProfile: Identifiable {
 extension UserProfile: Equatable {
     // Equatable conformance
 }
+```
 
-// MARK: - String
+### Private Extension Pattern
 
-private extension String {
-    var isValidEmail: Bool {
-        // Implementation
-    }
+ALL private methods MUST be in a `private extension`, never inside the type body:
+
+```swift
+// ✅ Correct: private extension
+final class MyClass {
+    // MARK: Public Functions
+    func doWork() { helper() }
 }
+
+// MARK: - Private Functions
+private extension MyClass {
+    func helper() { }
+}
+
+// ❌ Wrong: private methods inside the type body
+final class MyClass {
+    func doWork() { helper() }
+    private func helper() { }  // WRONG - use private extension
+}
+```
+
+### Multiline Declarations (after-first)
+
+First parameter on the same line as the opening parenthesis, subsequent aligned:
+
+```swift
+// ✅ Correct: first param on first line, aligned
+let viewModel = UserViewModel(getUserUseCase: useCase,
+                              router: router,
+                              analytics: analytics)
+
+func configure(title: String,
+               subtitle: String,
+               icon: Image) { }
+
+// ❌ Wrong: first param on new line
+let viewModel = UserViewModel(
+    getUserUseCase: useCase,
+    router: router,
+    analytics: analytics
+)
+```
+
+**SwiftFormat enforces this** with `--wraparguments after-first` and `--wrapparameters after-first`.
 ```
 
 ---

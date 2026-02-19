@@ -104,6 +104,50 @@ function_body_length: 40 (warning) / 60 (error)
 --type-attributes same-line
 --func-attributes same-line
 --wraparguments after-first
+--wrapparameters after-first
+--wrapcollections after-first
+--closingparen balanced
+```
+
+### Multiline Declarations (after-first)
+
+First parameter on the same line as the opening parenthesis:
+
+```swift
+// ✅ Correct: first param on first line, aligned
+let viewModel = UserViewModel(getUserUseCase: useCase,
+                              router: router,
+                              analytics: analytics)
+
+// ❌ Wrong: first param on new line
+let viewModel = UserViewModel(
+    getUserUseCase: useCase,
+    router: router,
+    analytics: analytics
+)
+```
+
+### Private Extension Pattern
+
+ALL private methods MUST be in a `private extension`, never inside the type body:
+
+```swift
+// ✅ Correct
+final class MyClass {
+    // MARK: Public Functions
+    func doWork() { helper() }
+}
+
+// MARK: - Private Functions
+private extension MyClass {
+    func helper() { }
+}
+
+// ❌ Wrong: private methods inside the type body
+final class MyClass {
+    func doWork() { helper() }
+    private func helper() { }  // WRONG - use private extension
+}
 ```
 
 ### Naming Conventions

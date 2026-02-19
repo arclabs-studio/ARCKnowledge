@@ -115,9 +115,8 @@ struct UserListView: View {
     }
 }
 
-// ViewModel (Presentation Layer - coordinates UI state)
+// ViewModel (Presentation Layer - coordinates UI state, NO business logic)
 @Observable
-@MainActor
 final class UserListViewModel {
     private(set) var users: [User] = []
     private(set) var isLoading = false
@@ -128,6 +127,8 @@ final class UserListViewModel {
         self.getUsersUseCase = getUsersUseCase
     }
 
+    // @MainActor only on methods that update UI-bound state
+    @MainActor
     func loadUsers() async {
         isLoading = true
         users = (try? await getUsersUseCase.execute()) ?? []
@@ -140,8 +141,8 @@ protocol GetUsersUseCaseProtocol: Sendable {
     func execute() async throws -> [User]
 }
 
-// Use Case (Domain Layer - business logic)
-final class GetUsersUseCase: GetUsersUseCaseProtocol {
+// Use Case (Domain Layer - ALL business logic lives here)
+final class GetUsersUseCase: GetUsersUseCaseProtocol, Sendable {
     private let repository: UserRepositoryProtocol
 
     init(repository: UserRepositoryProtocol) {
@@ -176,6 +177,94 @@ final class UserRepositoryImpl: UserRepositoryProtocol {
         return dtos.map { $0.toDomain() }
     }
 }
+```
+
+### Use Case Patterns
+
+**Single-responsibility** (default — one operation per Use Case):
+```swift
+protocol GetUsersUseCaseProtocol: Sendable {
+    func execute() async throws -> [User]
+}
+```
+
+**Grouped Use Case** (when actions are closely related and share dependencies):
+```swift
+protocol UserFavoritesUseCaseProtocol: Sendable {
+    func execute(_ action: UserFavoritesAction) async throws
+}
+
+enum UserFavoritesAction: Sendable {
+    case add(restaurantID: UUID)
+    case remove(restaurantID: UUID)
+    case check(restaurantID: UUID)
+}
+
+final class UserFavoritesUseCase: UserFavoritesUseCaseProtocol, Sendable {
+    private let repository: RestaurantRepositoryProtocol
+    private let userRepository: UserRepositoryProtocol
+
+    init(repository: RestaurantRepositoryProtocol,
+         userRepository: UserRepositoryProtocol) {
+        self.repository = repository
+        self.userRepository = userRepository
+    }
+
+    func execute(_ action: UserFavoritesAction) async throws {
+        switch action {
+        case .add(let restaurantID):
+            try await addFavorite(restaurantID)
+        case .remove(let restaurantID):
+            try await removeFavorite(restaurantID)
+        case .check(let restaurantID):
+            try await checkFavorite(restaurantID)
+        }
+    }
+}
+
+// MARK: - Private Functions
+
+private extension UserFavoritesUseCase {
+    func addFavorite(_ restaurantID: UUID) async throws { /* ... */ }
+    func removeFavorite(_ restaurantID: UUID) async throws { /* ... */ }
+    func checkFavorite(_ restaurantID: UUID) async throws { /* ... */ }
+}
+```
+
+Use grouped Use Cases ONLY when:
+- Actions share the same dependencies (same repositories)
+- Actions are semantically related (CRUD on the same resource)
+- Splitting would create near-duplicate classes with identical dependencies
+
+**Testing rule**: Every UseCase MUST have corresponding unit tests using Swift Testing.
+
+### Concurrency Guidelines (`@MainActor`)
+
+Follow the **progressive concurrency model** (WWDC 2025-268):
+
+1. **Do NOT apply `@MainActor` to entire ViewModels** — apply it only to specific methods that update UI-bound state
+2. **Never put `@MainActor` on Use Cases** — Domain layer is actor-agnostic
+3. **Never put `@MainActor` on Repository implementations** — they may run on background
+4. **Use `@concurrent` (Swift 6.2+)** for CPU-intensive work
+5. **Use actors** for non-UI subsystems with independent mutable state
+
+```swift
+// ✅ Correct: @MainActor only on methods that update UI state
+@Observable
+final class UserListViewModel {
+    private(set) var users: [User] = []
+
+    private let getUsersUseCase: GetUsersUseCaseProtocol
+
+    @MainActor
+    func loadUsers() async {
+        users = (try? await getUsersUseCase.execute()) ?? []
+    }
+}
+
+// ❌ Wrong: Blanket @MainActor
+@MainActor @Observable
+final class UserListViewModel { /* ... */ }
 ```
 
 ### SOLID Principles Quick Guide
@@ -260,14 +349,17 @@ For complete patterns, examples, and guidelines:
 
 ## Anti-Patterns to Avoid
 
+- ❌ Business logic in Views or ViewModels (move to Use Cases)
 - ❌ ViewModels depending on concrete Repository implementations
 - ❌ Domain layer importing UIKit or SwiftUI
 - ❌ Data layer containing business logic
 - ❌ Massive ViewModels doing everything
 - ❌ Global singletons without protocol abstraction
 - ❌ Direct navigation without Router (NavigationLink, .sheet)
-- ❌ Business logic in Views
 - ❌ Reverse dependencies (Domain importing Presentation/Data)
+- ❌ Blanket `@MainActor` on entire classes (apply per-method)
+- ❌ `@MainActor` on Use Cases or Repository implementations
+- ❌ Private methods inside type body (use `private extension` instead)
 
 ## Related Skills
 
