@@ -2,7 +2,7 @@
 name: arc-presentation-layer
 description: |
   ARC Labs Studio Presentation layer patterns. Covers SwiftUI Views structure,
-  @Observable ViewModels with @MainActor, state management with LoadingState enum,
+  @Observable ViewModels (NO business logic, @MainActor per-method only), state management with LoadingState enum,
   ARCNavigation Router pattern for navigation, data flow between View-ViewModel-UseCase,
   accessibility, dark mode, SwiftUI previews with @Previewable, iOS 26 Liquid Glass
   patterns, and MVVM+C pattern implementation.
@@ -134,12 +134,14 @@ private extension UserProfileView {
 
 ### ViewModel Structure
 
+ViewModels coordinate UI state only. They delegate ALL business logic to Use Cases.
+Use `@MainActor` only on specific methods that update UI-bound state, not on the entire class.
+
 ```swift
 import ARCLogger
 import ARCNavigation
 import Foundation
 
-@MainActor
 @Observable
 final class UserProfileViewModel {
 
@@ -163,16 +165,15 @@ final class UserProfileViewModel {
 
     // MARK: Initialization
 
-    init(
-        getUserProfileUseCase: GetUserProfileUseCaseProtocol,
-        router: Router<AppRoute>
-    ) {
+    init(getUserProfileUseCase: GetUserProfileUseCaseProtocol,
+         router: Router<AppRoute>) {
         self.getUserProfileUseCase = getUserProfileUseCase
         self.router = router
     }
 
     // MARK: Lifecycle
 
+    @MainActor
     func onAppear() async {
         await loadProfile()
     }
@@ -184,6 +185,7 @@ final class UserProfileViewModel {
         router.navigate(to: .editProfile(user))
     }
 
+    @MainActor
     func onTappedRetry() async {
         await loadProfile()
     }
@@ -192,6 +194,7 @@ final class UserProfileViewModel {
 // MARK: - Private Functions
 
 private extension UserProfileViewModel {
+    @MainActor
     func loadProfile() async {
         isLoading = true
         errorMessage = nil
@@ -234,7 +237,6 @@ enum LoadingState<T: Equatable>: Equatable {
     case error(String)
 }
 
-@MainActor
 @Observable
 final class ContentViewModel {
     private(set) var state: LoadingState<[Item]> = .idle
@@ -282,7 +284,6 @@ enum AppRoute: Route {
 ### Navigation in ViewModel
 
 ```swift
-@MainActor
 @Observable
 final class HomeViewModel {
     private let router: Router<AppRoute>
