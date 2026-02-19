@@ -196,8 +196,9 @@ What's done well in this change:
 
 ### Concurrency Checklist
 - [ ] No `Task.detached` capturing `@MainActor` state
-- [ ] `@MainActor` on ViewModels
-- [ ] `Sendable` conformance where needed
+- [ ] `@MainActor` per-method only (NOT blanket on ViewModel class)
+- [ ] No `@MainActor` on Use Cases or Repository implementations
+- [ ] `Sendable` conformance on UseCase protocols and implementations
 - [ ] No `DispatchQueue.main.async` - use `@MainActor`
 - [ ] `Task.sleep(for:)` instead of nanoseconds
 
@@ -209,11 +210,14 @@ What's done well in this change:
 - [ ] Error handling (no `assertionFailure` in production paths)
 
 ### Architecture Checklist
-- [ ] No business logic in Views
-- [ ] ViewModels use `@Observable` + `@MainActor`
+- [ ] No business logic in Views or ViewModels
+- [ ] ViewModels use `@Observable` (NO blanket `@MainActor`)
+- [ ] `@MainActor` only on specific methods that update UI-bound state
 - [ ] Dependencies injected via protocols
-- [ ] Use Cases in Domain layer
+- [ ] Use Cases in Domain layer with `Sendable` conformance
+- [ ] Every UseCase has unit tests
 - [ ] Repository pattern for data access
+- [ ] Private methods in `private extension` (not inside type body)
 
 ## Related Skills
 
