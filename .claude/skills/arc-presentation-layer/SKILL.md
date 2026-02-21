@@ -1,38 +1,20 @@
 ---
 name: arc-presentation-layer
 description: |
-  ARC Labs Studio Presentation layer patterns. Covers SwiftUI Views structure,
-  @Observable ViewModels (NO business logic, @MainActor per-method only), state management with LoadingState enum,
-  ARCNavigation Router pattern for navigation, data flow between View-ViewModel-UseCase,
-  accessibility, dark mode, SwiftUI previews with @Previewable, iOS 26 Liquid Glass
-  patterns, and MVVM+C pattern implementation.
-  **INVOKE THIS SKILL** when:
-  - Creating SwiftUI Views with proper structure
-  - Implementing @Observable ViewModels with @MainActor
-  - Setting up navigation with ARCNavigation Router
-  - Managing UI state (loading, error, success states)
-  - Handling user actions in ViewModels
-  - Structuring Presentation layer feature folders
-  - Implementing iOS 26 Liquid Glass effects
-  - Using @Previewable for SwiftUI previews
+  Presentation layer patterns with SwiftUI Views, @Observable ViewModels
+  (NO business logic, @MainActor per-method only), LoadingState enum, and
+  ARCNavigation Router. Use when "creating SwiftUI views", "implementing
+  ViewModels", "setting up navigation", "managing UI state", "handling user
+  actions", "using @Previewable", or "implementing Liquid Glass effects".
+user-invocable: true
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Presentation Layer Patterns
 
-## When to Use This Skill
-
-Use this skill when:
-- **Creating SwiftUI Views** with proper structure
-- **Implementing ViewModels** with @Observable
-- **Setting up navigation** with ARCNavigation Router
-- **Managing UI state** (loading, error, success)
-- **Handling user actions** in ViewModels
-- **Structuring feature folders** (View, ViewModel, Router)
-- **Implementing MVVM+C pattern**
-- **Adding SwiftUI previews** with @Previewable
-- **Implementing iOS 26 Liquid Glass** effects and patterns
-
-## Quick Reference
+## Instructions
 
 ### Presentation Layer Structure
 
@@ -218,10 +200,8 @@ private extension UserProfileViewModel {
 #if DEBUG
 extension UserProfileViewModel {
     static var mock: UserProfileViewModel {
-        UserProfileViewModel(
-            getUserProfileUseCase: MockGetUserProfileUseCase(),
-            router: Router()
-        )
+        UserProfileViewModel(getUserProfileUseCase: MockGetUserProfileUseCase(),
+                             router: Router())
     }
 }
 #endif
@@ -309,25 +289,25 @@ final class HomeViewModel {
 ### Data Flow
 
 ```
-View → ViewModel → Use Case → Repository
-  │         │           │          │
-  │ User    │ Calls     │ Business │ Data
-  │ Action  │ execute() │ Logic    │ Access
-  ↓         ↓           ↓          ↓
+View -> ViewModel -> Use Case -> Repository
+  |         |           |          |
+  | User    | Calls     | Business | Data
+  | Action  | execute() | Logic    | Access
+  v         v           v          v
 Button  onTapped()  UseCase.execute()  fetch()
 ```
 
 ### View Naming Conventions
 
-- **Views**: `*View.swift` → `UserProfileView`, `HomeView`
-- **ViewModels**: `*ViewModel.swift` → `UserProfileViewModel`
+- **Views**: `*View.swift` -> `UserProfileView`, `HomeView`
+- **ViewModels**: `*ViewModel.swift` -> `UserProfileViewModel`
 - **User actions**: `onTapped*`, `onChanged*`, `onAppear`
 - **Private methods**: `load*`, `format*`, `validate*`
 
 ## View Best Practices
 
 ```swift
-// ✅ Handle all states
+// Handle all states
 var body: some View {
     Group {
         switch viewModel.state {
@@ -339,34 +319,34 @@ var body: some View {
     }
 }
 
-// ✅ Extract subviews
+// Extract subviews
 var profileHeader: some View { /* ... */ }
 
-// ✅ Use Button for interactions (accessibility)
+// Use Button for interactions (accessibility)
 Button("Add") { viewModel.onTappedAdd() }
 
-// ❌ Don't use onTapGesture for buttons
-Image(systemName: "plus").onTapGesture { }  // BAD
+// Don't use onTapGesture for buttons
+// Image(systemName: "plus").onTapGesture { }  // BAD
 ```
 
 ## ViewModel Best Practices
 
 ```swift
-// ✅ private(set) for mutable state
+// private(set) for mutable state
 private(set) var isLoading = false
 
-// ✅ Prefix user actions with "on"
+// Prefix user actions with "on"
 func onTappedButton() { }
 func onChangedText(_ text: String) { }
 
-// ✅ Call Use Cases, not Repositories
+// Call Use Cases, not Repositories
 let user = try await getUserUseCase.execute()
 
-// ❌ Don't reference Views
-var destinationView: ProfileView?  // NEVER
+// Don't reference Views
+// var destinationView: ProfileView?  // NEVER
 
-// ❌ Don't contain business logic
-if rating > 4.0 && price < 50 { }  // Move to Use Case
+// Don't contain business logic
+// if rating > 4.0 && price < 50 { }  // Move to Use Case
 ```
 
 ## iOS 26+ Patterns (Liquid Glass)
@@ -411,121 +391,62 @@ struct ProfileCardView: View {
 }
 ```
 
-### Glass Effect Tinting
-
-```swift
-// Tinted glass for brand colors
-VStack {
-    content
-}
-.glassEffect()
-.tint(.blue)  // Applies tint to glass effect
-
-// Different tint intensities
-.tint(.blue.opacity(0.3))  // Subtle tint
-```
-
-### Toolbar with Liquid Glass
-
-```swift
-struct ContentView: View {
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                // Content
-            }
-            .navigationTitle("Home")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button(action: {}) {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
-            // iOS 26: Toolbars automatically get Liquid Glass treatment
-        }
-    }
-}
-```
-
 ## SwiftUI Previews
 
 ### @Previewable Macro (iOS 18+)
 
-Use `@Previewable` to simplify previews with state:
-
 ```swift
-// ✅ Modern approach with @Previewable
+// Modern approach with @Previewable
 #Preview {
     @Previewable @State var isEnabled = true
-
     Toggle("Enable Feature", isOn: $isEnabled)
 }
 
-// ✅ Preview with ViewModel
+// Preview with ViewModel
 #Preview("Profile Loaded") {
     @Previewable @State var viewModel = UserProfileViewModel.mock
-
     UserProfileView(viewModel: viewModel)
 }
 
-// ❌ Old approach (still works but verbose)
-struct PreviewWrapper: View {
-    @State private var isEnabled = true
-
-    var body: some View {
-        Toggle("Enable Feature", isOn: $isEnabled)
-    }
-}
-
-#Preview {
-    PreviewWrapper()
-}
-```
-
-### Preview Best Practices
-
-```swift
-// ✅ Multiple preview states
-#Preview("Loaded State") {
-    let viewModel = UserProfileViewModel.mock
-    viewModel.user = .mock
-    return UserProfileView(viewModel: viewModel)
-}
-
-#Preview("Loading State") {
-    let viewModel = UserProfileViewModel.mock
-    viewModel.isLoading = true
-    return UserProfileView(viewModel: viewModel)
-}
-
-#Preview("Error State") {
-    let viewModel = UserProfileViewModel.mock
-    viewModel.errorMessage = "Failed to load profile"
-    return UserProfileView(viewModel: viewModel)
-}
-
-// ✅ Preview with different color schemes
+// Multiple preview states
 #Preview("Dark Mode") {
     UserProfileView(viewModel: .mock)
         .preferredColorScheme(.dark)
 }
 
-// ✅ Preview with different dynamic type sizes
 #Preview("Large Text") {
     UserProfileView(viewModel: .mock)
         .dynamicTypeSize(.xxxLarge)
 }
 ```
 
-## Detailed Documentation
+## References
 
 For complete patterns:
-- **@presentation.md** - Complete Presentation layer guide
+- **@references/presentation.md** - Complete Presentation layer guide
+
+## Examples
+
+### Creating a new feature screen
+User says: "Create a restaurant detail screen"
+
+1. Create `RestaurantDetailView` with proper MARK sections
+2. Create `RestaurantDetailViewModel` with `@Observable`, `@MainActor` per-method
+3. Define route case in `AppRoute`
+4. Extract private subviews into `private extension`
+5. Add previews for loaded, loading, and error states
+6. Result: Complete feature with View, ViewModel, route, and previews
+
+### Setting up navigation for a tab-based app
+User says: "Set up tab navigation with ARCNavigation"
+
+1. Define `AppRoute` enum conforming to `Route`
+2. Create `Router<AppRoute>` in app entry point
+3. Add `@Environment(Router<AppRoute>.self)` to views needing navigation
+4. Implement `onTapped*` methods in ViewModels for navigation actions
+5. Result: Type-safe navigation with router pattern
 
 ## Related Skills
-
-When working on the presentation layer, you may also need:
 
 | If you need...                    | Use                                     |
 |-----------------------------------|-----------------------------------------|
