@@ -1,17 +1,14 @@
 ---
 name: arc-worktrees-workflow
 description: |
-  Git worktrees workflow for parallel feature development at ARC Labs Studio.
-  Covers worktree creation, submodule initialization, cleanup procedures,
-  shell aliases for quick navigation, and integration with Linear ticketing
-  system (FVRS-XXX format).
-
-  **INVOKE THIS SKILL** when:
-  - Starting a new feature that requires isolated development
-  - Setting up parallel development environments
-  - Managing multiple in-progress features simultaneously
-  - Cleaning up after PR merge
-  - Configuring shell aliases for worktree navigation
+  Git worktrees workflow for parallel feature development. Covers worktree
+  creation, submodule initialization, cleanup procedures, shell aliases for
+  quick navigation, and Linear ticketing integration (FVRS-XXX format). Use
+  when "starting isolated development", "parallel features", "managing
+  worktrees", "cleaning up after merge", or "configuring shell aliases".
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Git Worktrees Workflow
@@ -43,9 +40,11 @@ Git worktrees allow you to have multiple working directories from the same repos
     └── FVRS-125/
 ```
 
-## Creating a New Worktree
+## Instructions
 
-### Step 1: Create Branch and Worktree
+### Creating a New Worktree
+
+#### Step 1: Create Branch and Worktree
 
 From the main repository (FavRes-iOS):
 
@@ -69,7 +68,7 @@ git worktree add \
   origin/main
 ```
 
-### Step 2: Initialize Submodules
+#### Step 2: Initialize Submodules
 
 Submodules are NOT automatically initialized in new worktrees:
 
@@ -84,42 +83,19 @@ git submodule update --init --recursive
 git submodule status
 ```
 
-Expected output:
-```
- 2862218b18... Tools/ARCDevTools (v2.0.1-2-g2862218)
- 5fabb991e0... Tools/ARCDevTools/ARCKnowledge (v2.0.1-1-g5fabb99)
-```
-
-### Step 3: Open Claude Code
+#### Step 3: Open Claude Code
 
 ```bash
 # Open Claude Code in the new worktree
 claude
-
-# Or open in new Ghostty tab
-# ⌘+T to create new tab, then:
-cd ~/Developer/ARCLabsStudio/Apps/FavRes-iOS-worktrees/FVRS-123 && claude
 ```
 
-## Managing Worktrees
-
-### List All Worktrees
+### Managing Worktrees
 
 ```bash
-# From any worktree
+# List all worktrees
 git worktree list
-```
 
-Output:
-```
-/Users/arclabs/Developer/ARCLabsStudio/Apps/FavRes-iOS               abc1234 [develop]
-/Users/arclabs/Developer/ARCLabsStudio/Apps/FavRes-iOS-worktrees/FVRS-123  def5678 [feature/FVRS-123]
-/Users/arclabs/Developer/ARCLabsStudio/Apps/FavRes-iOS-worktrees/FVRS-124  ghi9012 [feature/FVRS-124]
-```
-
-### Check Worktree Status
-
-```bash
 # Quick status of all worktrees
 for wt in ~/Developer/ARCLabsStudio/Apps/FavRes-iOS-worktrees/*/; do
   echo "=== $(basename $wt) ==="
@@ -127,42 +103,23 @@ for wt in ~/Developer/ARCLabsStudio/Apps/FavRes-iOS-worktrees/*/; do
 done
 ```
 
-## Cleanup After PR Merge
-
-### Step 1: Remove Worktree
+### Cleanup After PR Merge
 
 ```bash
 # Navigate to main repo
 cd ~/Developer/ARCLabsStudio/Apps/FavRes-iOS
 
-# Remove worktree (keeps branch)
+# Remove worktree
 git worktree remove ../FavRes-iOS-worktrees/FVRS-123
 
 # Or force remove if there are untracked files
 git worktree remove --force ../FavRes-iOS-worktrees/FVRS-123
-```
 
-### Step 2: Delete Branch (Optional)
-
-```bash
 # Delete local branch (if PR was merged)
 git branch -d feature/FVRS-123
 
-# Force delete if not merged
-git branch -D feature/FVRS-123
-
-# Delete remote branch
-git push origin --delete feature/FVRS-123
-```
-
-### Step 3: Prune Stale Entries
-
-```bash
-# Clean up stale worktree entries
+# Prune stale entries
 git worktree prune
-
-# Verify
-git worktree list
 ```
 
 ## Shell Aliases for Quick Navigation
@@ -183,7 +140,6 @@ export ARC_WORKTREES="$ARC_APPS/FavRes-iOS-worktrees"
 alias zf="cd $ARC_FAVRES && pwd"
 
 # Quick navigation to worktrees (za, zb, zc pattern)
-# These get dynamically assigned based on active worktrees
 alias za="cd $ARC_WORKTREES/\$(ls $ARC_WORKTREES | head -1) 2>/dev/null && pwd || echo 'No worktrees'"
 alias zb="cd $ARC_WORKTREES/\$(ls $ARC_WORKTREES | sed -n '2p') 2>/dev/null && pwd || echo 'No second worktree'"
 alias zc="cd $ARC_WORKTREES/\$(ls $ARC_WORKTREES | sed -n '3p') 2>/dev/null && pwd || echo 'No third worktree'"
@@ -212,13 +168,6 @@ zw() {
 zwl() {
   echo "=== FavRes Worktrees ==="
   git -C "$ARC_FAVRES" worktree list
-  echo ""
-  echo "=== Navigation Aliases ==="
-  echo "zf  → main (develop)"
-  echo "za  → $(ls $ARC_WORKTREES 2>/dev/null | head -1 || echo 'none')"
-  echo "zb  → $(ls $ARC_WORKTREES 2>/dev/null | sed -n '2p' || echo 'none')"
-  echo "zc  → $(ls $ARC_WORKTREES 2>/dev/null | sed -n '3p' || echo 'none')"
-  echo "zw  → specific ticket (e.g., zw FVRS-123)"
 }
 
 # Create new worktree (from develop)
@@ -248,9 +197,9 @@ zwn() {
     cd "$ARC_WORKTREES/$ticket"
     git submodule update --init --recursive
     echo ""
-    echo "✅ Worktree created: $ARC_WORKTREES/$ticket"
-    echo "📁 Branch: $branch_name"
-    echo "🚀 Run 'claude' to start coding"
+    echo "Worktree created: $ARC_WORKTREES/$ticket"
+    echo "Branch: $branch_name"
+    echo "Run 'claude' to start coding"
   fi
 }
 
@@ -278,8 +227,8 @@ zwr() {
   git worktree remove "$path" --force
   git worktree prune
 
-  echo "✅ Worktree removed"
-  echo "💡 Don't forget to delete the branch if PR was merged:"
+  echo "Worktree removed"
+  echo "Don't forget to delete the branch if PR was merged:"
   echo "   git branch -d feature/$ticket-*"
 }
 ```
@@ -308,30 +257,13 @@ source ~/.zshrc
 5. **Create PR**: Link to Linear ticket
 6. **After merge**: `zwr FVRS-123`
 
-## Memory Directory Integration
-
-Each worktree should maintain its own `/memory` directory for context:
-
-```
-FVRS-123/
-├── memory/
-│   ├── CONTEXT.md       # Feature context and decisions
-│   ├── PROGRESS.md      # What's done, what's next
-│   └── BLOCKERS.md      # Issues encountered
-├── FavRes-iOS/
-└── Tools/
-```
-
-See `/memory` skill for detailed memory directory patterns.
-
 ## Best Practices
 
-### Recommended Limits
 - **Maximum 3 active worktrees** (matches Ghostty tabs 1-3)
 - **Complete and clean up** before creating new ones
 - **Keep develop branch clean** - only merge via PR
 
-### Common Issues
+## Common Mistakes
 
 | Issue | Solution |
 |-------|----------|
@@ -340,31 +272,30 @@ See `/memory` skill for detailed memory directory patterns.
 | Can't remove worktree | Use `--force` flag or check for running processes |
 | Branch already exists | Delete branch first or use existing branch |
 
-### Daily Workflow
+## Examples
 
-```bash
-# Morning: Check worktree status
-zwl
+### Starting parallel development on two features
+User says: "I need to work on FVRS-123 and FVRS-124 in parallel"
 
-# Start work on feature
-zw FVRS-123
-claude
+1. `zwn FVRS-123 restaurant-search` - creates first worktree
+2. `zwn FVRS-124 map-integration` - creates second worktree
+3. Open Ghostty tabs: Tab 1 = main, Tab 2 = FVRS-123, Tab 3 = FVRS-124
+4. Run `claude` in each tab
+5. Result: Three independent development environments
 
-# Switch context (different Ghostty tab)
-# ⌘+2 or ⌘+3
+### Cleaning up after feature merge
+User says: "FVRS-123 was merged, clean up"
 
-# End of day: commit and push all worktrees
-for wt in ~/Developer/ARCLabsStudio/Apps/FavRes-iOS-worktrees/*/; do
-  echo "=== $(basename $wt) ==="
-  git -C "$wt" status -sb
-done
-```
+1. `zwr FVRS-123` - removes worktree and prunes
+2. `git branch -d feature/FVRS-123-restaurant-search` - deletes local branch
+3. `git push origin --delete feature/FVRS-123-restaurant-search` - deletes remote
+4. Result: Clean worktree state
 
 ## Related Skills
 
 | If you need... | Use |
 |----------------|-----|
-| Memory directories | `/memory` |
+| Memory directories | `/arc-memory` |
 | Git workflow | `/arc-workflow` |
 | Project setup | `/arc-project-setup` |
 | Feature development | `/arc-create-feature` |
