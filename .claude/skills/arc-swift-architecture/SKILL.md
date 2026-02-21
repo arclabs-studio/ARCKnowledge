@@ -1,38 +1,21 @@
 ---
 name: arc-swift-architecture
 description: |
-  ARC Labs Studio Swift architecture patterns and principles. Covers Clean
-  Architecture with three layers (Presentation, Domain, Data), MVVM+Coordinator
-  pattern with ARCNavigation Router, SOLID principles applied to Swift, Protocol-Oriented
-  Design, dependency injection, layer boundaries, data flow, and singleton patterns.
-
-  **INVOKE THIS SKILL** when:
-  - Designing a new feature or module architecture
-  - Setting up layer boundaries (Presentation/Domain/Data)
-  - Implementing MVVM+C pattern with ViewModels and Routers
-  - Creating Use Cases, Entities, or Repository protocols
-  - Reviewing code for architectural compliance
-  - Discussing or explaining architectural decisions
+  Swift architecture patterns covering Clean Architecture (Presentation,
+  Domain, Data layers), MVVM+Coordinator with ARCNavigation Router, SOLID
+  principles, Protocol-Oriented Design, and dependency injection. Use when
+  "designing a feature", "setting up layers", "implementing MVVM+C",
+  "creating Use Cases", "reviewing architecture", or "resolving dependency
+  issues between layers".
+user-invocable: true
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Swift Architecture Patterns
 
-## When to Use This Skill
-
-Use this skill when you need to:
-- **Design new features or modules** following Clean Architecture
-- **Refactor existing code** to improve architecture
-- **Answer questions** about layer boundaries and dependencies
-- **Implement MVVM+C pattern** (Model-View-ViewModel-Coordinator)
-- **Set up dependency injection** properly
-- **Make Protocol-Oriented Design decisions**
-- **Review code architecture** and provide feedback
-- **Explain architectural patterns** to team members
-- **Resolve dependency issues** between layers
-- **Design domain entities and use cases**
-- **Understand when singletons are appropriate**
-
-## Quick Reference
+## Instructions
 
 ### Clean Architecture - Three Layers
 
@@ -181,14 +164,14 @@ final class UserRepositoryImpl: UserRepositoryProtocol {
 
 ### Use Case Patterns
 
-**Single-responsibility** (default — one operation per Use Case):
+**Single-responsibility** (default):
 ```swift
 protocol GetUsersUseCaseProtocol: Sendable {
     func execute() async throws -> [User]
 }
 ```
 
-**Grouped Use Case** (when actions are closely related and share dependencies):
+**Grouped Use Case** (when actions share dependencies and are semantically related):
 ```swift
 protocol UserFavoritesUseCaseProtocol: Sendable {
     func execute(_ action: UserFavoritesAction) async throws
@@ -198,36 +181,6 @@ enum UserFavoritesAction: Sendable {
     case add(restaurantID: UUID)
     case remove(restaurantID: UUID)
     case check(restaurantID: UUID)
-}
-
-final class UserFavoritesUseCase: UserFavoritesUseCaseProtocol, Sendable {
-    private let repository: RestaurantRepositoryProtocol
-    private let userRepository: UserRepositoryProtocol
-
-    init(repository: RestaurantRepositoryProtocol,
-         userRepository: UserRepositoryProtocol) {
-        self.repository = repository
-        self.userRepository = userRepository
-    }
-
-    func execute(_ action: UserFavoritesAction) async throws {
-        switch action {
-        case .add(let restaurantID):
-            try await addFavorite(restaurantID)
-        case .remove(let restaurantID):
-            try await removeFavorite(restaurantID)
-        case .check(let restaurantID):
-            try await checkFavorite(restaurantID)
-        }
-    }
-}
-
-// MARK: - Private Functions
-
-private extension UserFavoritesUseCase {
-    func addFavorite(_ restaurantID: UUID) async throws { /* ... */ }
-    func removeFavorite(_ restaurantID: UUID) async throws { /* ... */ }
-    func checkFavorite(_ restaurantID: UUID) async throws { /* ... */ }
 }
 ```
 
@@ -242,18 +195,17 @@ Use grouped Use Cases ONLY when:
 
 Follow the **progressive concurrency model** (WWDC 2025-268):
 
-1. **Do NOT apply `@MainActor` to entire ViewModels** — apply it only to specific methods that update UI-bound state
+1. **Do NOT apply `@MainActor` to entire ViewModels** — apply it only to specific methods
 2. **Never put `@MainActor` on Use Cases** — Domain layer is actor-agnostic
 3. **Never put `@MainActor` on Repository implementations** — they may run on background
 4. **Use `@concurrent` (Swift 6.2+)** for CPU-intensive work
 5. **Use actors** for non-UI subsystems with independent mutable state
 
 ```swift
-// ✅ Correct: @MainActor only on methods that update UI state
+// Correct: @MainActor only on methods that update UI state
 @Observable
 final class UserListViewModel {
     private(set) var users: [User] = []
-
     private let getUsersUseCase: GetUsersUseCaseProtocol
 
     @MainActor
@@ -262,9 +214,9 @@ final class UserListViewModel {
     }
 }
 
-// ❌ Wrong: Blanket @MainActor
-@MainActor @Observable
-final class UserListViewModel { /* ... */ }
+// Wrong: Blanket @MainActor
+// @MainActor @Observable
+// final class UserListViewModel { /* ... */ }
 ```
 
 ### SOLID Principles Quick Guide
@@ -274,31 +226,6 @@ final class UserListViewModel { /* ... */ }
 3. **Liskov Substitution**: Subtypes must be substitutable for base types
 4. **Interface Segregation**: Many specific protocols > one general
 5. **Dependency Inversion**: Depend on abstractions (protocols), not concretions
-
-### Protocol-Oriented Design
-
-```swift
-// Define protocols in Domain layer
-protocol UserRepository: Sendable {
-    func fetchUsers() async throws -> [User]
-    func saveUser(_ user: User) async throws
-}
-
-// Implement in Data layer
-final class RemoteUserRepository: UserRepository {
-    func fetchUsers() async throws -> [User] { /* ... */ }
-    func saveUser(_ user: User) async throws { /* ... */ }
-}
-
-// Inject via protocols (Dependency Inversion)
-final class GetUsersUseCase {
-    private let repository: UserRepository  // Protocol, not concrete type
-
-    init(repository: UserRepository) {
-        self.repository = repository
-    }
-}
-```
 
 ### Dependency Injection Pattern
 
@@ -317,11 +244,7 @@ final class AppDependencies {
 
 ### When Singletons Are Appropriate
 
-Use singletons ONLY for truly global, unique resources:
-- Hardware access (camera, location)
-- App configuration
-- Analytics/logging
-
+Use singletons ONLY for truly global, unique resources (hardware, config, analytics).
 **Always wrap with protocols for testability:**
 ```swift
 protocol LocationServiceProtocol: Sendable {
@@ -331,39 +254,56 @@ protocol LocationServiceProtocol: Sendable {
 final class LocationService: LocationServiceProtocol {
     static let shared = LocationService()
     private init() {}
-
     func getCurrentLocation() async throws -> Location { /* ... */ }
 }
 ```
 
-## Detailed Documentation
+## References
 
 For complete patterns, examples, and guidelines:
 
-- **@clean-architecture.md** - Complete Clean Architecture guide with examples
-- **@mvvm-c.md** - MVVM+Coordinator pattern implementation details
-- **@solid-principles.md** - SOLID principles applied to Swift
-- **@protocol-oriented.md** - Protocol-Oriented Programming best practices
-- **@singletons.md** - When and how to use singletons safely
-- **@domain.md** - Domain layer: Entities, Use Cases, Repository Protocols
+- **@references/clean-architecture.md** - Complete Clean Architecture guide with examples
+- **@references/mvvm-c.md** - MVVM+Coordinator pattern implementation details
+- **@references/solid-principles.md** - SOLID principles applied to Swift
+- **@references/protocol-oriented.md** - Protocol-Oriented Programming best practices
+- **@references/singletons.md** - When and how to use singletons safely
+- **@references/domain.md** - Domain layer: Entities, Use Cases, Repository Protocols
 
-## Anti-Patterns to Avoid
+## Common Mistakes
 
-- ❌ Business logic in Views or ViewModels (move to Use Cases)
-- ❌ ViewModels depending on concrete Repository implementations
-- ❌ Domain layer importing UIKit or SwiftUI
-- ❌ Data layer containing business logic
-- ❌ Massive ViewModels doing everything
-- ❌ Global singletons without protocol abstraction
-- ❌ Direct navigation without Router (NavigationLink, .sheet)
-- ❌ Reverse dependencies (Domain importing Presentation/Data)
-- ❌ Blanket `@MainActor` on entire classes (apply per-method)
-- ❌ `@MainActor` on Use Cases or Repository implementations
-- ❌ Private methods inside type body (use `private extension` instead)
+- Business logic in Views or ViewModels (move to Use Cases)
+- ViewModels depending on concrete Repository implementations
+- Domain layer importing UIKit or SwiftUI
+- Data layer containing business logic
+- Massive ViewModels doing everything
+- Global singletons without protocol abstraction
+- Direct navigation without Router (NavigationLink, .sheet)
+- Reverse dependencies (Domain importing Presentation/Data)
+- Blanket `@MainActor` on entire classes (apply per-method)
+- `@MainActor` on Use Cases or Repository implementations
+- Private methods inside type body (use `private extension` instead)
+
+## Examples
+
+### Designing a new feature module
+User says: "Design the architecture for a restaurant search feature"
+
+1. Create Domain layer: `SearchRestaurantsUseCase`, `Restaurant` entity, `RestaurantRepositoryProtocol`
+2. Create Data layer: `RestaurantRepositoryImpl`, `RestaurantDTO`, `RestaurantRemoteDataSource`
+3. Create Presentation: `SearchView`, `SearchViewModel` with `@Observable`
+4. Wire up via `AppDependencies` composition root
+5. Result: Complete feature with Clean Architecture layers and DI
+
+### Reviewing code for architectural compliance
+User says: "Review this ViewModel for architecture issues"
+
+1. Check for business logic (filtering, validation) — should be in UseCase
+2. Check `@MainActor` usage — per-method only, not blanket
+3. Check dependencies — protocols, not concrete types
+4. Check private methods — must be in `private extension`
+5. Result: List of violations with recommended fixes
 
 ## Related Skills
-
-When working on architecture, you may also need:
 
 | If you need...              | Use                       |
 |-----------------------------|---------------------------|
