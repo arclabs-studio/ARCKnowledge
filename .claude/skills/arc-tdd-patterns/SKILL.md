@@ -1,50 +1,32 @@
 ---
 name: arc-tdd-patterns
 description: |
-  Test-Driven Development patterns for ARC Labs Studio using Swift Testing
-  framework. Covers TDD methodology (Red-Green-Refactor), test structure with
-  Swift Testing macros (@Test, @Suite, #expect), mocking patterns, parameterized
-  tests, async testing, test organization, coverage requirements (100% for packages,
-  80%+ for apps), and xcodebuild testing for iOS apps.
-
-  **INVOKE THIS SKILL** when:
-  - Writing new tests for features or components
-  - Setting up test infrastructure for a project
-  - Following TDD workflow (Red-Green-Refactor)
-  - Creating mocks and test doubles
-  - Checking or improving test coverage
-  - Configuring CI pipelines for test automation
+  Test-Driven Development patterns using Swift Testing framework. Covers TDD
+  methodology (Red-Green-Refactor), test structure with @Test/@Suite/#expect,
+  mocking patterns, parameterized tests, async testing, and coverage
+  requirements. Use when "writing tests", "setting up test infrastructure",
+  "TDD workflow", "creating mocks", "checking coverage", or "configuring CI
+  for tests".
+user-invocable: true
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - TDD Patterns & Swift Testing
 
-## When to Use This Skill
-
-Use this skill when:
-- **Writing new tests** for features or components
-- **Setting up test infrastructure** for a project or module
-- **Following TDD workflow** (Red → Green → Refactor)
-- **Creating mocks and test doubles** for dependencies
-- **Organizing tests** properly in the test suite
-- **Checking test coverage** and meeting requirements
-- **Reviewing test quality** and test code
-- **Debugging failing tests** and understanding errors
-- **Learning Swift Testing** framework syntax and patterns
-- **Configuring xcodebuild** for iOS app testing
-- **Setting up GitHub Actions** for CI test automation
-
-## Quick Reference
+## Instructions
 
 ### TDD Cycle
 
 ```
-1. 🔴 RED: Write a failing test
+1. RED: Write a failing test
    └─ Test describes desired behavior
 
-2. 🟢 GREEN: Make test pass with minimal code
+2. GREEN: Make test pass with minimal code
    └─ Focus on making it work, not perfect
 
-3. 🔵 REFACTOR: Improve code quality
+3. REFACTOR: Improve code quality
    └─ Clean up while tests keep passing
 ```
 
@@ -264,20 +246,16 @@ struct GetRestaurantsUseCaseTests {
 #if DEBUG
 extension User {
     static var mock: User {
-        User(
-            id: UUID(uuidString: "12345678-1234-1234-1234-123456789012")!,
-            email: "test@example.com",
-            name: "Test User",
-            avatarURL: nil,
-            createdAt: Date(timeIntervalSince1970: 1700000000)
-        )
+        User(id: UUID(uuidString: "12345678-1234-1234-1234-123456789012")!,
+             email: "test@example.com",
+             name: "Test User",
+             avatarURL: nil,
+             createdAt: Date(timeIntervalSince1970: 1700000000))
     }
 
-    static func mock(
-        id: UUID = UUID(),
-        email: String = "test@example.com",
-        name: String = "Test User"
-    ) -> User {
+    static func mock(id: UUID = UUID(),
+                     email: String = "test@example.com",
+                     name: String = "Test User") -> User {
         User(id: id, email: email, name: name, avatarURL: nil, createdAt: Date())
     }
 }
@@ -327,44 +305,6 @@ xcodebuild test \
 xcrun xccov view --report TestResults.xcresult
 ```
 
-### GitHub Actions CI
-
-```yaml
-name: Tests
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
-
-jobs:
-  test:
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
-
-      - name: Run Tests
-        run: |
-          xcodebuild test \
-            -scheme "YourApp" \
-            -destination "platform=iOS Simulator,name=iPhone 16" \
-            -enableCodeCoverage YES \
-            -resultBundlePath TestResults.xcresult \
-            CODE_SIGNING_ALLOWED=NO
-
-      - name: Upload Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: TestResults.xcresult
-```
-
 ### Swift Package Testing
 
 ```bash
@@ -410,30 +350,30 @@ await #expect(throws: (any Error).self) {
 }
 ```
 
-## Detailed Documentation
+## References
 
 For complete testing guides and examples:
-- **@testing.md** - Complete TDD methodology and Swift Testing guide
+- **@references/testing.md** - Complete TDD methodology and Swift Testing guide
 
-## Anti-Patterns to Avoid
+## Common Mistakes
 
-- ❌ Testing implementation details instead of behavior
-- ❌ Tests depending on execution order
-- ❌ Sharing state between tests
-- ❌ Testing multiple things in one test
-- ❌ Not following AAA pattern
-- ❌ Mocking everything (test real objects when possible)
-- ❌ Ignoring failing tests
-- ❌ Using real network/database in unit tests
-- ❌ Skipping `CODE_SIGNING_ALLOWED=NO` in CI
+- Testing implementation details instead of behavior
+- Tests depending on execution order
+- Sharing state between tests
+- Testing multiple things in one test
+- Not following AAA pattern
+- Mocking everything (test real objects when possible)
+- Ignoring failing tests
+- Using real network/database in unit tests
+- Skipping `CODE_SIGNING_ALLOWED=NO` in CI
 
-## Common Test Errors & Solutions
+## Troubleshooting
 
 ### "Scheme not found"
 ```bash
 # List available schemes
 xcodebuild -list
-# Share scheme: Product → Scheme → Manage Schemes → Check "Shared"
+# Share scheme: Product -> Scheme -> Manage Schemes -> Check "Shared"
 ```
 
 ### "No matching destination"
@@ -447,9 +387,28 @@ xcodebuild -scheme "YourApp" -showdestinations
 # Add CODE_SIGNING_ALLOWED=NO to xcodebuild command
 ```
 
-## Related Skills
+## Examples
 
-When working on testing, you may also need:
+### TDD workflow for a new UseCase
+User says: "Create a GetFavoriteRestaurantsUseCase with TDD"
+
+1. RED: Write `GetFavoriteRestaurantsUseCaseTests` with test for filtering favorites
+2. GREEN: Create `GetFavoriteRestaurantsUseCase` with minimal implementation
+3. REFACTOR: Extract shared mock setup into `makeSUT()` factory
+4. Add error path test, empty list test
+5. Result: UseCase with 100% coverage and clean test suite
+
+### Adding tests to an existing ViewModel
+User says: "Add tests for SearchViewModel"
+
+1. Create `SearchViewModelTests` suite
+2. Test initial state (idle, no results)
+3. Test `onChangedSearchText` delegates to UseCase
+4. Test loading state transitions
+5. Test error handling
+6. Result: Comprehensive ViewModel tests covering all state transitions
+
+## Related Skills
 
 | If you need...              | Use                       |
 |-----------------------------|---------------------------|

@@ -1,35 +1,21 @@
 ---
 name: arc-project-setup
 description: |
-  ARC Labs Studio project setup and configuration. Covers Swift Package creation
-  (Package.swift templates, structure, versioning), iOS App setup, ARCDevTools
-  integration (SwiftLint, SwiftFormat, Git hooks), Xcode project configuration,
-  SPM best practices, GitHub Actions CI/CD, and development workflow automation.
-
-  **INVOKE THIS SKILL** when:
-  - Creating new Swift Packages with proper structure
-  - Setting up new iOS Apps following ARC Labs standards
-  - Integrating ARCDevTools (SwiftLint, SwiftFormat, hooks)
-  - Configuring Xcode projects or CI/CD pipelines
-  - Managing SPM dependencies
-  - Troubleshooting build or configuration issues
+  Project setup and configuration for Swift Packages and iOS Apps. Covers
+  Package.swift templates, ARCDevTools integration (SwiftLint, SwiftFormat,
+  Git hooks), Xcode project configuration, SPM best practices, GitHub Actions
+  CI/CD, and development workflow automation. Use when "creating a new
+  package", "setting up an iOS app", "integrating ARCDevTools", "configuring
+  CI/CD", or "managing SPM dependencies".
+user-invocable: true
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Project Setup & Configuration
 
-## When to Use This Skill
-
-Use this skill when:
-- **Creating new Swift Packages** with proper structure
-- **Setting up new iOS Apps** following ARC Labs standards
-- **Integrating ARCDevTools** for quality automation
-- **Configuring Xcode projects** properly
-- **Managing SPM dependencies** in packages or apps
-- **Setting up CI/CD** with GitHub Actions
-- **Troubleshooting build** or configuration issues
-- **Understanding ARC Labs tooling** and workflow
-
-## Quick Reference
+## Instructions
 
 ### Swift Package Template (Package.swift)
 
@@ -48,11 +34,8 @@ let package = Package(
     ],
 
     products: [
-        .library(
-            name: "ARCPackageName",
-            targets: ["ARCPackageName"]
-        )
-        // Note: Demo apps are standalone Xcode projects, NOT products
+        .library(name: "ARCPackageName",
+                 targets: ["ARCPackageName"])
     ],
 
     dependencies: [
@@ -60,21 +43,17 @@ let package = Package(
     ],
 
     targets: [
-        .target(
-            name: "ARCPackageName",
-            dependencies: [
-                .product(name: "ARCLogger", package: "ARCLogger")
-            ],
-            path: "Sources/ARCPackageName",
-            swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency")
-            ]
-        ),
-        .testTarget(
-            name: "ARCPackageNameTests",
-            dependencies: ["ARCPackageName"],
-            path: "Tests/ARCPackageNameTests"
-        )
+        .target(name: "ARCPackageName",
+                dependencies: [
+                    .product(name: "ARCLogger", package: "ARCLogger")
+                ],
+                path: "Sources/ARCPackageName",
+                swiftSettings: [
+                    .enableUpcomingFeature("StrictConcurrency")
+                ]),
+        .testTarget(name: "ARCPackageNameTests",
+                    dependencies: ["ARCPackageName"],
+                    path: "Tests/ARCPackageNameTests")
     ],
 
     swiftLanguageModes: [.v6]
@@ -144,34 +123,6 @@ make setup     # Re-run ARCDevTools setup
 | `.git/hooks/pre-commit` | Auto-format and lint before commit |
 | `.git/hooks/pre-push` | Run tests before push |
 
-### SwiftLint Key Rules
-
-```yaml
-# Metrics
-line_length: 120 (warning) / 150 (error)
-file_length: 500 (warning) / 1000 (error)
-function_body_length: 50 (warning) / 100 (error)
-
-# Custom rules (errors)
-no_force_cast: as! → severity: error
-no_force_try: try! → severity: error
-
-# Custom rules (warnings)
-observable_viewmodel: ViewModels must use @Observable
-```
-
-### SwiftFormat Key Settings
-
-```
---swiftversion 6.0
---indent 4
---maxwidth 120
---self remove
---type-attributes prev-line    # @MainActor on separate line
---func-attributes prev-line
---stored-var-attributes same-line
-```
-
 ### GitHub Actions (Swift Packages)
 
 ```yaml
@@ -238,40 +189,14 @@ jobs:
 | **ARCIntelligence** | AI/ML integration |
 | **ARCMetrics** | Analytics (MetricKit, TelemetryDeck) |
 
-## Project Type Detection
-
-ARCDevTools auto-detects project type:
-
-| Type | Detection | Generated |
-|------|-----------|-----------|
-| Swift Package | `Package.swift` | SPM-based Makefile, workflows |
-| iOS App | `*.xcodeproj` | xcodebuild Makefile, iOS workflows |
-
-```bash
-# Override if needed
-./ARCDevTools/arcdevtools-setup --type package
-./ARCDevTools/arcdevtools-setup --type ios-app
-```
-
 ## Semantic Versioning
 
 ```
 MAJOR.MINOR.PATCH
 
-Breaking change → MAJOR (1.0.0 → 2.0.0)
-New feature    → MINOR (1.0.0 → 1.1.0)
-Bug fix        → PATCH (1.0.0 → 1.0.1)
-```
-
-### Creating a Release
-
-```bash
-# Tag release
-git tag -a v1.2.0 -m "Release 1.2.0"
-git push origin v1.2.0
-
-# Update CHANGELOG.md
-# GitHub Actions will create release from tag
+Breaking change -> MAJOR (1.0.0 -> 2.0.0)
+New feature    -> MINOR (1.0.0 -> 1.1.0)
+Bug fix        -> PATCH (1.0.0 -> 1.0.1)
 ```
 
 ## Demo Apps in Packages
@@ -286,14 +211,14 @@ Example/
 
 **NOT** executable targets in Package.swift.
 
-## Detailed Documentation
+## References
 
 For complete guides:
-- **@packages.md** - Swift Package creation and standards
-- **@apps.md** - iOS App guidelines
-- **@arcdevtools.md** - ARCDevTools integration and configuration
-- **@spm.md** - SPM commands and troubleshooting
-- **@xcode.md** - Xcode project configuration
+- **@references/packages.md** - Swift Package creation and standards
+- **@references/apps.md** - iOS App guidelines
+- **@references/arcdevtools.md** - ARCDevTools integration and configuration
+- **@references/spm.md** - SPM commands and troubleshooting
+- **@references/xcode.md** - Xcode project configuration
 
 ## Troubleshooting
 
@@ -311,7 +236,7 @@ chmod +x .git/hooks/pre-commit
 ### xcodebuild Scheme Not Found
 ```bash
 xcodebuild -list  # List available schemes
-# In Xcode: Product → Scheme → Manage Schemes → Check "Shared"
+# In Xcode: Product -> Scheme -> Manage Schemes -> Check "Shared"
 ```
 
 ### Code Signing Error in CI
@@ -325,9 +250,29 @@ xcodebuild test -scheme "App" CODE_SIGNING_ALLOWED=NO
 git submodule update --init --recursive
 ```
 
-## Related Skills
+## Examples
 
-When working on project setup, you may also need:
+### Creating a new Swift Package from scratch
+User says: "Create a new ARCAnalytics package"
+
+1. Create directory and `Package.swift` using template
+2. Set up `Sources/ARCAnalytics/` and `Tests/ARCAnalyticsTests/` structure
+3. Add ARCDevTools as submodule, run setup
+4. Create initial `README.md` following template
+5. Commit: `chore: initial package setup`
+6. Result: Complete package ready for development with CI/CD
+
+### Integrating ARCDevTools into an existing project
+User says: "Add ARCDevTools to my app"
+
+1. `git submodule add https://github.com/arclabs-studio/ARCDevTools`
+2. `./ARCDevTools/arcdevtools-setup --with-workflows`
+3. Verify `.swiftlint.yml`, `.swiftformat`, `Makefile` created
+4. Test: `make lint && make format`
+5. Commit: `chore: integrate ARCDevTools`
+6. Result: Automated linting, formatting, and CI workflows
+
+## Related Skills
 
 | If you need...              | Use                       |
 |-----------------------------|---------------------------|

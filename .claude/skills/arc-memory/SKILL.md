@@ -3,14 +3,12 @@ name: arc-memory
 description: |
   Memory directories system for persistent context across Claude Code sessions.
   Based on Boris Cherny's recommendations for maintaining project knowledge,
-  decisions, progress, and patterns that Claude can reference automatically.
-
-  **INVOKE THIS SKILL** when:
-  - Starting a new project and need to set up memory structure
-  - Beginning work on a feature and need to understand context
-  - Ending a session and need to document progress
-  - Making architectural decisions that should be remembered
-  - Encountering patterns or gotchas worth documenting
+  decisions, progress, and patterns. Use when "setting up memory structure",
+  "documenting decisions", "starting a new feature", "ending a session",
+  "recording patterns or gotchas", or "persistent context across sessions".
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Memory Directories System
@@ -29,9 +27,11 @@ The `/memory` directory system provides persistent context across Claude Code se
 | Repeating same mistakes | Document gotchas in PATTERNS.md |
 | Context window limits | Summarize key info, reference details |
 
-## Directory Structure
+## Instructions
 
-### Project-Level Memory (Main Repo)
+### Directory Structure
+
+#### Project-Level Memory (Main Repo)
 
 ```
 FavRes-iOS/
@@ -47,7 +47,7 @@ FavRes-iOS/
 └── CLAUDE.md               # References memory/ for context
 ```
 
-### Feature-Level Memory (Worktrees)
+#### Feature-Level Memory (Worktrees)
 
 ```
 FavRes-iOS-worktrees/
@@ -59,199 +59,7 @@ FavRes-iOS-worktrees/
         └── LEARNINGS.md    # Things discovered during implementation
 ```
 
-## File Templates
-
-### memory/README.md
-
-```markdown
-# Memory Directory
-
-This directory contains persistent context for Claude Code sessions.
-Files here are referenced in CLAUDE.md and provide project knowledge
-that doesn't need to be repeated each conversation.
-
-## Files
-
-| File | Purpose | Update Frequency |
-|------|---------|------------------|
-| ARCHITECTURE.md | System design decisions | When architecture changes |
-| DECISIONS.md | ADRs with rationale | Each significant decision |
-| PATTERNS.md | Code patterns & gotchas | When patterns emerge |
-| DEPENDENCIES.md | Why we use each dep | When deps change |
-| features/*.md | Feature-specific context | Per feature lifecycle |
-
-## Usage
-
-Claude Code reads these files when referenced in CLAUDE.md.
-Keep files concise - summarize, don't duplicate documentation.
-```
-
-### memory/ARCHITECTURE.md
-
-```markdown
-# Architecture Memory
-
-Last updated: YYYY-MM-DD
-
-## System Overview
-
-[Brief description of the system architecture]
-
-## Key Components
-
-### Component Name
-- **Purpose**: What it does
-- **Location**: Where to find it
-- **Dependencies**: What it needs
-- **Gotchas**: Common issues
-
-## Data Flow
-
-[Describe how data moves through the system]
-
-## Integration Points
-
-[External services, APIs, packages]
-```
-
-### memory/DECISIONS.md
-
-```markdown
-# Architecture Decision Records
-
-## ADR-001: [Decision Title]
-
-**Date**: YYYY-MM-DD
-**Status**: Accepted | Superseded | Deprecated
-**Ticket**: FVRS-XXX
-
-### Context
-What is the issue that we're seeing that is motivating this decision?
-
-### Decision
-What is the change that we're proposing and/or doing?
-
-### Consequences
-What becomes easier or more difficult because of this change?
-
----
-
-## ADR-002: [Next Decision]
-...
-```
-
-### memory/PATTERNS.md
-
-```markdown
-# Project Patterns & Gotchas
-
-## Patterns We Follow
-
-### Pattern Name
-```swift
-// Example code showing the pattern
-```
-**When to use**: [Situation]
-**Why**: [Rationale]
-
-## Gotchas & Pitfalls
-
-### Gotcha: [Issue Name]
-**Symptom**: What you see when this happens
-**Cause**: Why it happens
-**Solution**: How to fix/avoid it
-**Ticket**: FVRS-XXX (if applicable)
-
-## Anti-Patterns to Avoid
-
-### Don't Do This
-```swift
-// Bad example
-```
-**Why it's bad**: [Explanation]
-**Do this instead**: [Better approach]
-```
-
-### memory/DEPENDENCIES.md
-
-```markdown
-# Dependencies Memory
-
-## ARC Packages
-
-| Package | Version | Purpose | Notes |
-|---------|---------|---------|-------|
-| ARCDesignSystem | 2.3.1 | Design tokens, typography | Use .arcSpacing*, .arcCorner* |
-| ARCUIComponents | 1.6.0 | Reusable UI components | Check before building custom |
-| ARCNavigation | 1.2.0 | Type-safe routing | Router<AppRoute> pattern |
-
-## Third-Party
-
-| Package | Version | Purpose | Why This One |
-|---------|---------|---------|--------------|
-| [Name] | X.Y.Z | [Purpose] | [Why we chose it] |
-
-## Dependency Decisions
-
-### Why ARCDesignSystem over custom tokens?
-[Explanation]
-
-### Why not [Alternative]?
-[Explanation]
-```
-
-### memory/features/FVRS-XXX.md (Feature Template)
-
-```markdown
-# FVRS-XXX: [Feature Title]
-
-**Status**: In Progress | Completed | On Hold
-**Branch**: feature/FVRS-XXX-description
-**Started**: YYYY-MM-DD
-**Completed**: YYYY-MM-DD (if done)
-
-## Overview
-
-[What this feature does and why]
-
-## Scope
-
-### In Scope
-- [ ] Task 1
-- [ ] Task 2
-
-### Out of Scope
-- Item explicitly not included
-
-## Technical Approach
-
-[How we're implementing this]
-
-## Key Decisions
-
-| Decision | Rationale | Date |
-|----------|-----------|------|
-| Used X instead of Y | Because... | YYYY-MM-DD |
-
-## Progress Log
-
-### YYYY-MM-DD
-- Completed: [What was done]
-- Next: [What's planned]
-- Blockers: [If any]
-
-## Learnings
-
-[Things discovered that might help future features]
-
-## Related
-
-- Ticket: [Linear link]
-- PR: [GitHub link]
-- Related features: FVRS-YYY
-```
-
-## CLAUDE.md Integration
+### CLAUDE.md Integration
 
 Add to your project's CLAUDE.md:
 
@@ -270,21 +78,21 @@ When starting a new feature, check `memory/features/` for related context.
 When making decisions, document in `memory/DECISIONS.md`.
 ```
 
-## Session Workflow
+### Session Workflow
 
-### Starting a Session
+#### Starting a Session
 
 1. Claude reads CLAUDE.md (which references memory/)
 2. If working on feature FVRS-XXX, read `memory/features/FVRS-XXX.md`
 3. Check PROGRESS.md for current state
 
-### During a Session
+#### During a Session
 
-1. Make decisions → Note them for DECISIONS.md
-2. Discover patterns → Note them for PATTERNS.md
-3. Hit blockers → Document in feature's BLOCKERS.md
+1. Make decisions -> Note them for DECISIONS.md
+2. Discover patterns -> Note them for PATTERNS.md
+3. Hit blockers -> Document in feature's BLOCKERS.md
 
-### Ending a Session
+#### Ending a Session
 
 ```markdown
 ## Session End Checklist
@@ -295,6 +103,17 @@ When making decisions, document in `memory/DECISIONS.md`.
 - [ ] Note blockers in feature memory if unresolved
 - [ ] Commit memory changes: `git add memory/ && git commit -m "docs(memory): update session progress"`
 ```
+
+## References
+
+File templates are available in the `templates/` directory:
+
+- **@templates/README.template.md** - Memory directory README
+- **@templates/ARCHITECTURE.template.md** - Architecture memory template
+- **@templates/DECISIONS.template.md** - ADR template
+- **@templates/PATTERNS.template.md** - Patterns and gotchas template
+- **@templates/DEPENDENCIES.template.md** - Dependencies memory template
+- **@templates/FEATURE.template.md** - Feature-specific memory template
 
 ## Memory Maintenance
 
@@ -319,6 +138,25 @@ When using worktrees:
 1. Main repo memory = shared project knowledge
 2. Worktree memory = feature-specific context
 3. After PR merge, move relevant learnings to main memory
+
+## Examples
+
+### Setting up memory for a new project
+User says: "Set up memory directories for my new app"
+
+1. Create `memory/` directory in project root
+2. Generate README.md, ARCHITECTURE.md, DECISIONS.md, PATTERNS.md, DEPENDENCIES.md from templates
+3. Create `memory/features/` directory
+4. Add memory references to CLAUDE.md
+5. Result: Complete memory structure ready for use
+
+### Documenting a decision mid-session
+User says: "Document why we chose SwiftData over Core Data"
+
+1. Read `memory/DECISIONS.md` to find next ADR number
+2. Add ADR entry with context, decision, and consequences
+3. Commit: `docs(memory): add ADR-003 SwiftData selection`
+4. Result: Decision preserved for future sessions
 
 ## Related Skills
 

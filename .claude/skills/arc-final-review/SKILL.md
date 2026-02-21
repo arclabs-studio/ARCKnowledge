@@ -1,24 +1,22 @@
 ---
 name: arc-final-review
 description: |
-  Final code review before merge. Analyzes branch changes by domain (SwiftUI, Data,
-  Concurrency, Architecture), invokes specialized Axiom skills, and generates a
-  prioritized finalization plan with verification gates and tech debt cleanup items.
-
-  **INVOKE THIS SKILL** when:
-  - About to merge a feature branch
-  - Finishing a significant code change
-  - Preparing a PR for review
-  - Wanting a comprehensive quality check before ship
-  - Need to identify remaining tech debt
+  Final code review before merge. Analyzes branch changes by domain (SwiftUI,
+  Data, Concurrency, Architecture), invokes specialized Axiom skills, and
+  generates a prioritized finalization plan with verification gates and tech
+  debt cleanup items. Use when "about to merge", "preparing a PR", "finishing
+  a feature branch", "pre-merge review", or "final quality check before ship".
 user-invocable: true
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Final Review
 
 You are a **Staff iOS Engineer** reviewing code changes before merge. Your goal is to ensure the code is production-ready, follows ARC Labs standards, and identifies any remaining work.
 
-## Review Process
+## Instructions
 
 ### Step 1: Analyze Current State
 
@@ -219,6 +217,27 @@ What's done well in this change:
 - [ ] Repository pattern for data access
 - [ ] Private methods in `private extension` (not inside type body)
 
+## Examples
+
+### Pre-merge review of a search feature
+User says: "Review my feature branch before I create a PR"
+
+1. Run `git diff --name-only develop..HEAD` to identify changed files
+2. Categorize: SwiftUI views, ViewModel, UseCase, Repository, Tests
+3. Invoke `/swiftui-expert-skill` for UI files, `/swift-concurrency` for async code
+4. Generate finalization plan with 0 critical, 2 important issues
+5. List verification gates (tests pass, Thread Sanitizer clean)
+6. Result: "Ready to Merge" with 2 improvement suggestions
+
+### Reviewing a data migration branch
+User says: "/arc-final-review"
+
+1. Detect SwiftData model changes and migration code
+2. Invoke `/axiom:axiom-ios-data` for migration safety review
+3. Flag missing `mergePolicy` as Critical
+4. Flag missing migration test as Important
+5. Result: "Needs Work" - address 1 critical issue before merge
+
 ## Related Skills
 
 When issues are found, use these skills for detailed guidance:
@@ -232,21 +251,6 @@ When issues are found, use these skills for detailed guidance:
 | Performance | `/axiom:axiom-ios-performance` |
 | Testing gaps | `/arc-tdd-patterns` |
 | Architecture violations | `/arc-swift-architecture` |
-
-## Example Usage
-
-```
-User: /arc-final-review
-
-Claude:
-1. Runs git diff to identify changed files
-2. Categorizes changes by domain
-3. Invokes relevant Axiom skills for each domain
-4. Generates comprehensive finalization plan
-5. Lists verification gates
-6. Identifies tech debt items
-7. Provides merge recommendation
-```
 
 ## Integration with ARC Labs Workflow
 
