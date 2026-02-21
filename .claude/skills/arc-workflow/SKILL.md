@@ -1,35 +1,20 @@
 ---
 name: arc-workflow
 description: |
-  ARC Labs Studio Git workflow and development process. Covers Conventional Commits
-  specification (feat, fix, docs, refactor, test, chore), Git branch naming with
-  Linear integration (feature/, bugfix/, hotfix/), branch protection rules, PR
-  templates, Plan Mode for complex tasks, Git Flow with main/develop branches,
-  release process, and commit message templates.
-
-  **INVOKE THIS SKILL** when:
-  - Writing commit messages (Conventional Commits format)
-  - Creating branches with proper naming
-  - Opening Pull Requests with ARC Labs template
-  - Planning complex features with Plan Mode
-  - Understanding Git Flow (main/develop branches)
-  - Setting up branch protection rules
+  Git workflow and development process covering Conventional Commits (feat,
+  fix, docs, refactor, test, chore), branch naming with Linear integration,
+  PR templates, Plan Mode for complex tasks, and Git Flow with main/develop
+  branches. Use when "writing commits", "creating branches", "opening PRs",
+  "planning features", or "understanding Git Flow".
+user-invocable: true
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Git Workflow & Development Process
 
-## When to Use This Skill
-
-Use this skill when:
-- **Writing commit messages** following Conventional Commits
-- **Creating branches** with proper naming
-- **Opening Pull Requests** with templates
-- **Planning complex features** with Plan Mode
-- **Understanding Git Flow** (main, develop, feature branches)
-- **Setting up branch protection** rules
-- **Creating releases** with proper tagging
-
-## Quick Reference
+## Instructions
 
 ### Commit Message Format
 
@@ -59,12 +44,12 @@ Use this skill when:
 ### Commit Message Rules
 
 ```bash
-# ✅ Good
+# Good
 feat(storage): add SwiftData migration support
 fix(map): prevent crash when selecting annotation
 docs(architecture): document coordinator pattern
 
-# ❌ Bad
+# Bad
 feat(storage): added migration  # Past tense
 fix(map): fixed a bug          # Vague
 docs: updates                  # Too generic
@@ -107,19 +92,19 @@ release/1.2.0
 ### Git Flow
 
 ```
-main ←────────── (production, tagged releases)
-  ↑
-  │ merge
-  │
-release/1.2.0 ← (version bump, final testing)
-  ↑
-  │ branch
-  │
-develop ←────── (integration branch)
-  ↑
-  │ merge (PR)
-  │
-feature/ARC-123-search ← (feature development)
+main <------------- (production, tagged releases)
+  ^
+  | merge
+  |
+release/1.2.0 <- (version bump, final testing)
+  ^
+  | branch
+  |
+develop <--------- (integration branch)
+  ^
+  | merge (PR)
+  |
+feature/ARC-123-search <- (feature development)
 ```
 
 ### Workflow Commands
@@ -141,25 +126,6 @@ git push -u origin feature/ARC-123-restaurant-search
 git checkout develop
 git pull
 git branch -d feature/ARC-123-restaurant-search
-```
-
-### Hotfix Workflow
-
-```bash
-# Create hotfix from main
-git checkout main
-git pull origin main
-git checkout -b hotfix/ARC-178-auth-vulnerability
-
-# Fix and commit
-git commit -m "hotfix(auth): patch security vulnerability"
-
-# Merge to main AND develop
-# Create PR to main first, then PR to develop
-# Tag main with version
-git checkout main
-git tag -a v1.2.1 -m "Hotfix: Auth vulnerability patch"
-git push --tags
 ```
 
 ### PR Template
@@ -212,80 +178,51 @@ Enter Plan Mode when:
 
 1. **Deep Reflection** - Analyze scope, identify ambiguities
 2. **Ask Clarifying Questions** (4-6 questions)
-   - Architecture decisions
-   - Scope boundaries
-   - Dependencies needed
-   - Testing strategy
-   - Trade-offs
 3. **Draft Step-by-Step Plan** with files/types
 4. **Get Approval** before implementing
 5. **Progress Updates** after each phase
 
-### Plan Mode Questions
-
-```markdown
-## Architecture
-- Which layer should this live in?
-- Should this be a new package or part of existing?
-
-## Scope
-- What's explicitly in/out of scope?
-- Any dependencies on other features?
-
-## Testing
-- What are the critical test scenarios?
-- What coverage is expected?
-
-## Trade-offs
-- Performance vs. simplicity?
-- Flexibility vs. clarity?
-```
-
-## Detailed Documentation
+## References
 
 For complete guidelines:
-- **@git-commits.md** - Complete commit message guide
-- **@git-branches.md** - Branch naming and workflow
-- **@plan-mode.md** - When and how to use Plan Mode
+- **@references/git-commits.md** - Complete commit message guide
+- **@references/git-branches.md** - Branch naming and workflow
+- **@references/plan-mode.md** - When and how to use Plan Mode
 
 ## Branch Protection Rules
 
 ### main Branch
-- ✅ Require PR reviews (1+ approvals)
-- ✅ Status checks must pass
-- ✅ No force push
-- ✅ No deletion
+- Require PR reviews (1+ approvals)
+- Status checks must pass
+- No force push
+- No deletion
 
 ### develop Branch
-- ✅ Require PR reviews
-- ✅ Status checks must pass
-- ✅ No force push
+- Require PR reviews
+- Status checks must pass
+- No force push
 
-## Quick Commit Examples
+## Examples
 
-```bash
-# Feature
-git commit -m "feat(auth): add biometric authentication"
+### Committing a new feature
+User says: "Commit my restaurant search implementation"
 
-# Bug fix
-git commit -m "fix(map): resolve annotation selection crash"
+1. Run `git status` to see changed files
+2. Stage relevant files: `git add Sources/Features/Search/`
+3. Commit: `feat(search): add restaurant search with filtering`
+4. Push: `git push -u origin feature/ARC-123-restaurant-search`
+5. Result: Clean commit following Conventional Commits format
 
-# Documentation
-git commit -m "docs(readme): update setup instructions"
+### Creating a PR for a bugfix
+User says: "Create a PR for my map crash fix"
 
-# Refactoring
-git commit -m "refactor(storage): extract provider protocol"
-
-# Testing
-git commit -m "test(repository): add comprehensive CRUD tests"
-
-# Chore
-git commit -m "chore(deps): update ARCLogger to 1.2.0"
-```
+1. Verify branch naming: `bugfix/ARC-145-map-crash`
+2. Push branch if not yet pushed
+3. Create PR with template: `Bugfix/ARC-145: Map Annotation Crash Fix`
+4. Link to Linear issue in PR body
+5. Result: PR ready for review with proper template
 
 ## Related Skills
-
-When working on Git workflow, you may also need:
 
 | If you need...              | Use                       |
 |-----------------------------|---------------------------|
