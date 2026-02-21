@@ -2,33 +2,22 @@
 name: arc-audit
 description: |
   Comprehensive audit of ARC Labs Studio projects for standards compliance.
-  Scans 9 domains (Architecture, Presentation, Domain, Data, Testing, Code Style,
-  Documentation, Accessibility, Concurrency) and generates a compliance report
-  with severity levels and a letter grade (A-F).
-
-  **INVOKE THIS SKILL** when:
-  - Performing a periodic project health check
-  - Reviewing an entire project or module for compliance
-  - Preparing for a major release or milestone
-  - Onboarding a new project to ARC Labs standards
-  - After significant refactoring to verify nothing regressed
+  Scans 9 domains (Architecture, Presentation, Domain, Data, Testing, Code
+  Style, Documentation, Accessibility, Concurrency) and generates a compliance
+  report with severity levels and a letter grade (A-F). Use when "project
+  health check", "pre-release audit", "standards compliance", "post-refactor
+  verification", or "onboarding to ARC Labs standards".
 user-invocable: true
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Project Audit
 
 You are a **Staff iOS Engineer** performing a comprehensive standards audit. Your goal is to systematically scan the project against all ARC Labs standards and produce an actionable compliance report.
 
-## When to Use This Skill
-
-Use this skill when:
-- **Periodic review**: Monthly or milestone-based project health check
-- **Pre-release audit**: Before shipping a version
-- **Post-refactor verification**: After significant code changes
-- **New project onboarding**: Bringing an existing codebase to ARC Labs standards
-- **Quality gate**: Before approving a large PR or feature branch
-
-## Audit Scope
+## Instructions
 
 You can audit at three levels:
 
@@ -37,8 +26,6 @@ You can audit at three levels:
 | **Full project** | `/arc-audit` | All source files in the project |
 | **Directory** | `/arc-audit Sources/Features/` | Only files in the specified path |
 | **Single file** | `/arc-audit Sources/MyFile.swift` | One file against all applicable rules |
-
-## Audit Process
 
 ### Step 1: Discover Project Structure
 
@@ -385,6 +372,25 @@ After generating the report:
 3. **Prioritize by impact** - Critical > Important > Improvement
 4. **Suggest Linear tickets** - For Important+ findings, suggest creating Linear issues
 
+## Examples
+
+### Full project audit before release
+User says: "/arc-audit"
+
+1. Discover project structure (Swift Package with 45 source files, 22 test files)
+2. Run all 9 domain audits against Sources/ and Tests/
+3. Find: 0 Critical, 3 Important (missing Sendable on 2 UseCases, 1 blanket @MainActor)
+4. Grade: B
+5. Result: Compliance report with specific file:line references and fixes
+
+### Auditing a single directory
+User says: "/arc-audit Sources/Features/Search/"
+
+1. Scope audit to Search feature files only
+2. Check all 9 domains against those files
+3. Find: 1 Important (ViewModel contains business logic)
+4. Result: Focused report with recommendation to extract UseCase
+
 ## Integration with Workflow
 
 ```
@@ -395,7 +401,7 @@ After generating the report:
 5. Re-audit after fixes to verify grade improvement
 ```
 
-## Complementary Skills
+## Related Skills
 
 During the audit, invoke these skills for domain-specific deep dives:
 
@@ -408,8 +414,6 @@ During the audit, invoke these skills for domain-specific deep dives:
 | Concurrency issues | `axiom-swift-concurrency` |
 | Accessibility issues | `axiom-ios-accessibility` |
 | SwiftUI problems | `swiftui-expert-skill` |
-
-## Related Skills
 
 | If you need... | Use |
 |----------------|-----|
