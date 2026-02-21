@@ -5,6 +5,21 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-02-22
+
+### Changed
+- **All 11 skills aligned with Anthropic's official skill guide** (Feb 2026)
+  - Rewritten `description` fields with concise trigger phrases
+  - Added `metadata` blocks (author, version) to all skills
+  - Renamed section headings (`Instructions`, `References`, `Common Mistakes`, `Examples`)
+  - Added `## Examples` sections with concrete usage scenarios
+  - Removed `**INVOKE THIS SKILL**` blocks from descriptions
+- **23 supplemental files moved to `references/` subdirectories** for progressive disclosure
+  - `arc-data-layer`, `arc-tdd-patterns`, `arc-presentation-layer` (1 file each)
+  - `arc-workflow` (3 files), `arc-swift-architecture` (6 files)
+  - `arc-quality-standards` (6 files), `arc-project-setup` (5 files)
+- **Skills updated**: arc-final-review, arc-audit, arc-memory, arc-data-layer, arc-tdd-patterns, arc-presentation-layer, arc-workflow, arc-swift-architecture, arc-quality-standards, arc-project-setup, arc-worktrees-workflow
+
 ## [2.6.0] - 2026-02-19
 
 ### Added
