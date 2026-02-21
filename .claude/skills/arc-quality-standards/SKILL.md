@@ -1,73 +1,56 @@
 ---
 name: arc-quality-standards
 description: |
-  ARC Labs Studio code quality standards and best practices. Covers code review
-  checklists for AI-generated code, SwiftLint and SwiftFormat configuration, naming
-  conventions, documentation standards with DocC, README templates, package folder
-  structure guidelines, UI/UX guidelines following Apple HIG, accessibility (VoiceOver,
-  Dynamic Type), dark mode support, and localization.
-
-  **INVOKE THIS SKILL** when:
-  - Reviewing ANY code (before approving or suggesting changes)
-  - Writing DocC documentation for public APIs
-  - Creating or updating README files
-  - Checking naming conventions or file structure
-  - Implementing accessibility or dark mode support
-  - Setting up or fixing SwiftLint/SwiftFormat issues
+  Code quality standards covering code review checklists, SwiftLint/SwiftFormat
+  configuration, naming conventions, DocC documentation, README templates,
+  package structure, UI/UX guidelines (Apple HIG), accessibility, dark mode,
+  and localization. Use when "reviewing code", "writing documentation",
+  "creating READMEs", "checking naming", "implementing accessibility",
+  or "fixing lint issues".
+user-invocable: true
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Code Quality Standards
 
-## When to Use This Skill
-
-Use this skill when:
-- **Reviewing code** (human or AI-generated)
-- **Setting up SwiftLint/SwiftFormat** in a project
-- **Fixing code style issues** or warnings
-- **Writing DocC documentation** for public APIs
-- **Creating README files** for packages or projects
-- **Organizing package folder structure** by size
-- **Implementing accessibility** (VoiceOver, Dynamic Type)
-- **Supporting dark mode** properly
-- **Following Apple HIG** for UI/UX
-- **Localizing user-facing strings**
-
-## Quick Reference
+## Instructions
 
 ### Code Review Checklist (AI-Generated Code)
 
 #### SwiftUI Deprecated APIs to Replace
 ```swift
-// ❌ foregroundColor() → ✅ foregroundStyle()
+// foregroundColor() -> foregroundStyle()
 Text("Hello").foregroundStyle(.blue)
 
-// ❌ cornerRadius() → ✅ clipShape()
+// cornerRadius() -> clipShape()
 Rectangle().clipShape(.rect(cornerRadius: 12))
 
-// ❌ NavigationView → ✅ NavigationStack
+// NavigationView -> NavigationStack
 NavigationStack { ContentView() }
 
-// ❌ ObservableObject → ✅ @Observable
+// ObservableObject -> @Observable
 @Observable final class ViewModel { }
 
-// ❌ DispatchQueue.main.async → ✅ @MainActor async/await
+// DispatchQueue.main.async -> @MainActor async/await
 @MainActor func loadData() async { }
 
-// ❌ Task.sleep(nanoseconds:) → ✅ Task.sleep(for:)
+// Task.sleep(nanoseconds:) -> Task.sleep(for:)
 try await Task.sleep(for: .seconds(1))
 ```
 
 #### Accessibility Requirements
 ```swift
-// ❌ onTapGesture → ✅ Button (for VoiceOver)
+// onTapGesture -> Button (for VoiceOver)
 Button { action() } label: {
     Image(systemName: "star")
 }
 
-// ✅ All buttons need text labels
+// All buttons need text labels
 Button("Add Item", systemImage: "plus") { addItem() }
 
-// ❌ Fixed font sizes → ✅ Dynamic Type
+// Fixed font sizes -> Dynamic Type
 Text("Hello").font(.title2)  // Not .system(size: 24)
 ```
 
@@ -114,17 +97,16 @@ function_body_length: 40 (warning) / 60 (error)
 First parameter on the same line as the opening parenthesis:
 
 ```swift
-// ✅ Correct: first param on first line, aligned
+// Correct: first param on first line, aligned
 let viewModel = UserViewModel(getUserUseCase: useCase,
                               router: router,
                               analytics: analytics)
 
-// ❌ Wrong: first param on new line
-let viewModel = UserViewModel(
-    getUserUseCase: useCase,
-    router: router,
-    analytics: analytics
-)
+// Wrong: first param on new line
+// let viewModel = UserViewModel(
+//     getUserUseCase: useCase,
+//     router: router
+// )
 ```
 
 ### Private Extension Pattern
@@ -132,7 +114,7 @@ let viewModel = UserViewModel(
 ALL private methods MUST be in a `private extension`, never inside the type body:
 
 ```swift
-// ✅ Correct
+// Correct
 final class MyClass {
     // MARK: Public Functions
     func doWork() { helper() }
@@ -142,12 +124,6 @@ final class MyClass {
 private extension MyClass {
     func helper() { }
 }
-
-// ❌ Wrong: private methods inside the type body
-final class MyClass {
-    func doWork() { helper() }
-    private func helper() { }  // WRONG - use private extension
-}
 ```
 
 ### Naming Conventions
@@ -155,14 +131,12 @@ final class MyClass {
 ```swift
 // Types: PascalCase
 struct UserProfile { }
-class NetworkManager { }
 enum LoadingState { }
 protocol DataSourceProtocol { }
 
 // Variables/Constants: camelCase
 let userName = "John"
 var isLoading = false
-private let apiClient: APIClient
 
 // Booleans: is/has/should prefix
 var isLoading: Bool
@@ -194,31 +168,25 @@ import ARCNavigation
 struct UserProfile {
 
     // MARK: Private Properties
-
     private(set) var email: String
 
     // MARK: Public Properties
-
     let id: UUID
     let name: String
 
     // MARK: Initialization
-
     init(id: UUID, name: String, email: String) { }
 
     // MARK: Public Functions
-
     func validate() -> Bool { }
 }
 
 // MARK: - Private Functions
-
 private extension UserProfile {
     func formatEmail() -> String { }
 }
 
 // MARK: - Identifiable
-
 extension UserProfile: Identifiable { }
 ```
 
@@ -241,99 +209,59 @@ extension UserProfile: Identifiable { }
 public func fetchUser(by id: UUID) async throws -> User { }
 ```
 
-### Package Folder Structure
-
-**Small Package (< 10 files)**
-```
-Sources/PackageName/
-├── PackageName.swift       # Main entry point
-├── Models/                 # Data models
-└── Extensions/             # Swift extensions
-```
-
-**Medium Package (10-30 files)**
-```
-Sources/PackageName/
-├── Public/                 # Public API
-├── Internal/               # Internal implementation
-├── Models/                 # Data models
-├── Protocols/              # Protocol definitions
-├── Extensions/             # Swift extensions
-└── Utilities/              # Helper functions
-```
-
-**Large Package (> 30 files)**
-```
-Sources/PackageName/
-├── Public/
-│   ├── API/               # Public interfaces
-│   └── Models/            # Public models
-├── Internal/
-│   ├── Services/          # Internal services
-│   ├── Repositories/      # Data access
-│   └── Managers/          # Business logic
-├── Protocols/
-├── Extensions/
-└── Resources/             # Assets, localization
-```
-
 ### UI Guidelines (Apple HIG)
 
 ```swift
-// ✅ Semantic colors (adapt to dark mode)
+// Semantic colors (adapt to dark mode)
 Color.primary          // Text color
 Color.secondary        // Secondary text
 Color.accentColor      // Tint color
 Color(.systemBackground)
 
-// ✅ Dynamic Type
+// Dynamic Type
 .font(.body)           // Scales with user settings
 .font(.title)
-.font(.headline)
 
-// ✅ Safe area respect
+// Safe area respect
 .safeAreaInset(edge: .bottom) { }
 .ignoresSafeArea(.keyboard)
 
-// ✅ Accessibility
+// Accessibility
 .accessibilityLabel("Add new item")
 .accessibilityHint("Double tap to add")
-.dynamicTypeSize(...DynamicTypeSize.accessibility3)
 ```
 
 ### Localization
 
 ```swift
-// ✅ All user-facing text must use String(localized:)
+// All user-facing text must use String(localized:)
 Text(String(localized: "welcome_message"))
 
-// In Localizable.strings (English keys)
-"welcome_message" = "Welcome to FavRes!"
-
-// ❌ Never hardcode strings
-Text("Welcome!")  // BAD
+// Never hardcode strings
+// Text("Welcome!")  // BAD
 ```
 
-## Detailed Documentation
+## References
 
 For complete guidelines:
-- **@code-review.md** - AI-generated code review checklist
-- **@code-style.md** - SwiftLint/SwiftFormat configuration
-- **@documentation.md** - DocC documentation standards
-- **@readme-standards.md** - README template
-- **@package-structure.md** - Package folder organization
-- **@ui-guidelines.md** - HIG, accessibility, dark mode
+- **@references/code-review.md** - AI-generated code review checklist
+- **@references/code-style.md** - SwiftLint/SwiftFormat configuration
+- **@references/documentation.md** - DocC documentation standards
+- **@references/readme-standards.md** - README template
+- **@references/package-structure.md** - Package folder organization
+- **@references/ui-guidelines.md** - HIG, accessibility, dark mode
 
-## Critical Rules (Never Break)
+## Common Mistakes
 
-1. **No Force Unwrapping** - Avoid force unwrap, force try, and force cast operators
-2. **No print()** - Use ARCLogger
-3. **No Magic Numbers** - Use named constants
-4. **No Hardcoded Strings** - Use localization
-5. **No Skipping Accessibility** - VoiceOver labels required
-6. **No Skipping Dark Mode** - Test both modes
-7. **One Type Per File** - Separate files for each type
-8. **Public APIs Must Be Documented** - DocC required
+- Force unwrapping in production code
+- Using `print()` instead of ARCLogger
+- Magic numbers without named constants
+- Massive files (>500 lines) or functions (>60 lines)
+- Missing access control on public APIs
+- Stringly-typed code (use enums/structs)
+- Fixed font sizes (breaks Dynamic Type)
+- Using `onTapGesture` for interactive elements
+- Deprecated SwiftUI APIs
 
 ## Pre-commit Commands
 
@@ -351,21 +279,27 @@ swiftlint --fix
 swiftformat --lint .
 ```
 
-## Anti-Patterns to Avoid
+## Examples
 
-- ❌ Force unwrapping in production code
-- ❌ Using `print()` instead of ARCLogger
-- ❌ Magic numbers without named constants
-- ❌ Massive files (>500 lines) or functions (>60 lines)
-- ❌ Missing access control on public APIs
-- ❌ Stringly-typed code (use enums/structs)
-- ❌ Fixed font sizes (breaks Dynamic Type)
-- ❌ Using `onTapGesture` for interactive elements
-- ❌ Deprecated SwiftUI APIs
+### Reviewing AI-generated SwiftUI code
+User says: "Review this View for quality issues"
+
+1. Check for deprecated APIs (foregroundColor, cornerRadius, NavigationView)
+2. Verify accessibility (Button vs onTapGesture, Dynamic Type, labels)
+3. Check private extension pattern (no private methods inside type body)
+4. Verify multiline style (after-first parameter alignment)
+5. Result: List of issues with specific line references and fixes
+
+### Setting up SwiftLint for a new project
+User says: "Configure SwiftLint for my package"
+
+1. Install: `brew install swiftlint`
+2. Copy `.swiftlint.yml` from ARCDevTools
+3. Add custom rules (no_force_cast, no_force_try, no_print)
+4. Set up pre-commit hook
+5. Result: Automated quality checks on every commit
 
 ## Related Skills
-
-When working on quality-related tasks, you may also need:
 
 | If you need...              | Use                       |
 |-----------------------------|---------------------------|
