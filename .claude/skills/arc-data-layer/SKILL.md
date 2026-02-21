@@ -1,36 +1,20 @@
 ---
 name: arc-data-layer
 description: |
-  ARC Labs Studio Data layer implementation patterns. Covers Repository pattern
-  implementation, Data Sources (remote API and local persistence), DTOs (Data
-  Transfer Objects), caching strategies (memory, disk, cache-first), error mapping,
-  SwiftData integration, API client patterns, and data transformation between DTOs
-  and Domain entities.
-
-  **INVOKE THIS SKILL** when:
-  - Implementing Repository pattern for data access
-  - Creating API clients for network requests
-  - Setting up local persistence with SwiftData
-  - Designing caching strategies (memory, disk, cache-first)
-  - Creating DTOs and mapping to Domain entities
-  - Handling data layer errors properly
+  Implements the Data layer using Repository pattern, DTOs, API clients, and
+  SwiftData persistence. Use when "creating a repository", "implementing API
+  client", "setting up SwiftData", "designing caching", "mapping DTOs to
+  domain entities", or "handling data layer errors". Covers caching strategies,
+  error mapping, and data transformation.
+user-invocable: true
+metadata:
+  author: ARC Labs Studio
+  version: "3.0.0"
 ---
 
 # ARC Labs Studio - Data Layer Patterns
 
-## When to Use This Skill
-
-Use this skill when:
-- **Implementing repositories** for data access
-- **Creating API clients** for network requests
-- **Setting up local persistence** with SwiftData
-- **Designing caching strategies** (memory, disk, cache-first)
-- **Creating DTOs** for API/Database mapping
-- **Mapping between DTOs and Domain entities**
-- **Handling data layer errors** properly
-- **Coordinating multiple data sources** (remote, local, cache)
-
-## Quick Reference
+## Instructions
 
 ### Data Layer Structure
 
@@ -64,11 +48,9 @@ final class UserRepositoryImpl {
 
     // MARK: Initialization
 
-    init(
-        remoteDataSource: UserRemoteDataSourceProtocol,
-        localDataSource: UserLocalDataSourceProtocol,
-        cacheManager: CacheManagerProtocol
-    ) {
+    init(remoteDataSource: UserRemoteDataSourceProtocol,
+         localDataSource: UserLocalDataSourceProtocol,
+         cacheManager: CacheManagerProtocol) {
         self.remoteDataSource = remoteDataSource
         self.localDataSource = localDataSource
         self.cacheManager = cacheManager
@@ -119,11 +101,9 @@ final class UserRemoteDataSource: UserRemoteDataSourceProtocol {
     }
 
     func fetchUser(by id: UUID) async throws -> UserDTO {
-        try await apiClient.request(
-            endpoint: .user(id),
-            method: .get,
-            responseType: UserDTO.self
-        )
+        try await apiClient.request(endpoint: .user(id),
+                                    method: .get,
+                                    responseType: UserDTO.self)
     }
 }
 ```
@@ -185,23 +165,19 @@ struct UserDTO: Codable {
 
 extension UserDTO {
     func toDomain() -> User {
-        User(
-            id: UUID(uuidString: id) ?? UUID(),
-            email: email,
-            name: name,
-            avatarURL: avatarUrl.flatMap { URL(string: $0) },
-            createdAt: ISO8601DateFormatter().date(from: createdAt) ?? Date()
-        )
+        User(id: UUID(uuidString: id) ?? UUID(),
+             email: email,
+             name: name,
+             avatarURL: avatarUrl.flatMap { URL(string: $0) },
+             createdAt: ISO8601DateFormatter().date(from: createdAt) ?? Date())
     }
 
     static func fromDomain(_ user: User) -> UserDTO {
-        UserDTO(
-            id: user.id.uuidString,
-            email: user.email,
-            name: user.name,
-            avatarUrl: user.avatarURL?.absoluteString,
-            createdAt: ISO8601DateFormatter().string(from: user.createdAt)
-        )
+        UserDTO(id: user.id.uuidString,
+                email: user.email,
+                name: user.name,
+                avatarUrl: user.avatarURL?.absoluteString,
+                createdAt: ISO8601DateFormatter().string(from: user.createdAt))
     }
 }
 ```
@@ -210,24 +186,20 @@ extension UserDTO {
 
 ```swift
 protocol APIClientProtocol: Sendable {
-    func request<T: Decodable>(
-        endpoint: Endpoint,
-        method: HTTPMethod,
-        body: Encodable?,
-        responseType: T.Type
-    ) async throws -> T
+    func request<T: Decodable>(endpoint: Endpoint,
+                               method: HTTPMethod,
+                               body: Encodable?,
+                               responseType: T.Type) async throws -> T
 }
 
 final class APIClient: APIClientProtocol {
     private let baseURL: URL
     private let session: URLSession
 
-    func request<T: Decodable>(
-        endpoint: Endpoint,
-        method: HTTPMethod = .get,
-        body: Encodable? = nil,
-        responseType: T.Type
-    ) async throws -> T {
+    func request<T: Decodable>(endpoint: Endpoint,
+                               method: HTTPMethod = .get,
+                               body: Encodable? = nil,
+                               responseType: T.Type) async throws -> T {
         let url = baseURL.appendingPathComponent(endpoint.path)
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
@@ -297,30 +269,40 @@ try await local.save(data)  // Always save locally first
 Task.detached { try? await remote.save(data) }  // Sync in background
 ```
 
-## Detailed Documentation
+## References
 
 For complete patterns:
-- **@data.md** - Complete Data layer guide with examples
+- **@references/data.md** - Complete Data layer guide with examples
 
-## Critical Rules
+## Common Mistakes
 
-1. **No Business Logic** - Repository only handles data access
-2. **DTOs Stay in Data Layer** - Never return DTOs to Domain
-3. **Map Errors** - Convert network errors to repository errors
-4. **Protocol-Based** - All data sources use protocols
-5. **Cache Invalidation** - Invalidate cache when data changes
+- Putting business logic in repositories (filtering, sorting, validation)
+- Returning DTOs to Domain layer
+- Exposing network errors directly
+- Storing Domain entities in database (use DTOs)
+- Tight coupling to specific data source
 
-## Anti-Patterns to Avoid
+## Examples
 
-- ❌ Business logic in repositories (filtering, sorting, validation)
-- ❌ Returning DTOs to Domain layer
-- ❌ Exposing network errors directly
-- ❌ Storing Domain entities in database (use DTOs)
-- ❌ Tight coupling to specific data source
+### Creating a repository for restaurants
+User says: "Create a repository for restaurants"
+
+1. Define `RestaurantRepositoryProtocol` in Domain layer
+2. Implement `RestaurantRepositoryImpl` in Data layer with remote + local data sources
+3. Create `RestaurantDTO` with `toDomain()` mapper
+4. Add cache-first strategy for list endpoints
+5. Result: Complete repository with protocol, implementation, DTO, and error mapping
+
+### Adding SwiftData persistence
+User says: "Add local persistence for user favorites"
+
+1. Create `FavoriteModel` as SwiftData `@Model`
+2. Create `FavoriteLocalDataSource` with `FavoriteLocalDataSourceProtocol`
+3. Add DTO mapping between model and domain entity
+4. Integrate into existing repository with cache-first strategy
+5. Result: Offline-capable favorites with SwiftData backing
 
 ## Related Skills
-
-When working on the data layer, you may also need:
 
 | If you need...              | Use                       |
 |-----------------------------|---------------------------|
