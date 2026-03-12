@@ -5,6 +5,32 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] - 2026-03-12
+
+### Added
+- **arc-xcode-cloud skill** (`.claude/skills/arc-xcode-cloud/`) - Complete Xcode Cloud CI/CD setup guidance: ci_scripts configuration, recommended workflows (CI, PR validation, Release), environment variables, private SPM authorization, and 25-hour budget strategy
+- **Claude GitHub Actions workflows** - `claude.yml` for @claude mentions in issues/PRs and `claude-code-review.yml` for automated PR code reviews
+- **arc-worktrees-workflow skill** - Parallel feature development with git worktrees
+- **arc-memory skill** - Persistent context across Claude Code sessions
+- **arc-final-review skill** - Pre-merge quality checks inspired by Staff iOS Engineer review patterns
+
+### Changed
+- **CLAUDE.md** comprehensive agent guide rewrite with full architecture patterns
+  - Progressive concurrency model (`@MainActor` only per-method, never blanket on class)
+  - Grouped Use Case pattern with action enums
+  - Private extension pattern enforcement
+  - Multiline declaration alignment rules
+  - ARCKnowledge submodule chain documentation
+  - Skills routing table with Axiom and Van der Lee complementary skills
+  - Critical rules expanded to 15
+- **arc-presentation-layer skill** - Added iOS 26 Liquid Glass material effects, `@Previewable` macro, toolbar glass treatment, backward-compatible glass implementations
+- **arc-swift-architecture skill** - Added Use Case grouping patterns, ISP examples, concurrency guidelines
+- **Skills/skills-index.md** - Updated routing guide with arc-xcode-cloud and CI/CD scenario
+- **Tools/xcode.md** - Added Xcode Cloud section with quick setup guide
+- **Architecture and layer documentation** - Updated ViewModel/UseCase patterns, `@MainActor` per-method examples, Sendable conformance
+
+---
+
 ## [2.7.0] - 2026-02-22
 
 ### Changed
