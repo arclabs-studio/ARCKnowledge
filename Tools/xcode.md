@@ -1181,12 +1181,42 @@ Format Document: ⌘ + A, Ctrl + I
 
 ---
 
+## Xcode Cloud
+
+Xcode Cloud is the **recommended CI/CD solution** for ARC Labs iOS apps. It is Apple's native CI/CD service, tightly integrated with Xcode and App Store Connect.
+
+| Feature | Details |
+|---------|---------|
+| **Free Tier** | 25 compute hours/month |
+| **Configuration** | Via Xcode/App Store Connect UI — no YAML files |
+| **Customization** | `ci_scripts/` shell scripts at project root |
+| **Advantages** | Native simulator, automatic signing, zero macOS overhead |
+
+### Quick Setup
+
+```bash
+# Copy ci_scripts/ templates from ARCDevTools
+mkdir -p ci_scripts
+cp Tools/ARCDevTools/templates/ci_scripts/*.sh ci_scripts/
+chmod +x ci_scripts/*.sh
+git add ci_scripts/ && git commit -m "feat(ci): add Xcode Cloud ci_scripts"
+```
+
+Then configure workflows in Xcode → Report Navigator (⌘9) → Cloud tab.
+
+**Full setup guide**: `Tools/ARCDevTools/docs/xcode-cloud-setup.md`
+
+**Skill**: Use `/arc-xcode-cloud` for complete Xcode Cloud setup guidance, troubleshooting, and hour budget strategy.
+
+---
+
 ## Resources
 
 - [Xcode Help](https://developer.apple.com/documentation/xcode)
 - [Build Settings Reference](https://xcodebuildsettings.com/)
 - [App Distribution Guide](https://developer.apple.com/documentation/xcode/distributing-your-app-for-beta-testing-and-releases)
 - [Swift Package Manager](https://swift.org/package-manager/)
+- [Xcode Cloud Documentation](https://developer.apple.com/documentation/xcode/xcode-cloud)
 
 ---
 
