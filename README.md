@@ -40,6 +40,7 @@ ARCKnowledge now uses **Claude Code Skills** for progressive context loading, re
 | **Presentation Layer** | `/arc-presentation-layer` | Views, ViewModels, @Observable, navigation |
 | **Workflow** | `/arc-workflow` | Git commits, branches, PRs, Plan Mode |
 | **Project Setup** | `/arc-project-setup` | New packages/apps, ARCDevTools, Xcode, CI/CD |
+| **Xcode Cloud** | `/arc-xcode-cloud` | Xcode Cloud setup, ci_scripts, workflows, hour budget |
 
 ### How It Works
 
@@ -223,6 +224,12 @@ Covers Swift Package creation, iOS App setup, ARCDevTools integration, Xcode con
 
 **Files included:**
 - `packages.md`, `apps.md`, `arcdevtools.md`, `spm.md`, `xcode.md`
+
+### arc-xcode-cloud
+Covers Xcode Cloud setup, `ci_scripts/` configuration, recommended workflows (CI, PR validation, Release), environment variables, private SPM dependency authorization, and 25-hour budget strategy.
+
+**Files included:**
+- `SKILL.md` (self-contained)
 
 ---
 
