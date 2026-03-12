@@ -57,6 +57,7 @@ Use for **ARC Labs projects** where consistency with studio standards is require
 | `/arc-project-setup` | New packages/apps, ARCDevTools, CI/CD |
 | `/arc-worktrees-workflow` | Parallel feature development with git worktrees |
 | `/arc-memory` | Persistent context across Claude Code sessions |
+| `/arc-xcode-cloud` | Xcode Cloud setup, ci_scripts, workflow configuration, hour budgeting |
 
 **Characteristics**:
 - Prescriptive (imposes specific patterns)
@@ -189,6 +190,11 @@ Available sources:
 1. `swiftui-expert-skill` for Liquid Glass basics
 2. `axiom-liquid-glass` for detailed implementation
 3. `axiom-swiftui-26-ref` for API reference
+
+### "I need to set up CI/CD for an iOS app"
+1. `/arc-xcode-cloud` for Xcode Cloud setup (recommended)
+2. `/arc-project-setup` for ARCDevTools integration
+3. `axiom-ios-build` if build is failing in CI
 
 ### "My build is failing"
 1. `axiom-ios-build` first (environment diagnostics)

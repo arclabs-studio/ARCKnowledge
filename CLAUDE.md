@@ -56,6 +56,7 @@ Use these slash commands to load detailed context when needed.
 |-------|----------|
 | `/arc-swift-architecture` | Designing new features, setting up layers, MVVM+C pattern |
 | `/arc-project-setup` | Creating new packages/apps, integrating ARCDevTools, CI/CD |
+| `/arc-xcode-cloud` | Setting up CI/CD, configuring Xcode Cloud workflows, ci_scripts |
 
 ### During Implementation
 | Skill | Use When |
