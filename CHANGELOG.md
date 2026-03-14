@@ -5,6 +5,30 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2026-03-14
+
+### Added
+- **ARC Labs Subagents system** (`AGENTS.md`, `.claude/agents/`) — 12 autonomous agents that invoke skills dynamically
+  - **arc-swift-tdd** (sonnet) — TDD implementation, writes tests before code
+  - **arc-swift-reviewer** (sonnet) — Delegated code review, structured report
+  - **arc-swift-debugger** (sonnet) — Build/test failure diagnosis, environment-first
+  - **arc-spm-manager** (haiku) — Package.swift management and verification (ARCPurchasing, ARCAuthentication added)
+  - **arc-xcode-explorer** (haiku) — Read-only codebase navigation and architecture mapping
+  - **arc-linear-bridge** (haiku) — Linear ticket to Swift test scaffolding + branch creation
+  - **arc-pr-publisher** — Validates pre-PR checklist, creates GitHub PR, links Linear ticket, updates issue to "In Review"
+  - **arc-release-orchestrator** — Bumps version, updates CHANGELOG, creates release branch and PR
+  - **arc-testflight** — Orchestrates archive → upload → TestFlight configuration and tester groups
+  - **arc-aso** — App Store Optimization, orchestrates 8 ASO skills, produces ready-to-upload metadata
+  - **arc-swiftdata-migration** — High-risk schema migration agent, test-before-code, confirms before breaking changes
+  - **arc-dependency-auditor** — Read-only SPM dependency audit across project ecosystem
+
+### Changed
+- **arc-linear-bridge** — Added `mcp__ARC_Linear_GitHub__github_create_branch` tool; creates branch after scaffolding
+- **arc-spm-manager** — Fixed GitHub org URL (`arcdevtools` → `arclabs-studio`); added ARCPurchasing and ARCAuthentication to known packages table
+- **Skills/skills-index.md** — Added Agents section with routing table for all 12 agents
+
+---
+
 ## [2.8.0] - 2026-03-12
 
 ### Added
