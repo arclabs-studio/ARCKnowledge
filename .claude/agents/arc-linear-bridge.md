@@ -15,6 +15,7 @@ tools:
   - Skill
   - mcp__ARC_Linear_GitHub__linear_get_issue
   - mcp__ARC_Linear_GitHub__linear_list_issues
+  - mcp__ARC_Linear_GitHub__github_create_branch
 ---
 
 # ARC Labs Linear Bridge Agent
@@ -142,26 +143,39 @@ type: project
 [any technical notes extracted from ticket]
 ```
 
-### Step 7: Report
+### Step 7: Create the Branch
 
-Report:
-1. Ticket summary (title, status, type)
-2. Entities and Use Cases identified
-3. Test files created with paths
-4. Memory file created with path
-5. Suggested branch name and `git checkout -b` command
-
-## Branch Name Format
+Derive the branch name from the ticket:
 
 ```
 feature/[TICKET-ID]-[slug]
 ```
 
+Where `[slug]` is the ticket title lowercased, spaces → hyphens, max 5 words.
 Example: `feature/FVRS-145-restaurant-favorites`
+
+**Create locally**:
+```bash
+git checkout -b feature/[TICKET-ID]-[slug]
+```
+
+If the local `git checkout` fails (e.g. not in a git repo, or the branch already exists), fall back to creating it on GitHub via MCP:
+```
+mcp__ARC_Linear_GitHub__github_create_branch(branch: "feature/[TICKET-ID]-[slug]")
+```
+
+### Step 8: Report
+
+Report:
+1. Ticket summary (title, status, type)
+2. Entities and Use Cases identified
+3. Test files created (paths)
+4. Memory file created (path)
+5. Branch created: `feature/[TICKET-ID]-[slug]` ✅
 
 ## Hard Constraints
 
-- **No commit or push**
+- **No commit or push** — branch creation only, no commits
 - **Never implement the feature** — scaffolding only
 - **Never overwrite existing files** — check with `ls` before `Write`
 - **Read the ticket via MCP** — do not ask the user to paste ticket content
