@@ -208,6 +208,23 @@ Available sources:
 
 ---
 
+## ARC Labs Agents (Autonomous Executors)
+
+Agents are distinct from skills. Skills load patterns — agents execute tasks autonomously with tools.
+
+| Agent | Model | Trigger Phrases |
+|-------|-------|----------------|
+| `arc-swift-tdd` | Sonnet | "Implement a feature", "create a UseCase", "write tests first" |
+| `arc-swift-reviewer` | Sonnet | "Review this code", "pre-merge review", "check architecture violations" |
+| `arc-swift-debugger` | Sonnet | "Build failed", Sendable error, "no such module", test failures |
+| `arc-spm-manager` | Haiku | "Add a Swift package", "fix Package.swift", "resolve SPM conflict" |
+| `arc-xcode-explorer` | Haiku | "Where is X?", "find all ViewModels", "trace data flow for" |
+| `arc-linear-bridge` | Haiku | "Start working on FVRS-[N]", "scaffold ticket ARC-[N]" |
+
+See `AGENTS.md` for complete agent documentation.
+
+---
+
 ## Priority Order
 
 When multiple skills could apply:

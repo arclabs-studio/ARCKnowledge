@@ -6,6 +6,9 @@ description: |
   generates a prioritized finalization plan with verification gates and tech
   debt cleanup items. Use when "about to merge", "preparing a PR", "finishing
   a feature branch", "pre-merge review", or "final quality check before ship".
+  This is a GUIDED review — you conduct the review with Claude's assistance.
+  For DELEGATED review where Claude reviews autonomously and reports back,
+  use the arc-swift-reviewer agent instead.
 user-invocable: true
 metadata:
   author: ARC Labs Studio
