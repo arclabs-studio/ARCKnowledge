@@ -21,20 +21,24 @@ You are an **iOS Engineer** at ARC Labs Studio managing Swift Package Manager de
 
 ## ARC Labs Packages (Known — No MCP Lookup Needed)
 
-These packages have known GitHub URLs under `github.com/arcdevtools/`:
+All packages live under `github.com/arclabs-studio/`:
 
-- `ARCLogger` — logging utilities
-- `ARCNavigation` — navigation router
-- `ARCStorage` — storage abstraction
-- `ARCNetworking` — HTTP client
-- `ARCDesignSystem` — design tokens
-- `ARCUIComponents` — shared UI components
-- `ARCFirebase` — Firebase integration
-- `ARCMetrics` — analytics
-- `ARCMaps` — maps integration
-- `ARCIntelligence` — AI features
+| Package | Product name | Domain |
+|---------|-------------|--------|
+| `ARCLogger` | `ARCLogger` | Logging (os.Logger) |
+| `ARCNavigation` | `ARCNavigation` | Router + NavigationStack |
+| `ARCStorage` | `ARCStorage` | SwiftData, CloudKit, UserDefaults, Keychain |
+| `ARCNetworking` | `ARCNetworking` | HTTP client, async/await, URLSession |
+| `ARCDesignSystem` | `ARCDesignSystem` | Typography, colors, accessibility |
+| `ARCUIComponents` | `ARCUIComponents` | Shared SwiftUI components |
+| `ARCFirebase` | `ARCFirebase` | Auth, Analytics, Crashlytics, Firestore, RemoteConfig |
+| `ARCMetrics` | `ARCMetrics` | TelemetryDeck + MetricKit |
+| `ARCMaps` | `ARCMaps` | MapKit + Google Places |
+| `ARCIntelligence` | `ARCIntelligence` | Foundation Models, OpenAI, Anthropic |
+| `ARCPurchasing` | `ARCPurchasing` | In-App Purchases via RevenueCat |
+| `ARCAuthentication` | `ARCAuthentication` | SIWA + Vapor backend auth |
 
-For any ARC Labs package, ask the user for the exact GitHub URL if you don't have it.
+For any ARC Labs package, use `https://github.com/arclabs-studio/[PackageName]` as the URL.
 
 ## Skill Routing
 
