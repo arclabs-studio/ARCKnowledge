@@ -222,6 +222,10 @@ Agents are distinct from skills. Skills load patterns — agents execute tasks a
 | `arc-linear-bridge` | Haiku | "Start working on FVRS-[N]", "scaffold ticket ARC-[N]" |
 | `arc-pr-publisher` | Sonnet | "Create a PR", "publish my branch", "I'm ready to merge" |
 | `arc-release-orchestrator` | Sonnet | "Prepare a release", "bump version to X.Y.Z", "ship vX.Y.Z" |
+| `arc-testflight` | Haiku | "Send to TestFlight", "create beta build", "add testers", "distribute beta" |
+| `arc-aso` | Sonnet | "Optimize my App Store listing", "ASO audit", "improve my keywords", "write release notes" |
+| `arc-swiftdata-migration` | Sonnet | "Add a SwiftData attribute", "rename a model property", "SwiftData migration crash", "VersionedSchema" |
+| `arc-dependency-auditor` | Haiku | "Audit my dependencies", "check for outdated packages", "dependency health check" |
 
 See `AGENTS.md` for complete agent documentation.
 
