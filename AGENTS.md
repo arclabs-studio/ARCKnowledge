@@ -9,7 +9,7 @@ Subagents are **autonomous executors** — they take a task, use tools, and retu
 
 ---
 
-## The 6 ARC Labs Agents
+## The 8 ARC Labs Agents
 
 ### `arc-swift-tdd`
 **Implements features using strict TDD** — writes Swift Testing test suites before any production code.
@@ -79,7 +79,7 @@ No skills invoked — lightweight by design for speed.
 ---
 
 ### `arc-linear-bridge`
-**Linear-to-Swift scaffolding** — reads tickets via MCP, creates test skeleton + feature memory file.
+**Linear-to-Swift scaffolding** — reads tickets via MCP, creates test skeleton + feature memory file + branch.
 
 | | |
 |--|--|
@@ -88,6 +88,32 @@ No skills invoked — lightweight by design for speed.
 | **Triggers** | "Start working on FVRS-[N]", "scaffold ticket ARC-[N]", "set up tests for [issue ID]" |
 
 Skills invoked dynamically: `arc-tdd-patterns`, `arc-memory`
+
+---
+
+### `arc-pr-publisher`
+**Publishes a feature branch as a PR** — validates checklist, creates PR on GitHub, links Linear ticket, updates issue to "In Review".
+
+| | |
+|--|--|
+| **Model** | claude-sonnet-4-6 |
+| **Read-only** | No (creates PR via MCP) |
+| **Triggers** | "Create a PR", "open a pull request", "publish my branch", "I'm ready to merge", "submit for review" |
+
+Skills invoked dynamically: `arc-quality-standards`, `arc-tdd-patterns`
+
+---
+
+### `arc-release-orchestrator`
+**Orchestrates the full release cycle** — bumps version, updates CHANGELOG, creates release branch and PR, reports manual steps (tag + App Store).
+
+| | |
+|--|--|
+| **Model** | claude-sonnet-4-6 |
+| **Read-only** | No |
+| **Triggers** | "Prepare a release", "bump version to X.Y.Z", "create release branch", "ship vX.Y.Z" |
+
+Skills invoked dynamically: `arc-release`
 
 ---
 
@@ -100,7 +126,9 @@ Skills invoked dynamically: `arc-tdd-patterns`, `arc-memory`
 | `arc-swift-debugger` | — | swift-concurrency, swiftdata-pro | axiom:axiom-swift-concurrency, axiom:axiom-ios-build, axiom:axiom-xcode-debugging, axiom:axiom-swiftdata, axiom:axiom-swift-testing | cupertino (search, symbols) |
 | `arc-spm-manager` | arc-project-setup | xcodebuildmcp | — | cupertino search |
 | `arc-xcode-explorer` | — (inlined) | — | — | cupertino search (optional) |
-| `arc-linear-bridge` | arc-tdd-patterns, arc-memory | — | — | linear_get_issue, linear_list_issues |
+| `arc-linear-bridge` | arc-tdd-patterns, arc-memory | — | — | linear_get_issue, linear_list_issues, github_create_branch |
+| `arc-pr-publisher` | arc-quality-standards, arc-tdd-patterns | — | — | github_create_pr, linear_get_issue, linear_update_issue, workflow_get_conventions |
+| `arc-release-orchestrator` | arc-release | — | — | github_create_branch, github_create_pr, linear_list_issues, workflow_get_conventions |
 
 ---
 

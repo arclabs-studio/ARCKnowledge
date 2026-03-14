@@ -220,6 +220,8 @@ Agents are distinct from skills. Skills load patterns — agents execute tasks a
 | `arc-spm-manager` | Haiku | "Add a Swift package", "fix Package.swift", "resolve SPM conflict" |
 | `arc-xcode-explorer` | Haiku | "Where is X?", "find all ViewModels", "trace data flow for" |
 | `arc-linear-bridge` | Haiku | "Start working on FVRS-[N]", "scaffold ticket ARC-[N]" |
+| `arc-pr-publisher` | Sonnet | "Create a PR", "publish my branch", "I'm ready to merge" |
+| `arc-release-orchestrator` | Sonnet | "Prepare a release", "bump version to X.Y.Z", "ship vX.Y.Z" |
 
 See `AGENTS.md` for complete agent documentation.
 
