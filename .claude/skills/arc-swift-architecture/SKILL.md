@@ -219,13 +219,18 @@ final class UserListViewModel {
 // final class UserListViewModel { /* ... */ }
 ```
 
-### SOLID Principles Quick Guide
+### Swift Design Principles
 
-1. **Single Responsibility**: Each class has one reason to change
-2. **Open/Closed**: Open for extension, closed for modification
-3. **Liskov Substitution**: Subtypes must be substitutable for base types
-4. **Interface Segregation**: Many specific protocols > one general
-5. **Dependency Inversion**: Depend on abstractions (protocols), not concretions
+ARC Labs expresses design through six Swift-native principles (see `@references/swift-design-principles.md`):
+
+1. **Value Semantics by Default**: Structs first; classes only when identity or inheritance is needed
+2. **Protocol-Driven Abstraction**: Protocols are the primary abstraction — not abstract base classes
+3. **Composition Over Inheritance**: Protocol extensions + struct composition replace class hierarchies
+4. **Well-Defined Ownership**: Every piece of state has one explicit owner; `private(set)` enforces this
+5. **Structured Concurrency**: `async/await` + actors + TaskGroup; no manual `DispatchQueue`
+6. **Compile-Time Correctness**: Zero warnings, no force unwraps, no `@unchecked Sendable`
+
+SOLID remains a useful reference: S is reinforced by Clean Architecture; O and L are transformed (protocols replace inheritance); I dissolves (Swift protocols are focused by design); D is preserved (protocol injection).
 
 ### Dependency Injection Pattern
 
@@ -262,9 +267,10 @@ final class LocationService: LocationServiceProtocol {
 
 For complete patterns, examples, and guidelines:
 
+- **@references/swift-design-principles.md** - ARC Labs foundational design principles (value semantics, POP, composition, ownership, concurrency, compile-time correctness)
 - **@references/clean-architecture.md** - Complete Clean Architecture guide with examples
 - **@references/mvvm-c.md** - MVVM+Coordinator pattern implementation details
-- **@references/solid-principles.md** - SOLID principles applied to Swift
+- **@references/solid-principles.md** - SOLID principles applied to Swift (read via swift-design-principles.md lens)
 - **@references/protocol-oriented.md** - Protocol-Oriented Programming best practices
 - **@references/singletons.md** - When and how to use singletons safely
 - **@references/domain.md** - Domain layer: Entities, Use Cases, Repository Protocols
