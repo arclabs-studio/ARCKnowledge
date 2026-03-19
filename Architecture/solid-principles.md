@@ -2,6 +2,8 @@
 
 **SOLID principles guide object-oriented design to create maintainable, scalable, and testable code.**
 
+> **ARC Labs Context**: This document covers SOLID as a reference framework. ARC Labs interprets SOLID through the lens of Swift's own design principles. For the foundational position on how these principles translate to Swift — including which are reinforced, which are transformed, and which dissolve — see [`swift-design-principles.md`](swift-design-principles.md).
+
 ---
 
 ## 🎯 The Five Principles

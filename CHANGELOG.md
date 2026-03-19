@@ -5,6 +5,22 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] - 2026-03-19
+
+### Added
+- **`Architecture/swift-design-principles.md`** — Foundational document defining ARC Labs' technical position on Swift software design. Six principles expressed in Swift's native vocabulary: Value Semantics by Default, Protocol-Driven Abstraction, Composition Over Inheritance, Well-Defined Ownership, Structured Concurrency, and Compile-Time Correctness. Includes honest SOLID mapping table showing which principles are reinforced, transformed, or dissolved in Swift, plus anti-patterns section.
+
+### Changed
+- **`Architecture/solid-principles.md`** — Added ARC Labs context note referencing `swift-design-principles.md` as the interpretive lens
+- **`Architecture/protocol-oriented.md`** — Added cross-reference to `swift-design-principles.md`
+- **`CLAUDE.md`** — Updated Technical Principles section: replaced bare "SOLID Principles" entry with reference to the six Swift design principles and `swift-design-principles.md`
+- **`.claude/skills/arc-swift-architecture/SKILL.md`** — Replaced "SOLID Principles Quick Guide" with "Swift Design Principles" section; added `swift-design-principles.md` as primary reference
+- **`.claude/skills/arc-swift-architecture/references/`** — Added `swift-design-principles.md` reference copy for skill context
+- **`Skills/skills-index.md`** — Updated arc-swift-architecture entry to mention Swift design principles
+- **`README.md`** — Added `swift-design-principles.md` to Architecture directory listing and arc-swift-architecture skill files
+
+---
+
 ## [2.9.0] - 2026-03-14
 
 ### Added

@@ -2,6 +2,8 @@
 
 **Protocol-Oriented Programming (POP) uses protocols as the primary abstraction mechanism, enabling flexible, testable, and reusable code.**
 
+> **ARC Labs Context**: This document covers Protocol-Oriented Programming patterns and when to apply them. For the broader design philosophy that frames POP within ARC Labs' approach to Swift — including how it relates to SOLID and structured concurrency — see [`swift-design-principles.md`](swift-design-principles.md).
+
 ---
 
 ## 🎯 Core Philosophy

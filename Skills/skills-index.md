@@ -46,7 +46,7 @@ Use for **ARC Labs projects** where consistency with studio standards is require
 
 | Skill | When to Use |
 |-------|-------------|
-| `/arc-swift-architecture` | Designing features, setting up layers, MVVM+C |
+| `/arc-swift-architecture` | Designing features, setting up layers, MVVM+C, Swift design principles |
 | `/arc-presentation-layer` | Views, ViewModels, @Observable, ARCNavigation |
 | `/arc-data-layer` | Repositories, API clients, DTOs, caching |
 | `/arc-tdd-patterns` | Writing tests, Swift Testing, TDD workflow |

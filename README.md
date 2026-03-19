@@ -144,6 +144,7 @@ ARCKnowledge/
 │       └── arc-project-setup/
 │
 ├── Architecture/                # Architectural patterns (reference)
+│   ├── swift-design-principles.md   ← Foundational design principles
 │   ├── clean-architecture.md
 │   ├── mvvm-c.md
 │   ├── protocol-oriented.md
@@ -184,10 +185,10 @@ ARCKnowledge/
 ## 📚 Skills Documentation Index
 
 ### arc-swift-architecture
-Covers Clean Architecture, MVVM+C pattern, SOLID principles, Protocol-Oriented Design, dependency injection, and singleton patterns.
+Covers Swift design principles, Clean Architecture, MVVM+C pattern, SOLID principles, Protocol-Oriented Design, dependency injection, and singleton patterns.
 
 **Files included:**
-- `clean-architecture.md`, `mvvm-c.md`, `solid-principles.md`, `protocol-oriented.md`, `singletons.md`, `domain.md`
+- `swift-design-principles.md`, `clean-architecture.md`, `mvvm-c.md`, `solid-principles.md`, `protocol-oriented.md`, `singletons.md`, `domain.md`
 
 ### arc-tdd-patterns
 Covers Swift Testing framework, TDD workflow, mocking patterns, coverage requirements, and CI testing.
