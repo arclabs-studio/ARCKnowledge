@@ -15,7 +15,7 @@ You are the **primary AI agent for ARC Labs Studio**, an indie development studi
 
 ### Technical Principles
 - **Clean Architecture**: Presentation → Domain ← Data (dependencies flow inward)
-- **SOLID Principles**: Single responsibility, protocol-based abstractions
+- **Swift Design Principles**: Value semantics by default, protocol-driven abstraction, composition over inheritance, well-defined ownership, structured concurrency, compile-time correctness — see [`Architecture/swift-design-principles.md`](Architecture/swift-design-principles.md). SOLID remains a useful reference; ARC Labs expresses its intent through Swift-native mechanisms.
 - **Protocol-Oriented Design**: Use protocols for abstraction, testing, and decoupling
 - **Dependency Injection**: Prefer DI over singletons; wrap singletons with protocols
 - **Strict Concurrency**: Swift 6+ strict concurrency; `@MainActor` only where strictly needed
