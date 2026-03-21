@@ -206,6 +206,8 @@ Unclear ownership is the root cause of most state-related bugs: unexpected mutat
 
 **State ownership in SwiftUI**: `@State` (view owns it), `@Binding` (view borrows it), `@Observable` (external model owns it), `@Environment` (environment injects it). Each modifier makes the ownership relationship explicit and verifiable.
 
+> See `Layers/presentation.md` § Dependency Injection Strategy for when to use `@Environment` vs init injection.
+
 At ARC Labs, the relevant ownership rule is about state in the Presentation layer: the ViewModel owns the state it exposes to Views. Views never mutate ViewModel state directly. Use Cases never hold UI state. The Domain layer has no awareness of how its output is displayed.
 
 ### Swift 6 Expression
@@ -408,7 +410,7 @@ SOLID was formulated in an OOP context (Java, C++, C#) where classes are the pri
 | **O** — Open/Closed | **Transformed** | Protocol conformances and extensions replace inheritance; new implementations extend without modifying |
 | **L** — Liskov Substitution | **Transformed** | Protocol contracts replace inheritance contracts; any conforming type substitutes any other |
 | **I** — Interface Segregation | **Dissolved** | Swift protocols are focused by design; standard library (Equatable, Hashable, Sendable) demonstrates this natively |
-| **D** — Dependency Inversion | **Vigente, different mechanism** | Protocols + init injection + `@Environment`; same goal, no abstract base classes needed |
+| **D** — Dependency Inversion | **Vigente, different mechanism** | Protocols + init injection (primary) + `@Environment` (Presentation layer, `@Observable` models); same goal, no abstract base classes needed |
 
 ### Honest Analysis by Principle
 
