@@ -5,6 +5,21 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2026-03-21
+
+### Added
+- **`Layers/presentation.md`** — `@MainActor` placement deep dive: explains why method-level annotation is preferred over class-level, with Swift 6.2 SE-0466 note on `DefaultIsolation = @MainActor` for app targets vs packages
+- **`Layers/presentation.md`** — Dependency Injection Strategy section: decision matrix for init injection vs `@Environment`, documents when to use `@Environment` for `@Observable` models (Router, UserSession) vs init injection for Domain/Data layers
+- **`Architecture/mvvm-c.md`** — Added `@Environment` for Router clarification note explaining why Router uses environment in Views but init injection in ViewModels
+- **`Architecture/swift-design-principles.md`** — Minor cross-reference improvements
+
+### Changed
+- **`Layers/presentation.md`** — ViewModel examples updated: removed blanket `@MainActor` from class, moved to `private extension` pattern with per-method `@MainActor` annotation
+- **`.claude/skills/arc-swift-architecture/references/`** — Synced all reference documents with updated Layers and Architecture content
+- **`CLAUDE.md`** — Updated `@MainActor` quick reference to reflect per-method annotation pattern
+
+---
+
 ## [2.10.0] - 2026-03-19
 
 ### Added
