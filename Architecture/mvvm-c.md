@@ -119,6 +119,8 @@ struct FavResApp: App {
 
 The `.withRouter()` modifier automatically injects the Router into SwiftUI's environment, making it available to all child views.
 
+> **Why `@Environment` for Router in Views?** Router is an `@Observable` model shared across the entire view hierarchy. `@Environment` avoids threading it through every intermediate View's init. ViewModels still receive Router via init injection for unit testability.
+
 ---
 
 ## 📱 Navigation Patterns

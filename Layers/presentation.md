@@ -310,7 +310,6 @@ import ARCLogger
 import ARCNavigation
 import Foundation
 
-@MainActor
 @Observable
 final class UserProfileViewModel {
     
@@ -350,25 +349,26 @@ final class UserProfileViewModel {
     }
     
     // MARK: Lifecycle
-    
+
     func onAppear() async {
         await loadProfile()
     }
-    
+
     // MARK: Public Functions
-    
+
     func onTappedEditProfile() {
         guard let user = user else { return }
-        
+
         ARCLogger.shared.info("User tapped edit profile")
         router.navigate(to: .editProfile(user))
     }
-    
+
+    @MainActor
     func onTappedSignOut() async {
         ARCLogger.shared.info("User requested sign out")
-        
+
         isLoading = true
-        
+
         do {
             try await signOutUseCase.execute()
             router.popToRoot()
@@ -379,10 +379,10 @@ final class UserProfileViewModel {
                 "error": error.localizedDescription
             ])
         }
-        
+
         isLoading = false
     }
-    
+
     func onTappedRetry() async {
         await loadProfile()
     }
@@ -390,11 +390,12 @@ final class UserProfileViewModel {
 
 // MARK: - Private Functions
 
-extension UserProfileViewModel {
+private extension UserProfileViewModel {
+    @MainActor
     func loadProfile() async {
         isLoading = true
         errorMessage = nil
-        
+
         do {
             user = try await getUserProfileUseCase.execute()
             ARCLogger.shared.debug("Profile loaded successfully")
@@ -404,7 +405,7 @@ extension UserProfileViewModel {
                 "error": error.localizedDescription
             ])
         }
-        
+
         isLoading = false
     }
 }
@@ -469,6 +470,43 @@ final class AppCoordinator {
 
 ---
 
+#### @MainActor Placement: Why Methods, Not the Class
+
+`@MainActor` on a **class** isolates every member — all stored properties, all methods, and `init` — to the main actor. This is a blanket constraint that forces even non-UI methods to hop to the main thread on every call, adds overhead, and prevents packages from being called from non-main-actor contexts without `await`.
+
+`@MainActor` on a **method** is targeted: after any `await` suspension point, the runtime guarantees execution returns to the main actor before continuing. This is what you need when a method awaits nonisolated async code and then writes to `@Observable` properties that drive UI.
+
+```swift
+// ✅ Correct: @MainActor only where the write-after-await happens
+@Observable
+final class UserViewModel {
+    private(set) var user: User?
+
+    // loadUser awaits a nonisolated UseCase, then writes to `user`.
+    // @MainActor guarantees the write happens on the main actor.
+    @MainActor
+    func loadUser() async {
+        user = try? await getUserUseCase.execute()
+    }
+
+    // Pure delegation — the @MainActor hop happens inside loadUser.
+    // No annotation needed here.
+    func onAppear() async {
+        await loadUser()
+    }
+}
+
+// ❌ Wrong: Blanket @MainActor — all methods locked to main thread,
+// prevents calling from background actors without await overhead.
+@MainActor
+@Observable
+final class UserViewModel { ... }
+```
+
+> **Swift 6.2 note (SE-0466)**: App targets can opt into `DefaultIsolation = @MainActor` via a build setting, which infers `@MainActor` for all non-explicitly-isolated code in the module. This is a valid alternative for apps. For **packages**, it is inappropriate — callers may be off the main actor. Per-method annotation is always safe for both.
+
+---
+
 #### 1. Use Enums for Complex State
 
 ```swift
@@ -479,7 +517,6 @@ enum LoadingState<T: Equatable>: Equatable {
     case error(String)
 }
 
-@MainActor
 @Observable
 final class RestaurantListViewModel {
     private(set) var state: LoadingState<[Restaurant]> = .idle
@@ -503,13 +540,12 @@ final class RestaurantListViewModel {
 #### 2. Private(set) for Mutable State
 
 ```swift
-@MainActor
 @Observable
 final class SearchViewModel {
     // ✅ Good: Private setter
     private(set) var results: [Restaurant] = []
     private(set) var isSearching = false
-    
+
     // ❌ Bad: Public mutable state
     var results: [Restaurant] = []
 }
@@ -518,16 +554,15 @@ final class SearchViewModel {
 #### 3. Method Naming Convention
 
 ```swift
-@MainActor
 @Observable
 final class HomeViewModel {
     // ✅ Good: Prefix with "on" for user actions
     func onTappedRestaurant(_ restaurant: Restaurant) { ... }
     func onChangedSearchText(_ text: String) { ... }
     func onAppear() { }
-    
+
     // ✅ Good: Standard naming for internal methods
-    private func loadRestaurants() async { ... }
+    @MainActor private func loadRestaurants() async { ... }
     private func formatDate(_ date: Date) -> String { ... }
 }
 ```
@@ -698,6 +733,93 @@ final class AppCoordinator {
 
 ---
 
+### Dependency Injection Strategy
+
+ARC Labs uses two complementary DI mechanisms. Choosing the right one keeps layers clean and tests simple.
+
+#### Decision Matrix
+
+| Dependency | Mechanism | Why |
+|---|---|---|
+| Use Cases → ViewModel | Init injection (protocol) | Testability; Domain layer abstraction |
+| Repositories → Use Case | Init injection (protocol) | Testability; Data layer abstraction |
+| Router → View | `@Environment(Router<AppRoute>.self)` | `@Observable`, shared across deep hierarchy |
+| Router → ViewModel | Init injection | Unit testability |
+| Shared app model (e.g., `UserSession`) → View | `@Environment(Type.self)` | `@Observable`, avoids threading through every init |
+| System values (`colorScheme`, `reduceMotion`) | `@Environment(\.keyPath)` | SwiftUI built-in key paths |
+| Services, API clients | Init injection (protocol) | Not `@Observable`; testability |
+
+#### The Rule
+
+`@Environment` is a **delivery mechanism** for Presentation-layer `@Observable` models. It does **not** replace the Composition Root — the `AppCoordinator` still creates and wires all dependencies. `.environment()` is how some of those objects reach deep Views without threading through every intermediate View's init.
+
+> Init injection remains the **primary** DI mechanism for Domain and Data layers. `@Environment` is strictly a Presentation-layer concern.
+
+#### Type-Based `@Environment` for @Observable (iOS 17+)
+
+The Router pattern generalises to any `@Observable` model that needs to be shared across a deep view hierarchy:
+
+```swift
+// Composition Root — inject into environment once
+WindowGroup {
+    ContentView()
+        .environment(userSession)   // userSession: UserSession (@Observable)
+        .withRouter(router)
+}
+
+// Any descendant View — read from environment
+struct ProfileView: View {
+    @Environment(UserSession.self) private var userSession
+    // ...
+}
+```
+
+#### `@Entry` Macro for Custom Environment Keys (iOS 18+)
+
+The `@Entry` macro eliminates the boilerplate of `EnvironmentKey` conformances:
+
+```swift
+// Before @Entry (iOS 17 and earlier)
+private struct UserSessionKey: EnvironmentKey {
+    static let defaultValue: UserSession? = nil
+}
+
+extension EnvironmentValues {
+    var userSession: UserSession? {
+        get { self[UserSessionKey.self] }
+        set { self[UserSessionKey.self] = newValue }
+    }
+}
+
+// After @Entry (iOS 18+)
+extension EnvironmentValues {
+    @Entry var userSession: UserSession?
+}
+```
+
+#### Anti-Patterns
+
+**Never inject these via `@Environment`**:
+
+```swift
+// ❌ Use Cases via @Environment — breaks testability, violates layer boundaries
+@Environment(GetRestaurantsUseCase.self) private var getRestaurantsUseCase
+
+// ❌ Repositories via @Environment — same issues
+@Environment(RestaurantRepositoryImpl.self) private var repository
+
+// ❌ Non-@Observable services — they don't participate in SwiftUI's update cycle
+@Environment(NetworkService.self) private var networkService
+```
+
+Use init injection for all Domain and Data layer dependencies. `@Environment` is reserved for `@Observable` models that need to propagate across the Presentation layer.
+
+#### `@EnvironmentObject` Deprecation
+
+`@EnvironmentObject` is superseded by `@Environment(Type.self)` when the model conforms to `@Observable` (iOS 17+). ARC Labs code targeting iOS 17+ **must not** use `@EnvironmentObject`. The `@Observable` macro provides the same propagation mechanism with better performance and compile-time safety.
+
+---
+
 ### Feature-Specific Router (for complex features)
 
 ```swift
@@ -774,19 +896,19 @@ Button("Load Profile") {
 }
 
 // 2. ViewModel Coordinates
-@MainActor
 @Observable
 final class ProfileViewModel {
+    @MainActor
     func onTappedLoadProfile() async {
         isLoading = true
-        
+
         do {
             // Call Use Case
             user = try await getUserProfileUseCase.execute(userId: currentUserId)
         } catch {
             errorMessage = error.localizedDescription
         }
-        
+
         isLoading = false
     }
 }
@@ -845,7 +967,7 @@ final class UserRepositoryImpl: UserRepositoryProtocol {
 ### ViewModels
 - [ ] State is `private(set)`
 - [ ] Dependencies injected via init
-- [ ] Uses `@Observable` and `@MainActor`
+- [ ] Uses `@Observable`; `@MainActor` on specific methods only
 - [ ] User actions prefixed with "on"
 - [ ] Calls Use Cases (not Repositories directly)
 - [ ] Tells Router to navigate (doesn't navigate itself)
