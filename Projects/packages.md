@@ -115,6 +115,13 @@ ARCPackageName/
 - Testable navigation flows
 - Zero dependencies
 
+**ARCPurchasing** - In-app purchase management
+- Protocol-based abstraction over RevenueCat SDK
+- `ARCPurchasingUI` module with paywall views and modifiers (`ARCPaywallView`, `.presentARCPaywall`, `.presentARCPaywallIfNeeded`, `.arcPaywallFooter`)
+- `PurchaseAnalytics` protocol for purchase funnel instrumentation
+- Full `MockPurchaseProvider` support for testing without RevenueCat
+- See `Monetization/` knowledge section for cross-app patterns
+
 **ARCNetworking**: Use when app needs:
 - Network connectivity
 

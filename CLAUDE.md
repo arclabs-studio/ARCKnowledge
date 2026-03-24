@@ -33,6 +33,7 @@ Project (App or Package)
         ├── .claude/skills/     ← All ARC Labs skills
         ├── Architecture/       ← Architecture reference docs
         ├── Layers/             ← Layer implementation guides
+        ├── Monetization/       ← Monetization patterns and guides
         ├── Quality/            ← Code quality standards
         └── Skills/             ← Skills index
 ```
@@ -113,7 +114,7 @@ See `Skills/skills-index.md` for the complete skills routing guide.
 
 **Swift Packages** (Public, Reusable)
 - ARCDesignSystem, ARCDevTools, ARCFirebase, ARCIntelligence, ARCLogger
-- ARCMaps, ARCMetrics, ARCNavigation, ARCNetworking, ARCStorage, ARCUIComponents
+- ARCMaps, ARCMetrics, ARCNavigation, ARCNetworking, ARCPurchasing, ARCStorage, ARCUIComponents
 
 **iOS Apps** (Private)
 - FavRes, FavBook, Pizzeria La Famiglia, TicketMind
