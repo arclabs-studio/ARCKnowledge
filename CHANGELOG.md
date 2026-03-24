@@ -5,6 +5,33 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.0] - 2026-03-24
+
+### Added
+- **Claude GitHub Actions workflows** (`.github/workflows/`) — `claude.yml` responds to `@claude` mentions in issues/PRs; `claude-code-review.yml` runs automated PR code reviews following ARC Labs Swift standards
+- **`/arc-worktrees-workflow` skill** — Parallel development workflow using git worktrees
+- **`/arc-memory` skill** — Memory directories system for persistent context across sessions
+- **`/arc-final-review` skill** — Pre-merge quality checks inspired by Staff iOS Engineer review patterns; invokes Axiom skills by domain; produces prioritized finalization plan
+- **`/arc-audit` skill** — Full project compliance audit against all ARCKnowledge standards
+- **`/arc-xcode-cloud` skill** — Xcode Cloud CI/CD setup and configuration workflows
+- **iOS 26 Liquid Glass patterns** in `arc-presentation-layer` — `.glassEffect` modifier, backward-compatible glass implementations, tinting patterns, toolbar Liquid Glass treatment
+- **`@Previewable` macro patterns** in `arc-presentation-layer` — SwiftUI preview best practices for iOS 18+
+- **`Skills/skills-index.md`** — Comprehensive routing guide mapping tasks to skill sources (ARC Labs, Van der Lee, Axiom), decision matrix, and coverage gaps
+- **`Architecture/swift-design-principles.md`** cross-references added to `solid-principles.md` and `protocol-oriented.md`
+- **Security patterns** added to `.gitignore` for ARC Labs projects
+
+### Changed
+- **All ARC Labs skills** aligned with Anthropic skill guide format (`arc-final-review`, `arc-audit`, `arc-memory`, `arc-worktrees-workflow`, `arc-data-layer`, `arc-tdd-patterns`, `arc-presentation-layer`, `arc-workflow`, `arc-swift-architecture`, `arc-quality-standards`, `arc-project-setup`)
+- **`CLAUDE.md`** — Comprehensive rewrite as primary agent guide; updated ViewModel/UseCase/concurrency patterns; `@MainActor` per-method annotation; multiline formatting and private extension patterns; grouped UseCase pattern with `Sendable` conformance; surfaced Swift design principles
+- **`Layers/presentation.md`** — `@MainActor` placement guidance updated; ViewModel examples use `private extension` pattern with per-method annotation
+- **`Architecture/mvvm-c.md`** — Added `@Environment` for Router clarification note
+- **`Skills/skills-index.md`** — Added Agents section with routing table for all 12 agents; added `arc-xcode-cloud` and new review skills
+
+### Fixed
+- **`arc-spm-manager`** — Corrected GitHub org URL (`arcdevtools` → `arclabs-studio`); added ARCPurchasing and ARCAuthentication to known packages table
+
+---
+
 ## [2.11.0] - 2026-03-21
 
 ### Added
