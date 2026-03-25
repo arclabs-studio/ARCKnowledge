@@ -5,6 +5,17 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.0] - 2026-03-25
+
+### Added
+- **`/arc-localization` skill** (`.claude/skills/arc-localization/`) — Localization standards for ARC Labs Studio apps and packages: in-app locale switching, String Catalogs, `nameKey` pattern for domain entities, `LocalizedStringKey` vs `String(localized:)`, navigation title localization, and `LanguageManager` pattern
+- **`Quality/localization.md`** — Comprehensive localization reference document covering String Catalogs, `nameKey` pattern, `LanguageManager`, and testing strategies
+
+### Changed
+- **`Skills/skills-index.md`** — Added `arc-localization` skill entry
+
+---
+
 ## [2.12.0] - 2026-03-24
 
 ### Added
@@ -301,6 +312,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[2.13.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.12.0...v2.13.0
+[2.12.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.11.0...v2.12.0
+[2.11.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.10.0...v2.11.0
+[2.10.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.9.0...v2.10.0
+[2.9.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.8.0...v2.9.0
+[2.8.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.7.0...v2.8.0
+[2.7.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/arclabs-studio/ARCKnowledge/compare/v2.3.0...v2.4.0
