@@ -20,6 +20,7 @@
 What do you need?                         → Primary Skill → Backup
 ──────────────────────────────────────────────────────────────────────
 Architecture (ARC Labs projects)          → arc-swift-architecture
+Localization & locale switching           → arc-localization ⭐
 SwiftUI general patterns                  → swiftui-expert-skill ⭐
 SwiftUI specific (nav, perf, layout)      → axiom-swiftui-*
 Swift Concurrency (learning)              → swift-concurrency
@@ -58,6 +59,7 @@ Use for **ARC Labs projects** where consistency with studio standards is require
 | `/arc-worktrees-workflow` | Parallel feature development with git worktrees |
 | `/arc-memory` | Persistent context across Claude Code sessions |
 | `/arc-xcode-cloud` | Xcode Cloud setup, ci_scripts, workflow configuration, hour budgeting |
+| `/arc-localization` | In-app locale switching, String Catalogs, nameKey pattern, LanguageManager |
 
 **Characteristics**:
 - Prescriptive (imposes specific patterns)
