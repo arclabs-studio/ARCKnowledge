@@ -108,6 +108,11 @@ Agents should also leverage these when appropriate:
 
 See `Skills/skills-index.md` for the complete skills routing guide.
 
+### Additional Tools
+
+Community skills, MCPs, and Claude Code plugins are documented separately:
+→ **[`Tools/agent-tools.md`](Tools/agent-tools.md)**
+
 ---
 
 ## Current ARC Labs Products
