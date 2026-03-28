@@ -5,6 +5,16 @@ All notable changes to ARCKnowledge will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.1] - 2026-03-28
+
+### Added
+- **`Tools/agent-tools.md`** — Comprehensive reference for AI agents covering community skills (SwiftUI, Swift Concurrency, SwiftData, Swift Testing), MCPs (XcodeBuildMCP, ARC Linear GitHub, Firebase), and Claude Code plugins (swift-lsp, axiom, slack); includes skill load order and instructions for adding new skills
+
+### Changed
+- **`CLAUDE.md`** — Added "Additional Tools" section linking to `Tools/agent-tools.md` for community skills, MCPs, and Claude Code plugins
+
+---
+
 ## [2.13.0] - 2026-03-25
 
 ### Added
