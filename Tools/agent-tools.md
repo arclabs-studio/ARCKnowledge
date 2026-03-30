@@ -23,6 +23,27 @@ Installed at `~/.agents/skills/` (symlinked from iCloud — available on all stu
 | `swiftdata-pro` | SwiftData modeling, migrations, relationships |
 | `swift-testing-expert` | Swift Testing framework, #expect/#require, parameterized tests |
 
+### Xcode Build Optimization
+
+Six-skill suite by [@AvdLee](https://github.com/AvdLee/Xcode-Build-Optimization-Agent-Skill) for benchmarking and optimizing Xcode build times. Runs 40+ checks across build settings, script phases, compiler flags, and SPM overhead.
+
+**Workflow:** Analyze first → review plan → approve changes → verify improvement. Nothing modified without explicit approval.
+
+| Skill | Role |
+|---|---|
+| `xcode-build-orchestrator` | **Start here** — coordinates the full pipeline, produces `optimization-plan.md` |
+| `xcode-build-benchmark` | Measures clean + incremental build times |
+| `xcode-compilation-analyzer` | Finds compile hotspots in source files |
+| `xcode-project-analyzer` | Audits build settings against best practices |
+| `spm-build-analysis` | Finds SPM overhead and package inefficiencies |
+| `xcode-build-fixer` | Applies approved changes from the plan |
+
+**Usage:**
+```
+Use the /xcode-build-orchestrator skill to analyze build performance
+and come up with a plan for improvements.
+```
+
 > **Note:** ARC Labs arc-* skills take precedence for studio standards. Use community skills as complementary reference when arc-* doesn't cover the specific area.
 
 ---
